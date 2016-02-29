@@ -1,0 +1,65 @@
+20160226
+    * Added calculations of amplification ratio
+
+20160122
+    * Updated the submitScript.sh script to make it possible to use option 1 and 2 (wait until previous steps are done
+    before continuing) to allow for merging of files from all samples in a run
+    * Updating the extraction of EGFR information and merging into one file
+    * Adding extraction of known SNPs in the colon panel
+    * Adding extraction of filtered variants in exon 18-21 in EGFR outside of hotspots to hotspotlist
+    * Adding thresholds for extraction of ACVR2A MSI markers
+20151204
+    * Changed aligner from Mosaik to Bwa
+    * Updated cutadapt to a new version which cuts both reads at the same time and removes empty read pairs
+    * A general look through and updating of necessary script and programs
+20151015
+    * Changing the vaf calculation for insertions from Pindel. The reference alleles reported from pindel is the real reference allele depth
+    giving the total read depth being ref_RD + var_RD
+    * Extracting MSI markers from FilteredAnnovarOutput
+    * Removing blacklistpositions in automatic filtering step.
+    * Making it possible to keep specific regions even if they are intronic in filtering of Annovar
+20150904
+    * Updated to new annovar and new annovar modules. Therefore createAnnovarOutput.pl had to be updated to match the new outputformat.
+    * Added one line per sample with information about tissue type
+    * Added a step for automatic filtering of annovar and pindel annovar output
+20150827
+    * Corrected the insertion allele frequency calculation from Pindel and re-run all runs from August
+20150422
+	* The merging of Pindel results now only consider indels in the given exons of the given genes
+	* Indexfile can be separated on ,
+20150227
+	* Changing in ExtractClinicalPostions.sh. Each sample has to have the hotspot file listed to make it possible to run
+	a mix of different sample types in one run 
+	* Adding HOTSPOTFILE_ARR and INDELFILE_ARR to submitScripts.sh
+	* Updating createInputFile.py to also take care of different hotspot and indel lists for different samples of different cancer types
+	* In ClinicalPositions.pl, changed the way of calculating variant alleleratio for multiple base pair variamts in hotspotlist
+	taking the lowest variant allele ratio for the bases included and added sample id in the first column
+	* Adding a quality control step by running FastQC on the cutadapted sequences
+	* Added a step to merge pindel output for specific genes with the clinical positions to get one output file 
+	* Added module_locator.py to make it possible to determine the path to the pythonscript folder
+	
+20150112
+	* Changing method for giving normal/annovar sample info
+
+20141204
+    * Adding mergeregions.py, intersection.py and extractEnds.py to remove the need of sedd
+    in the analysis pipeline
+    * Added calculateGeneCov_bed.py which can be used to calculate the gene or region coverage
+    * Added SERA_PBS_SUBMIT_clinic.sh which has a shorter list of options and the steps normally
+    used are set to on automatically
+    * Added ROOT_PATH_PINDEL to globals file instead of having it in the RunPindel.sh
+    * Added path to annovar modules to globals file instead of having it in RunAnnovar.sh
+    * Changed globalsUppnex.sh and globalsSmaug.sh to globalsHome.sh and globalsProj.sh to make it 
+    possible to easy switch between using the common project files for clinical sequencing facility and
+    using home directory
+    * Added module load python/2.7 to modules.sh
+    * Added option to copy reference files to refFiles in analysis folder when creating the input file
+
+20141120
+	* Changing total read depth calculation in ClinicalPositions.pl from the sum of the 
+	reference read depth and the variant read depth to the sum of the reference read depth
+	and the read depths of all variants present.
+	* Adding functionality to run Pindel and annotate the pindel output including adding
+	Pindel parameters to input file.
+	* Added createInputFile.py in SERA/bin/pythonscript directory
+	

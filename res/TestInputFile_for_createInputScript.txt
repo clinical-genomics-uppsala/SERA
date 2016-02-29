@@ -1,0 +1,3 @@
+Experimentnamn	Prov	Barcode	Design	Refseq	Normal
+2014_test	1	CGCATACA	DesignName	OurReferenceFilename	Colon	annovar
+2014_test	2	AAACCGGT	DesignName	OurReferenceFilename	Lung	annovar

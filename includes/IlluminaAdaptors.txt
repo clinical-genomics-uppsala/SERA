@@ -1,0 +1,59 @@
+Paired-end Multiplex DNA
+
+PE Multiplexing Adapter1:
+5' -------------------- -----ACACTCTTTCCCTAC ACGACGCTCTTCCGATCT (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -----TGTGAGAAAGGGATG TGCTGCGAGAAGGCTAGp (-) -------------------- -------------------- -------------------- --- 5'
+PE Multiplexing Adapter2:
+5' -------------------- -------------------- ------------------ (-) pGATCGGAAGAGCACACGTC T------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) TCTAGCCTTCTCGTGTGCAG A------------------- -------------------- --- 5'
+
+PE Multiplexing PCR Primer1:
+5' AATGATACGGCGACCACCGA GATCTACACTCTTTCCCTAC ACGACGCTCTTCCGATCT (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 5'
+PE Multiplexing PCR Primer2:
+5' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) TCTAGCCTTCTCGCCAAGTC ACTTGAGGTCAGTG------ -------------------- --- 5'
+
+PCR Multiplexing Primer Index X:
+5' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) -------------------- -CTTGAGGTCAGTG****** TAGAGCATACGGCAGAAGACGAAC-5
+
+Result Library:
+5' AATGATACGGCGACCACCGA GATCTACACTCTTTCCCTAC ACGACGCTCTTCCGATCT (-) AGATCGGAAGAGCACACGTC TGAACTCCAGTCAC****** ATCTCGTATGCCGTCTTCTGCTTG-3
+3' TTACTATGCCGCTGGTGGCT CTAGATGTGAGAAAGGGATG TGCTGCGAGAAGGCTAGA (-) TCTAGCCTTCTCGTGTGCAG ACTTGAGGTCAGTG****** TAGAGCATACGGCAGAAGACGAAC-5
+
+PE DNA Sequencing Primer1
+5' -------------------- -----ACACTCTTTCCCTAC ACGACGCTCTTCCGATCT (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 5'
+PE DNA Sequencing Primer2
+5' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) TCTAGCCTTCTCGTGTGCAG ACTTGAGGTCAGTG------ -------------------- --- 5'
+Multiplexing Index Read Sequencing Primer
+5' -------------------- -------------------- ------------------ (-) -GATCGGAAGAGCACACGTC TGAACTCCAGTCAC------ -------------------- --- 3'
+3' -------------------- -------------------- ------------------ (-) -------------------- -------------------- -------------------- --- 5'
+
+
+PCR Primer Index 1
+CAAGCAGAAGACGGCATACGAGAT-CGTGAT-GTGACTGGAGTTC	RevComp: ATCACG
+PCR Primer Index 2
+CAAGCAGAAGACGGCATACGAGAT-ACATCG-GTGACTGGAGTTC	RevComp: CGATGT
+PCR Primer Index 3
+CAAGCAGAAGACGGCATACGAGAT-GCCTAA-GTGACTGGAGTTC	RevComp: TTAGGC
+PCR Primer Index 4
+CAAGCAGAAGACGGCATACGAGAT-TGGTCA-GTGACTGGAGTTC	RevComp: TGACCA
+PCR Primer Index 5
+CAAGCAGAAGACGGCATACGAGAT-CACTGT-GTGACTGGAGTTC	RevComp: ACAGTG
+PCR Primer Index 6
+CAAGCAGAAGACGGCATACGAGAT-ATTGGC-GTGACTGGAGTTC	RevComp: GCCAAT
+PCR Primer Index 7
+CAAGCAGAAGACGGCATACGAGAT-GATCTG-GTGACTGGAGTTC	RevComp: CAGATC
+PCR Primer Index 8
+CAAGCAGAAGACGGCATACGAGAT-TCAAGT-GTGACTGGAGTTC	RevComp: ACTTGA
+PCR Primer Index 9
+CAAGCAGAAGACGGCATACGAGAT-CTGATC-GTGACTGGAGTTC	RevComp: GATCAG
+PCR Primer Index 10
+CAAGCAGAAGACGGCATACGAGAT-AAGCTA-GTGACTGGAGTTC	RevComp: TAGCTT
+PCR Primer Index 11
+CAAGCAGAAGACGGCATACGAGAT-GTAGCC-GTGACTGGAGTTC	RevComp: GGCTAC
+PCR Primer Index 12
+CAAGCAGAAGACGGCATACGAGAT-TACAAG-GTGACTGGAGTTC	RevComp: CTTGTA
