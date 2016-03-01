@@ -232,8 +232,8 @@ with open(args.variationfile, 'r') as variationfile:
                                                     outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\tyes\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + mutationLine[3] + "\t" + ref + "\t" + var + "\t" + mutationLine[11] + "\t" + mutationLine[10] + "\t" + mutationLine[9] + "\t" + mutationLine[13] + "\t" + mutationLine[8] + "\t" + cds + "\t" + aa + "\t" + ampliconInfo + "\t" + nm + "\t" + np + "\t" + ampliconColumns
                                                     outputfile.write(outStr + "\n")
                                     else:
-                                        # Do not output all positions without mutation in EGFR
-                                        if not genes[chrom][s][e].startswith("EGFR"):
+                                        # Output all positions in KIT and PDGFRA independent of mutation or not
+                                        if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA"):
                                             outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\t" + found + "\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-"
                                             outputfile.write(outStr + "\n")
 

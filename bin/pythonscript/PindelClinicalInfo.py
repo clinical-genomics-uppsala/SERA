@@ -11,7 +11,10 @@ Script for converting Pindel Annovar output to readable output
 
 def printToFile(args, RDs, chr2nc, ofile, row, cosmicID, tInfo, cdsInfo, aaInfo, stPlus, stMinus):
     # Print to file
-    ofile.write(args['sampleID'] + "\t" + row[6] + "\t" + cosmicID + "\t2")  # Go through all read depth and check if the total read depth is above
+    flag = 2
+    if row[6].startswith("ERBB2"):
+        flag = 3
+    ofile.write(args['sampleID'] + "\t" + row[6] + "\t" + cosmicID + "\t" + str(flag))  # Go through all read depth and check if the total read depth is above
     count = 1
     for rd in RDs:
         if int(row[12]) >= int(rd):
