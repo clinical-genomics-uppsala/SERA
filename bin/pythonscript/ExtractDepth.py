@@ -181,6 +181,9 @@ with open(args.variationfile, 'r') as variationfile:
                                         nm = "NM_006218.2"
                                         np = "NP_006209.2"
                                         flag = 3
+                                    elif genes[chrom][s][e].startswith("ERBB2"):
+                                        nm = "NM_001289937.1"
+                                        np = "NP_001276866.1"
                                     cds = "-"
                                     aa = "-"
                                     if not "not analyzable" in found and chrom in mutations and pos in mutations[chrom]:
