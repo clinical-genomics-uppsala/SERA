@@ -508,6 +508,11 @@ sub checkDeletions {
 											}
 										}
 									}    # End - foreach my $base (@alternatives) {
+									if ((!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}))
+									{
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}  = "no";
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+									}
 								}    # End - if ( $ref eq $line[5] ) {
 							}
 
@@ -794,15 +799,21 @@ sub printCosmicPos {
 						if ( $link->{'found'} ) {
 							print OUTPUT "\t" . $link->{'found'};
 						}
-						else { print OUTPUT "\t-"; }
+						else { print OUTPUT "\tnot analyzable"; }
 						foreach my $minRD (@minRDs) {
-							if ( $link->{'tot_rd'} ) {
+							if ( defined($link->{'tot_rd'})) {
 								print OUTPUT "\t" . checkReadDepth( $link->{'tot_rd'}, $minRD );
+							}
+							elsif(!defined($link->{'found'})) {
+								print OUTPUT "\tnot covered by design";
 							}
 							else { print OUTPUT "\t-"; }
 						}
-						if ( $link->{'tot_rd'} ) {
+						if (defined($link->{'tot_rd'})) {
 							print OUTPUT "\t" . $link->{'tot_rd'};
+						}
+						elsif(!defined($link->{'found'})) {
+							print OUTPUT "\tnot covered by design";
 						}
 						else { print OUTPUT "\t-"; }
 						print OUTPUT "\t" . $chr . "\t" . $start . "\t" . $end . "\t" . $ref . "\t" . $var;
