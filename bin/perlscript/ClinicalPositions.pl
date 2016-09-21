@@ -452,66 +452,73 @@ sub checkDeletions {
 
 								# Check that the reference base is correct
 								if ( $ref eq $ref{ $line[1] }{ $line[2] }{'ref'} ) {
-									my @deletions = split( /\|/, $line[5] );
+									if($line[5] =~ /^0$/) {
+										$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
+										$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+										$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth($totRD, $minRDs[0] );
+									} else {
 
-									# Go through all deletions
-									for ( my $i = 0 ; $i < scalar(@deletions) ; $i++ ) {
-										if ( $deletions[$i] =~ m/0,0/ ) {
-											my $deleteRD = my $tmp = 0;
+										my @deletions = split( /\|/, $line[5] );
 
-											# Split the deletion on ( which gives the read depth for the deletion and the rest
-											( $deleteRD, $tmp ) =
-											  split( /\(/, $deletions[$i] );
+										# Go through all deletions
+										for (my $i = 0; $i < scalar( @deletions ); $i++) {
+											if ($deletions[$i] =~ m/0,0/) {
+												my $deleteRD = my $tmp = 0;
 
-											## Calculate the total read depth of reference and variant
-											#my $totRD = $ref{ $line[1] }{ $line[2] }{'refRD'} + $deleteRD;
+												# Split the deletion on ( which gives the read depth for the deletion and the rest
+												( $deleteRD, $tmp ) =
+													split( /\(/, $deletions[$i] );
 
-											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth( $totRD, $minRDs[0] );
+												## Calculate the total read depth of reference and variant
+												#my $totRD = $ref{ $line[1] }{ $line[2] }{'refRD'} + $deleteRD;
 
-											if ( $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok" ) {
+												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth($totRD, $minRDs[0] );
 
-												# Check that the variant allele ratio is high enough
-												if ( $deleteRD / $totRD >= $minVariantAlleleRatio ) {
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd'}             = $ref{ $line[1] }{ $line[2] }{'refRD'};
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}          = "yes";
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'varAlleleRatio'} = $deleteRD / $totRD;
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_rd'}         = $deleteRD;
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}         = $totRD;
+												if ($cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok") {
 
-													my @ampliconOptions =
-													  split( /\|/, $line[7] );
-													my $ampInfo = my $amp_plus = my $amp_minus = my $amp = "-";
-													foreach my $am (@ampliconOptions) {
+													# Check that the variant allele ratio is high enough
+													if ($deleteRD / $totRD >= $minVariantAlleleRatio) {
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd'} = $ref{ $line[1] }{ $line[2] }{'refRD'};
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "yes";
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'varAlleleRatio'} = $deleteRD / $totRD;
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_rd'} = $deleteRD;
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
 
-														if ( $am =~ m/0,0/ ) {
+														my @ampliconOptions =
+															split( /\|/, $line[7] );
+														my $ampInfo = my $amp_plus = my $amp_minus = my $amp = "-";
+														foreach my $am (@ampliconOptions) {
 
-															# Count the number of plus and minus amplicons for the variant
-															my ( $amp_plus, $amp_minus ) = countAmplicons( $am, "del" );
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = $amp_plus;
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = $amp_minus;
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = $am;
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amp_plus'}  = $ref{ $line[1] }{ $line[2] }{'amp_plus'};
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amp_minus'} = $ref{ $line[1] }{ $line[2] }{'amp_minus'};
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amplicons'} = $ref{ $line[1] }{ $line[2] }{'amplicons'};
+															if ($am =~ m/0,0/) {
+
+																# Count the number of plus and minus amplicons for the variant
+																my ( $amp_plus, $amp_minus ) = countAmplicons( $am,	"del" );
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = $amp_plus;
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = $amp_minus;
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = $am;
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amp_plus'} = $ref{ $line[1] }{ $line[2] }{'amp_plus'};
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amp_minus'} = $ref{ $line[1] }{ $line[2] }{'amp_minus'};
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'ref_amplicons'} = $ref{ $line[1] }{ $line[2] }{'amplicons'};
+															}
 														}
 													}
+													else {
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+													}
+
 												}
 												else {
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}  = "no";
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "not analyzable";
 													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
 												}
-
 											}
-											else {
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}  = "not analyzable";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
-											}
-										}
-									}    # End - foreach my $base (@alternatives) {
-									if ((!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}))
-									{
-											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}  = "no";
+										}    # End - foreach my $base (@alternatives) {
+										if ((!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}))
+										{
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
 											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+										}
 									}
 								}    # End - if ( $ref eq $line[5] ) {
 							}
@@ -544,104 +551,110 @@ sub checkDeletions {
 									{
 										my $match = ( $start - $line[2] ) . "," . ( $end - $line[2] );
 
-										my @deletions = split( /\|/, $line[5] );
+										if($line[5] =~ /^0$/) {
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth($totRD, $minRDs[0] );
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
+											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+										}else {
+											my @deletions = split( /\|/, $line[5] );
 
-										# Go through all deletions
-										for ( my $i = 0 ; $i < scalar(@deletions) ; $i++ ) {
-											if ( $deletions[$i] =~ m/$match/ ) {
+											# Go through all deletions
+											for (my $i = 0; $i < scalar( @deletions ); $i++) {
+												if ($deletions[$i] =~ m/$match/) {
 
-												my $deleteRD = my $tmp = 0;
+													my $deleteRD = my $tmp = 0;
 
-												# Split the deletion on ( which gives the read depth for the deletion and the rest
-												( $deleteRD, $tmp ) =
-												  split( /\(/, $deletions[$i] );
+													# Split the deletion on ( which gives the read depth for the deletion and the rest
+													( $deleteRD, $tmp ) =
+														split( /\(/, $deletions[$i] );
 
-												## Calculate the total read depth of reference and variant
-												#my $totRD = $ref{ $line[1] }{ $line[2] }{'refRD'} + $deleteRD;
+													## Calculate the total read depth of reference and variant
+													#my $totRD = $ref{ $line[1] }{ $line[2] }{'refRD'} + $deleteRD;
 
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth( $totRD, $minRDs[0] );
-												if ( $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok" ) {
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth($totRD, $minRDs[0] );
+													if ($cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok") {
 
-													# Check that the variant allele ratio is high enough
-													if ( $deleteRD / $totRD >= $minVariantAlleleRatio ) {
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd'}             = $ref{ $line[1] }{ $line[2] }{'refRD'};
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}          = "yes";
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'varAlleleRatio'} = $deleteRD / $totRD;
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_rd'}         = $deleteRD;
+														# Check that the variant allele ratio is high enough
+														if ($deleteRD / $totRD >= $minVariantAlleleRatio) {
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd'} = $ref{ $line[1] }{ $line[2] }{'refRD'};
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "yes";
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'varAlleleRatio'} = $deleteRD / $totRD;
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_rd'} = $deleteRD;
 
-														my @ampliconOptions = split( /\|/, $line[7] );
-														foreach my $am (@ampliconOptions) {
+															my @ampliconOptions = split( /\|/, $line[7] );
+															foreach my $am (@ampliconOptions) {
 
-															if ( $am =~ m/$match/ ) {
+																if ($am =~ m/$match/) {
 
-																# Count the number of plus and minus amplicons for the variant
-																my ( $amp_plus, $amp_minus ) = countAmplicons( $am, "del" );
-																if ( $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} ) {
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  .= "_" . $amp_plus;
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} .= "_" . $amp_minus;
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} .= "_" . $am;
+																	# Count the number of plus and minus amplicons for the variant
+																	my ( $amp_plus, $amp_minus ) = countAmplicons( $am,	"del" );
+																	if ($cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}) {
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} .= "_".$amp_plus;
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} .= "_".$amp_minus;
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} .= "_".$am;
+																	}
+																	else {
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = $amp_plus;
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = $amp_minus;
+																		$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = $am;
+																	}
 																}
-																else {
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = $amp_plus;
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = $amp_minus;
-																	$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = $am;
-																}
+															}
+
+															# If tot_rd is undefined or the $tot_rd is lower than the already saved total read depth update it
+															if (!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
+																|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'})
+															{
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
+															}
+														}
+														else {
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = "-";
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
+															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
+
+															# If tot_rd is undefined or the $tot_rd is lower than the already saved total read depth update it
+															if (!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
+																|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'})
+															{
+																$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
 															}
 														}
 
-														# If tot_rd is undefined or the $tot_rd is lower than the already saved total read depth update it
-														if ( !$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
-															|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} )
-														{
-															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
-														}
 													}
 													else {
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}         = "no";
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = "-";
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "not analyzable";
+														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = "-";
 														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
 														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
 
 														# If tot_rd is undefined or the $tot_rd is lower than the already saved total read depth update it
-														if ( !$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
-															|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} )
+														if (!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
+															|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'})
 														{
 															$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
 														}
 													}
-
 												}
-												else {
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}         = "not analyzable";
-													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = "-";
+											}    # End - foreach my $base (@alternatives) {
+											if (!$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}) {
+
+												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth($ref{ $line[1] }{ $line[2] }{'refRD'}, $minRDs[0] );
+												if ($cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok") {
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "no";
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = "-";
 													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
 													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
-
-													# If tot_rd is undefined or the $tot_rd is lower than the already saved total read depth update it
-													if ( !$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'}
-														|| $totRD < $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} )
-													{
-														$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $totRD;
-													}
 												}
+												else {
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} = "not analyzable";
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'} = "-";
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
+													$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
+												}
+												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $ref{ $line[1] }{ $line[2] }{'refRD'};
 											}
-										}    # End - foreach my $base (@alternatives) {
-										if ( !$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'} ) {
-
-											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} = checkReadDepth( $ref{ $line[1] }{ $line[2] }{'refRD'}, $minRDs[0] );
-											if ( $cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'rd_stat'} eq "ok" ) {
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}         = "no";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = "-";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
-											}
-											else {
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'found'}         = "not analyzable";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_plus'}  = "-";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amp_minus'} = "-";
-												$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'var_amplicons'} = "-";
-											}
-											$cosmic{ $line[1] }{$start}{$end}{$ref}{$var}{'tot_rd'} = $ref{ $line[1] }{ $line[2] }{'refRD'};
 										}
 									}
 								}
