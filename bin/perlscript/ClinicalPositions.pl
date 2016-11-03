@@ -670,7 +670,7 @@ sub checkDeletions {
 sub checkInsertions {
 	my ($lineKey) = @_;
 	my @line = @$lineKey;
-	
+
 	# Take the total read depth as the sum of all reads at this position
 	my $totRD = $ref{ $line[1] }{ $line[2] }{'totRD'};
 	# Go through all cosmic start and end positions for this chromosome
@@ -812,13 +812,10 @@ sub printCosmicPos {
 						if ( $link->{'found'} ) {
 							print OUTPUT "\t" . $link->{'found'};
 						}
-						else { print OUTPUT "\tnot analyzable"; }
+						else { print OUTPUT "\tnot in design"; }
 						foreach my $minRD (@minRDs) {
 							if ( defined($link->{'tot_rd'})) {
 								print OUTPUT "\t" . checkReadDepth( $link->{'tot_rd'}, $minRD );
-							}
-							elsif(!defined($link->{'found'})) {
-								print OUTPUT "\tnot covered by design";
 							}
 							else { print OUTPUT "\t-"; }
 						}
@@ -842,11 +839,11 @@ sub printCosmicPos {
 							print OUTPUT "\t" . $link->{'varAlleleRatio'};
 						}
 						else { print OUTPUT "\t-"; }
-						
+
 						print OUTPUT "\t-"; # Ratio in 1000G
-						
+
 						print OUTPUT "\t-"; # exonic type
-						
+
 						if ( $link->{'cds'} ) {
 							print OUTPUT "\t" . $link->{'cds'};
 						}
