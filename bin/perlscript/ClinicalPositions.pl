@@ -822,9 +822,6 @@ sub printCosmicPos {
 						if (defined($link->{'tot_rd'})) {
 							print OUTPUT "\t" . $link->{'tot_rd'};
 						}
-						elsif(!defined($link->{'found'})) {
-							print OUTPUT "\tnot covered by design";
-						}
 						else { print OUTPUT "\t-"; }
 						print OUTPUT "\t" . $chr . "\t" . $start . "\t" . $end . "\t" . $ref . "\t" . $var;
 						if ( $link->{'var_rd'} ) {
