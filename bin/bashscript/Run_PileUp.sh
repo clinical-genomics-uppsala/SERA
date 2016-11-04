@@ -3,8 +3,8 @@
 # Script to run pileup
 #
 #SBATCH -p devcore  -n 1
-#SBATCH -t 02:00:00
-##SBATCH -p core -t 00:15:00 --qos=short
+#SBATCH -t 01:00:00
+##SBATCH -p devcore -t 00:15:00 --qos=short
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
