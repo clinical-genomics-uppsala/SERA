@@ -3,7 +3,7 @@
 # Script running bwa
 #
 #SBATCH -p devcore  -n 3
-#SBATCH -t 02:00:00
+#SBATCH -t 01:00:00
 ##SBATCH --qos=short
 
 # Include functions
@@ -36,36 +36,21 @@ if [ $PLATFORM = "Illumina" ]; then
 	# Check that the output file doesn't exist or if force is given
 	if [[ ! -e $ROOT_PATH/Bwa/${SAMPLEID}.sam || ! -z $FORCE ]]; then
 		# Check that input files exist
-		if [ "$MATE_PAIR" == "true" ]; then
-            if [[ -e ${PE1} && ${PE2} ]]; then
-                # Get the date when the analysis is run
-                now=$('date' +"%Y%m%d")
-                bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;
-                samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-                samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
+		if [[ -e ${PE1} && ${PE2} ]]; then
+			# Get the date when the analysis is run			
+			now=$('date' +"%Y%m%d")
+			bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;
+			samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
+			samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
+			
+						
+			SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
+			SuccessLog "${SAMPLEID}" samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
 
-
-                SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
-                SuccessLog "${SAMPLEID}" samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-
-            else
-                ErrorLog "${SAMPLEID}" "${PE1} and/or ${PE2} do NOT exist!";
-            fi
-        else
-            if [[ -e ${PE1} ]]; then
-                # Get the date when the analysis is run
-                now=$('date' +"%Y%m%d")
-                bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;
-                samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-                samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
-
-
-                SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
-                SuccessLog "${SAMPLEID}" samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-            else
-                ErrorLog "${SAMPLEID}" "${PE1} do NOT exist!";
-            fi
-        fi
+		else
+			ErrorLog "${SAMPLEID}" "${PE1} and/or ${PE2} do NOT exist!";
+		fi
+		
 	else
 		ErrorLog "${SAMPLEID}" "$ROOT_PATH/Bwa/${SAMPLEID}.sam already exists and force was NOT used!"; 
 
