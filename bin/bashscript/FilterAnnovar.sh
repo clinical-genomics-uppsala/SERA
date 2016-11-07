@@ -25,7 +25,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 		if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 			if [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
 				if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
-					if [[ $TYPE == "ovarial" ]]; then
+					if [[ ${TISSUE} == "ovarial" ]]; then
 						# Check if there are particular regions we want to keep						
 						if [[ $KEEPFILE == "false" ]]; then
 							cat  $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 1.0
@@ -46,7 +46,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 					fi
 
 				elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
-					if [[ $TYPE == "ovarial" ]]; then
+					if [[ ${TISSUE} == "ovarial" ]]; then
 						# Check if there are particular regions we want to keep	
 						if [[ $KEEPFILE == "false" ]]; then
 							cat  $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 1.0
@@ -71,7 +71,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 			else
 				if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
 					
-					if [[ $TYPE == "ovarial" ]]; then
+					if [[ ${TISSUE} == "ovarial" ]]; then
 						# Check if there are particular regions we want to keep	
 						if [[ $KEEPFILE == "false" ]]; then
 							cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 1.0
@@ -89,7 +89,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 
 				elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
 					
-					if [[ $TYPE == "ovarial" ]]; then
+					if [[ ${TISSUE} == "ovarial" ]]; then
 						# Check if there are particular regions we want to keep	
 						if [[ $KEEPFILE == "false" ]]; then
 							cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 1.0

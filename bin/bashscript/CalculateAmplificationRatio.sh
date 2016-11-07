@@ -13,14 +13,14 @@ if [ ! -d "$ROOT_PATH/Amplification" ]; then
 fi
 
 if [[ ${AMPLIFICATIONFILE} != "false" && ${BACKGROUNDFILE} != "false" ]]; then
-	if [[ ${TYPE} == "lung" || ${TYPE} == "colon" ]]; then
+	if [[ ${TISSUE} == "lung" || ${TISSUE} == "colon" ]]; then
 		if [ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]; then
-			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -chr2nc $NC2chr -t ${TYPE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
+			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -chr2nc $NC2chr -t ${TISSUE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 			sort -k3,3 -k4,4n $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt > $ROOT_PATH/Amplification/${SAMPLEID}.amplification.sorted.txt
 			rm $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 		
 		elif [ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]; then
-			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.variations -chr2nc $NC2chr -t ${TYPE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
+			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.variations -chr2nc $NC2chr -t ${TISSUE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 			sort -k3,3 -k4,4n $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt > $ROOT_PATH/Amplification/${SAMPLEID}.amplification.sorted.txt
 			rm $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 

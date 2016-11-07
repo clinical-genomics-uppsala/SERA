@@ -20,7 +20,7 @@ fi
 if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
-			if [[ ${TYPE} == "colon" ]]; then
+			if [[ ${TISSUE} == "colon" ]]; then
 				if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ]]; then
 					if [[ ! -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.ampliconmapped.txt  || ! -z $FORCE ]]; then
 						python $SERA_PATH/bin/pythonscript/ExtractMSImarkers.py -i $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput -o $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.ampliconmapped.txt --tgfbr2Ratio_1bp 0.1 --tgfbr2Ratio_2bp 0.05 --acvr2aRatio_1bp 0.1 --acvr2aRatio_2bp 0.05;
