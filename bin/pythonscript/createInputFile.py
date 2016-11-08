@@ -101,18 +101,18 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['sNummer'] = "S" + str(count)
             info[lineSplit[1]]['design'] = lineSplit[2]
             info[lineSplit[1]]['refseq'] = lineSplit[3]
-            info[lineSplit[1]]['cutadapt'] = lineSplit[3]
-            info[lineSplit[1]]['type'] = lineSplit[4].lower().strip()
-            info[lineSplit[1]]['tissue'] = lineSplit[5].lower().strip()
-            info[lineSplit[1]]['barcodeI7'] = lineSplit[6]
-            info[lineSplit[1]]['barcodeI5'] = lineSplit[7]
+            info[lineSplit[1]]['cutadapt'] = lineSplit[4]
+            info[lineSplit[1]]['type'] = lineSplit[5].lower().strip()
+            info[lineSplit[1]]['tissue'] = lineSplit[6].lower().strip()
+            info[lineSplit[1]]['barcodeI7'] = lineSplit[7]
+            info[lineSplit[1]]['barcodeI5'] = lineSplit[8]
 
-            if len(lineSplit) > 8 and args.normal:
+            if len(lineSplit) > 9 and args.normal:
                 parser.print_usage()
                 print("\nERROR: The normal has to be given either in the file or the commandline - NOT both!\n\n")
                 sys.exit()
             else:
-                if len(lineSplit) > 8:
+                if len(lineSplit) > 9:
                     info[lineSplit[1]]['normal'] = lineSplit[6]
                 else:
                     if args.normal:
@@ -404,7 +404,8 @@ with (open(output, mode = 'w'))as outfile:
     for sample in infoSort:
         outfile.write("let COUNT=COUNT+1;\n")
         outfile.write ("SAMPLEID_ARR_[${COUNT}]=\"" + sample + "\";\n")
-        outfile.write ("SEQUENCING_TAG_ARR_[${COUNT}]=\"" + info[sample]['barcode'] + "\";\n")
+        outfile.write ("BARCODE_I7_ARR_[${COUNT}]=\"" + info[sample]['barcodeI7'] + "\";\n")
+        outfile.write ("BARCODE_I5_ARR_[${COUNT}]=\"" + info[sample]['barcodeI5'] + "\";\n")
         outfile.write ("CUTADAPT_PREFIX_ARR_[${COUNT}]=\"" + info[sample]['cutadapt'] + "\";\n")
         outfile.write ("RAWDATA_PE1_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R1_001.fastq.gz" + "\";\n")
         outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R2_001.fastq.gz" + "\";\n")

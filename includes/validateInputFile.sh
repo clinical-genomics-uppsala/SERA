@@ -52,7 +52,8 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
 	if [ -z "$CLINICAL_FLAGS" ]; then settingserror "Clinical flags have to be set (or false)"; ERROR=1; fi;
 	if [ -z "$PINDEL_CLINICAL_FLAGS" ]; then settingserror "Pindel clinical flags have to be set (or false)"; ERROR=1; fi;
 	if [ -z "$REGION_CLINICAL_FLAGS" ]; then settingserror "Region clinical flags have to be set (or false)"; ERROR=1; fi;
-	if [ -z "${SEQUENCING_TAG_ARR_[${i}]}" ]; then settingserror "Sequencing tag must be specified or set to false for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
+	if [ -z "${BARCODE_I7_ARR_[${i}]}" ]; then settingserror "Sequencing tag must be specified or set to false for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
+    if [ -z "${BARCODE_I5_ARR_[${i}]}" ]; then settingserror "Sequencing tag must be specified or set to false for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
 
 
 	# more complex
