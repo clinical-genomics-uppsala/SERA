@@ -393,15 +393,15 @@ with (open(output, mode = 'w'))as outfile:
     outfile.write("export SNPMANIAFLAGS=\"" + args.snpmaniaFlags + "\";\n")
     outfile.write("export TUMOR_NORMAL_FLAGS=\"" + args.tumorNormalFlags + "\";\n")
     outfile.write("export ANNOVAR_FLAGS=\"" + args.annovarFlags + "\";\n")
-    outfile.write("export PINDEL_ANNOVAR_FLAGS=\"" + args.pindelAnnovarFlags + "\";\n")
     outfile.write("export ANNOVAR_PLASMA_FLAGS=\"" + args.annovarPlasmaFlags + "\";\n")
+    outfile.write("export PINDEL_ANNOVAR_FLAGS=\"" + args.pindelAnnovarFlags + "\";\n")
     outfile.write("export PINDEL_ANNOVAR_PLASMA_FLAGS=\"" + args.pindelAnnovarPlasmaFlags + "\";\n")
 
     outfile.write("\n## Clinical filtering\n")
     outfile.write("export CLINICAL_FLAGS=\"" + args.clinicalFlags + "\";\n")
-    outfile.write("export PINDEL_CLINICAL_FLAGS=\"" + args.pindelClinicalFlags + "\";\n")
     outfile.write("export CLINICAL_PLASMA_FLAGS=\"" + args.clinicalPlasmaFlags + "\";\n")
-    outfile.write("export PINDEL_CLINICAL__PLASMA_FLAGS=\"" + args.pindelClinicalPlasmaFlags + "\";\n")
+    outfile.write("export PINDEL_CLINICAL_FLAGS=\"" + args.pindelClinicalFlags + "\";\n")
+    outfile.write("export PINDEL_CLINICAL_PLASMA_FLAGS=\"" + args.pindelClinicalPlasmaFlags + "\";\n")
     outfile.write("export REGION_CLINICAL_FLAGS=\"" + args.regionClinicalFlags + "\";\n")
 
 
