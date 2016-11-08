@@ -21,17 +21,32 @@ if [ ${HOTSPOTFILE}!="false" ]; then
 	if [ ${READS} == "true" ]; then
 		# Check that the call type are set to h.sapiens
 		if [ ${CALL_TYPE} == "h.sapiens" ]; then
-	
-			if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
-				echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
-				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
+            if [ ${TYPE} == "ffpe" ]; then
+                if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
+    				echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
+    				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
 
-			elif  [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
-				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
-				
-			else
-				ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
-			fi
+    			elif  [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
+    				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
+    				
+    			else
+    				ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
+    			fi
+            elif [ ${TYPE} == "plasma" ]; then
+                if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
+                    echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
+                    perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
+
+                elif  [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
+                    echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
+                    perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
+                    
+                else
+                    ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
+                fi
+            else
+                ErrorLog "$SAMPLEID" "Only implemented for TYPE ffpe and plasma so far!!!"
+            fi
 		else
 			ErrorLog "$SAMPLEID" "The analysis is only supported for CALL_TYPE h.sapiens!";
 		fi

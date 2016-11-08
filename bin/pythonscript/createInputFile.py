@@ -32,9 +32,13 @@ parser.add_argument('-pindelFlags', '--pindelFlags', help = 'Set parameters for 
 parser.add_argument('-snpmaniaFlags', '--snpmaniaFlags', help = 'Set the SNPmania parameters. Default: -a 5 -q 20 -e 0 -am', type = str, default = "-a 5 -q 20 -e 0 -am")
 parser.add_argument('-tumorNormalFlags', '--tumorNormalFlags', help = 'Set parameters for pre-annovar filtering when both tumor and normal are present. Default: -tminRD 20 -nminRD 20 -tminVarRatio 0.10 -nHomoRefRatio 0.95 -am 5', type = str, default = "-tminRD 20 -nminRD 20 -tminVarRatio 0.10 -nHomoRefRatio 0.95 -am 5")
 parser.add_argument('-annovarFlags', '--annovarFlags', help = 'Set parameters for pre-annovar filtering when only tumor is present. Default: -minRD 20 -minVarRatio 0.01 -am 5', type = str, default = " -minRD 20 -minVarRatio 0.01 -am 5")
+parser.add_argument('-annovarPlasmaFlags', '--annovarPlasmaFlags', help = 'Set parameters for pre-annovar filtering when only tumor is present. Default: -minRD 20 -minVarRatio 0.001', type = str, default = " -minRD 20 -minVarRatio 0.001")
+parser.add_argument('-pindelAnnovarFlags', '--pindelAnnovarPlasmaFlags', help = 'Set parameters for pre-annovar filtering of pindel results. Default: -m 20 -v 0.01', type = str, default = "-m 20 -v 0.01")
+parser.add_argument('-pindelAnnovarPlasmaFlags', '--pindelAnnovarFlags', help = 'Set parameters for pre-annovar filtering of pindel results. Default: -m 20 -v 0.001', type = str, default = "-m 20 -v 0.001")
 parser.add_argument('-clinicalFlags', '--clinicalFlags', help = 'Set parameters for extracting clinical positions. Default: -minRD 30,300 -minVarRatio 0.01 -minAmpRD 5', type = str, default = "-minRD 30,300 -minVarRatio 0.01 -minAmpRD 5")
+parser.add_argument('-clinicalPlasmaFlags', '--clinicalPlasmaFlags', help = 'Set parameters for extracting clinical positions. Default: -minRD 30,300 -minVarRatio 0.001', type = str, default = "-minRD 30,300 -minVarRatio 0.001")
 parser.add_argument('-pindelClinicalFlags', '--pindelClinicalFlags', help = 'Set parameters for extracting indels from pindel in clinical genes. Default: -minRD 30,300 -minVarRatio 0.01', type = str, default = "-minRD 30,300 -minVarRatio 0.01")
-parser.add_argument('-pindelAnnovarFlags', '--pindelAnnovarFlags', help = 'Set parameters for pre-annovar filtering of pindel results. Default: -m 20 -v 0.01', type = str, default = "-m 20 -v 0.01")
+parser.add_argument('-pindelClinicalPlasmaFlags', '--pindelClinicalPlasmaFlags', help = 'Set parameters for extracting indels from pindel in clinical genes. Default: -minRD 30,300 -minVarRatio 0.001', type = str, default = "-minRD 30,300 -minVarRatio 0.001")
 parser.add_argument('-clinicalInfoFile', '--clinicalInfoFile', help = 'File with clinical hotspot and indel filenames per cancer type. If not wanted set to false! Default: clinicalCancerTypeFiles.txt', type = str, default = "clinicalCancerTypeFiles.txt")
 parser.add_argument('-regionClinicalFlags', '--regionClinicalFlags', help = 'Set parameters for reporting all positions in whole regions. Default: -minRD 30,300', type = str, default = "-minRD 30,300")
 
@@ -94,18 +98,20 @@ with open(args.infile, 'r') as infile:
             lineSplit = line.split(splitPattern)  # Split line by tab
             info[lineSplit[1]] = {}
             info[lineSplit[1]]['exp'] = lineSplit[0]
-            info[lineSplit[1]]['barcode'] = lineSplit[2]
             info[lineSplit[1]]['sNummer'] = "S" + str(count)
-            info[lineSplit[1]]['design'] = lineSplit[3]
-            info[lineSplit[1]]['refseq'] = lineSplit[4]
-            info[lineSplit[1]]['type'] = lineSplit[5].lower().strip()
+            info[lineSplit[1]]['design'] = lineSplit[2]
+            info[lineSplit[1]]['refseq'] = lineSplit[3]
+            info[lineSplit[1]]['type'] = lineSplit[4].lower().strip()
+            info[lineSplit[1]]['tissue'] = lineSplit[5].lower().strip()
+            info[lineSplit[1]]['barcodeI7'] = lineSplit[6]
+            info[lineSplit[1]]['barcodeI5'] = lineSplit[7]
 
-            if len(lineSplit) > 6 and args.normal:
+            if len(lineSplit) > 8 and args.normal:
                 parser.print_usage()
                 print("\nERROR: The normal has to be given either in the file or the commandline - NOT both!\n\n")
                 sys.exit()
             else:
-                if len(lineSplit) > 6:
+                if len(lineSplit) > 8:
                     info[lineSplit[1]]['normal'] = lineSplit[6]
                 else:
                     if args.normal:
@@ -379,11 +385,17 @@ with (open(output, mode = 'w'))as outfile:
     outfile.write("export TUMOR_NORMAL_FLAGS=\"" + args.tumorNormalFlags + "\";\n")
     outfile.write("export ANNOVAR_FLAGS=\"" + args.annovarFlags + "\";\n")
     outfile.write("export PINDEL_ANNOVAR_FLAGS=\"" + args.pindelAnnovarFlags + "\";\n")
+    outfile.write("export ANNOVAR_PLASMA_FLAGS=\"" + args.annovarPlasmaFlags + "\";\n")
+    outfile.write("export PINDEL_ANNOVAR_PLASMA_FLAGS=\"" + args.pindelAnnovarPlasmaFlags + "\";\n")
 
     outfile.write("\n## Clinical filtering\n")
     outfile.write("export CLINICAL_FLAGS=\"" + args.clinicalFlags + "\";\n")
     outfile.write("export PINDEL_CLINICAL_FLAGS=\"" + args.pindelClinicalFlags + "\";\n")
+    outfile.write("export CLINICAL_PLASMA_FLAGS=\"" + args.clinicalPlasmaFlags + "\";\n")
+    outfile.write("export PINDEL_CLINICAL__PLASMA_FLAGS=\"" + args.pindelClinicalPlasmaFlags + "\";\n")
     outfile.write("export REGION_CLINICAL_FLAGS=\"" + args.regionClinicalFlags + "\";\n")
+
+
 
     outfile.write('\n################################\n### SAMPLE SETTINGS\n################################\n\n')
 
@@ -405,7 +417,8 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("KEEPFILE_ARR_[${COUNT}]=\"" + info[sample]['keep'] + "\";\n")
         outfile.write ("AMPLIFICATIONFILE_ARR_[${COUNT}]=\"" + info[sample]['amplification'] + "\";\n")
         outfile.write ("BACKGROUNDFILE_ARR_[${COUNT}]=\"" + info[sample]['background'] + "\";\n")
-        outfile.write ("TYPE_ARR_[${COUNT}]=\"" + info[sample]['tissue'] + "\";\n")
+        outfile.write ("TYPE_ARR_[${COUNT}]=\"" + info[sample]['type'] + "\";\n")
+        outfile.write ("TISSUE_ARR_[${COUNT}]=\"" + info[sample]['tissue'] + "\";\n")
         outfile.write ("\n")
     if not outfile.closed:
         outfile.close()
