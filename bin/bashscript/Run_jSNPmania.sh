@@ -35,7 +35,7 @@ if [ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]; then
 		elif [ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]; then
 			if [[ ! -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations || ! -z $FORCE ]]; then
 				if [ -e $SERA_PATH/res/Convert2SNPmaniaHeader.sam ]; then
-					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS} >> $ROOT_PATH/SNPmania/jSNPmania_output.txt;
+					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS} >> $ROOT_PATH/SNPmania/jSNPmania_output.txt;
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi
