@@ -9,17 +9,17 @@
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
-if [ ! -d $ROOT_PATH/AmpliconCoverage ]; then
-	mkdir $ROOT_PATH/AmpliconCoverage
-fi
-
-if [ ! -d $ROOT_PATH/AmpliconMapped ]; then
-	mkdir $ROOT_PATH/AmpliconMapped
-fi
-
-# Check that platform is set to Illumina.
-if [[ ${PLATFORM} == "Illumina" ]]; then
-    if [ ${TYPE} == "ffpe" ]; then
+if [ ${TYPE} == "ffpe" ]; then
+    if [ ! -d $ROOT_PATH/AmpliconCoverage ]; then
+    	mkdir $ROOT_PATH/AmpliconCoverage
+    fi
+    
+    if [ ! -d $ROOT_PATH/AmpliconMapped ]; then
+    	mkdir $ROOT_PATH/AmpliconMapped
+    fi
+    
+    # Check that platform is set to Illumina.
+    if [[ ${PLATFORM} == "Illumina" ]]; then
     	# Check if the selection file exists in bed-format, if not create
     	if [[ ! -e $ROOT_PATH/refFiles/$REFSEQ.selection.bed || ! -z $FORCE ]]; then
     		${SERA_PATH}/bin/awkscript/sedd2bed.awk -v name="$REFSEQ" -v desc="Selection file" $NC2chr $ROOT_PATH/refFiles/$REFSEQ.selection > $ROOT_PATH/refFiles/$REFSEQ.selection.bed;
@@ -56,13 +56,14 @@ if [[ ${PLATFORM} == "Illumina" ]]; then
     	else
     		ErrorLog "${SAMPLEID}" "READS has to be true and MOLECULES false in the input file for the analysis to run!";
     	fi
-    elif [ ${TYPE} == "plasma" ]; then
-        SuccessLog "${SAMPLEID}" "Ampliconmapping is not needed for plasma samples - skipping!";
+        
     else
-        ErrorLog "${SAMPLEID}" "ffpe and plasma are the only types supported so far!";
+    	ErrorLog ${SAMPLEID} "So far only supported for Illumina!";
     fi
+elif [ ${TYPE} == "plasma" ]; then
+    SuccessLog "${SAMPLEID}" "Ampliconmapping is not needed for plasma samples - skipping!";
 else
-	ErrorLog ${SAMPLEID} "So far only supported for Illumina!";
+    ErrorLog "${SAMPLEID}" "ffpe and plasma are the only types supported so far!";
 fi
 # Check if readsVSmolecules worked
 if [ "$?" != "0" ]; then
