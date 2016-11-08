@@ -107,6 +107,8 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['barcodeI7'] = lineSplit[7]
             info[lineSplit[1]]['barcodeI5'] = lineSplit[8]
 
+            if info[lineSplit[1]]['cutadapt'] == "":
+                info[lineSplit[1]]['cutadapt'] = "false"
             if info[lineSplit[1]]['barcodeI7'] == "":
                 info[lineSplit[1]]['barcodeI7'] = "false"
             if info[lineSplit[1]]['barcodeI5'] == "":
@@ -417,8 +419,14 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R2_001.fastq.gz" + "\";\n")
         outfile.write ("RAWDATA_INDEX_ARR_[${COUNT}]=\"false\";\n")
         outfile.write ("REFSEQ_ARR_[${COUNT}]=\"" + info[sample]['refseq'] + "\";\n")
-        outfile.write ("ROIFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Regions.bed" + "\";\n")
-        outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Amplicons.bed" + "\";\n")
+        if re.match(info[sample]['type'], "ffpe"):
+            outfile.write ("ROIFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Regions.bed" + "\";\n")
+        else:
+            outfile.write ("ROIFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
+        if re.match(info[sample]['type'], "ffpe"):
+            outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Amplicons.bed" + "\";\n")
+        else:
+            outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
         outfile.write ("NORMAL_SAMPLEID_ARR_[${COUNT}]=\"" + info[sample]['normal'] + "\";\n")
         outfile.write ("HOTSPOTFILE_ARR_[${COUNT}]=\"" + info[sample]['hotspot'] + "\";\n")
         outfile.write ("INDELFILE_ARR_[${COUNT}]=\"" + info[sample]['indel'] + "\";\n")
