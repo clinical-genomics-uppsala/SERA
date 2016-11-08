@@ -107,6 +107,12 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['barcodeI7'] = lineSplit[7]
             info[lineSplit[1]]['barcodeI5'] = lineSplit[8]
 
+            if info[lineSplit[1]]['barcodeI7'] == "":
+                info[lineSplit[1]]['barcodeI7'] = "false"
+            if info[lineSplit[1]]['barcodeI5'] == "":
+                info[lineSplit[1]]['barcodeI5'] = "false"
+
+
             if len(lineSplit) > 9 and args.normal:
                 parser.print_usage()
                 print("\nERROR: The normal has to be given either in the file or the commandline - NOT both!\n\n")
