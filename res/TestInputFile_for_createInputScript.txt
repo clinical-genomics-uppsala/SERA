@@ -3,6 +3,6 @@ Experimentnamn	Prov	Barcode	Design	Refseq	Normal
 2014_test	2	AAACCGGT	DesignName	OurReferenceFilename	Lung	annovar
 
 # Suggestion for adaption to plasma analysis
-Experimentnamn  Prov    Design  Refseq  Typ Vävnad  Barcode I7  Barcode I5
-2014_test   1   DesignName  OurReferenceFilename    FFPE    Colon   CGCATACA
-2014_test   2   DesignName  OurReferenceFilename    Plasma    lung   AAACCGGT    GCGCTTAA
+Experimentnamn  Prov    Design  Refseq     Cutadapt Typ Vävnad  Barcode I7  Barcode I5
+2014_test   1   DesignName  OurReferenceFilename    false    FFPE    Colon   CGCATACA
+2014_test   2   DesignName  OurReferenceFilename    cp023_160928    Plasma    lung   AAACCGGT    GCGCTTAA

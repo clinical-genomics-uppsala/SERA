@@ -101,6 +101,7 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['sNummer'] = "S" + str(count)
             info[lineSplit[1]]['design'] = lineSplit[2]
             info[lineSplit[1]]['refseq'] = lineSplit[3]
+            info[lineSplit[1]]['cutadapt'] = lineSplit[3]
             info[lineSplit[1]]['type'] = lineSplit[4].lower().strip()
             info[lineSplit[1]]['tissue'] = lineSplit[5].lower().strip()
             info[lineSplit[1]]['barcodeI7'] = lineSplit[6]
@@ -122,7 +123,7 @@ with open(args.infile, 'r') as infile:
             # If clinical analysis is wanted add file names otherwise add false
             if not args.clinicalInfoFile.lower() == "false":
                 # ## COLON
-                if info[lineSplit[1]]['type'] == "colon" or info[lineSplit[1]]['type'] == "kolon" :
+                if info[lineSplit[1]]['tissue'] == "colon" or info[lineSplit[1]]['tissue'] == "kolon" :
                     info[lineSplit[1]]['tissue'] = "colon"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo['colon']['hotspot']):
@@ -160,7 +161,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['background']
 
                 # ## LUNG
-                elif info[lineSplit[1]]['type'] == "lung" or info[lineSplit[1]]['type'] == "lunga":
+                elif info[lineSplit[1]]['tissue'] == "lung" or info[lineSplit[1]]['tissue'] == "lunga":
                     info[lineSplit[1]]['tissue'] = "lung"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["lung"]['hotspot']):
@@ -198,7 +199,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['background']
 
                 # ## GIST
-                elif info[lineSplit[1]]['type'] == "gist":
+                elif info[lineSplit[1]]['tissue'] == "gist":
                     info[lineSplit[1]]['tissue'] = "gist"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["gist"]['hotspot']):
@@ -236,7 +237,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[lineSplit[1]]['type'] == "ovarial":
+                elif info[lineSplit[1]]['tissue'] == "ovarial":
                     info[lineSplit[1]]['tissue'] = "ovarial"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['hotspot']):
@@ -274,7 +275,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['background']
 
                 # ## MELANOM
-                elif info[lineSplit[1]]['type'] == "melanom" or info[lineSplit[1]]['type'] == "melanoma":
+                elif info[lineSplit[1]]['tissue'] == "melanom" or info[lineSplit[1]]['tissue'] == "melanoma":
                     info[lineSplit[1]]['tissue'] = "melanom"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["melanom"]['hotspot']):
@@ -312,7 +313,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file" + info[lineSplit[1]]['type'] + ", so far only Lung and Colon are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file" + info[lineSplit[1]]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[lineSplit[1]]['hotspot'] = "false"
@@ -404,6 +405,7 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write("let COUNT=COUNT+1;\n")
         outfile.write ("SAMPLEID_ARR_[${COUNT}]=\"" + sample + "\";\n")
         outfile.write ("SEQUENCING_TAG_ARR_[${COUNT}]=\"" + info[sample]['barcode'] + "\";\n")
+        outfile.write ("CUTADAPT_PREFIX_ARR_[${COUNT}]=\"" + info[sample]['cutadapt'] + "\";\n")
         outfile.write ("RAWDATA_PE1_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R1_001.fastq.gz" + "\";\n")
         outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R2_001.fastq.gz" + "\";\n")
         outfile.write ("RAWDATA_INDEX_ARR_[${COUNT}]=\"false\";\n")
