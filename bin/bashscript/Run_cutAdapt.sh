@@ -39,7 +39,14 @@ if [ $PLATFORM = "Illumina" ]; then
 			ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
 		fi
 	else
-		ErrorLog "${SAMPLEID}" "Only implemented for paired-end sequencing!";
+		if [ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]; then
+
+            cutadapt -a $tTag -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz --minimum-length 1 $RAWDATA_PE1 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+            SuccessLog "${SAMPLEID}" "cutadapt -a $tTag -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz --minimum-length 1 $RAWDATA_PE1 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;"
+
+        else
+            ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz already exists and force was NOT used!";
+        fi
 	fi
 fi
 
