@@ -2,7 +2,7 @@
 #
 # Script to run jSNPmania
 #SBATCH -p devcore  -n 4
-#SBATCH -t 02:00:00
+#SBATCH -t 01:00:00
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
