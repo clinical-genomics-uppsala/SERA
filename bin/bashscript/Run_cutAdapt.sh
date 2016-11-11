@@ -38,24 +38,33 @@ if [ $PLATFORM = "Illumina" ]; then
             elif [[ ${TYPE} == "plasma" ]]; then
                 if [ ${CUTADAPT_PREFIX} != "false" ]; then
                 
+                    TMP1_PE1="$SNIC_TMP/pe1.tmp1.fastq.gz";
+                    TMP1_PE2="$SNIC_TMP/pe2.tmp1.fastq.gz";
+
                     TEMP1_PE1="$SNIC_TMP/pe1.temp1.fastq.gz";
                     TEMP1_PE2="$SNIC_TMP/pe2.temp1.fastq.gz";
-                    
+
                     TEMP2_PE1="$SNIC_TMP/pe1.temp2.fastq.gz";
                     TEMP2_PE2="$SNIC_TMP/pe2.temp2.fastq.gz";
-                    
+
                     TEMP3_PE1="$SNIC_TMP/pe1.temp3.fastq.gz";
                     TEMP3_PE2="$SNIC_TMP/pe2.temp3.fastq.gz";
-                    
+
                     cutadaptFile5prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_5ptrim.fa";
                     cutadaptFile3prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_3ptrim.fa";
+
+                    cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -o $TMP1_PE1 -p $TMP1_PE2 --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+                    SuccessLog "cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -o $TMP1_PE1 -p $TMP1_PE2 --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
                     
-                    cutadapt -g file:$cutadaptFile5prim -o $TEMP1_PE1 -p $TEMP1_PE2 ${RAWDATA_PE1} ${RAWDATA_PE2} --minimum-length 40 -e 0.12 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
-                    SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile5prim -o $TEMP1_PE1 -p $TEMP1_PE2 ${RAWDATA_PE1} ${RAWDATA_PE2} --minimum-length 40 -e 0.12 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
+                    cutadapt -g file:$cutadaptFile5prim -o $TEMP1_PE1 -p $TEMP1_PE2 $TMP1_PE1 $TMP1_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+                    SuccessLog "cutadapt -g file:$cutadaptFile5prim -o $TEMP1_PE1 -p $TEMP1_PE2 $TMP_PE1 $TMP_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
+
                     cutadapt -g file:$cutadaptFile5prim -o $TEMP2_PE2 -p $TEMP2_PE1 $TEMP1_PE2 $TEMP1_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile5prim -o $TEMP2_PE2 -p $TEMP2_PE2 $TEMP1_PE2 $TEMP1_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
+                    
                     cutadapt -g file:$cutadaptFile3prim -o $TEMP3_PE1 -p $TEMP3_PE2 $TEMP2_PE1 $TEMP2_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile3prim -o $TEMP3_PE1 -p $TEMP3_PE2 $TEMP2_PE1 $TEMP2_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
+                    
                     cutadapt -g file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
                 else
