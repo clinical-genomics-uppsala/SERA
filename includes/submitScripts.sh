@@ -70,6 +70,23 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
 	#export sample-specific variables
 	export SAMPLEID=${SAMPLEID_ARR_[${i}]} SEQUNCING_TAG=${SEQUNCING_TAG_ARR_[${i}]} RAWDATA_PE1=${RAWDATA_PE1_ARR_[${i}]} RAWDATA_PE2=${RAWDATA_PE2_ARR_[${i}]} RAWDATA_INDEX=${RAWDATA_INDEX_ARR_[${i}]} REFSEQ=${REFSEQ_ARR_[${i}]} ROIFILE=${ROIFILE_ARR_[${i}]} SELECTIONFILE=${SELECTIONFILE_ARR_[${i}]} NORMAL_SAMPLEID=${NORMAL_SAMPLEID_ARR_[${i}]}  HOTSPOTFILE=${HOTSPOTFILE_ARR_[${i}]} INDELFILE=${INDELFILE_ARR_[${i}]} TYPE=${TYPE_ARR_[${i}]} KEEPFILE=${KEEPFILE_ARR_[${i}]} REGIONFILE=${REGIONFILE_ARR_[${i}]} AMPLIFICATIONFILE=${AMPLIFICATIONFILE_ARR_[${i}]} BACKGROUNDFILE=${BACKGROUNDFILE_ARR_[${i}]};
 
+    # Add info about samples to pipeline log
+    echo -e "Sample="$SAMPLEID >> $PIPELINE_LOG;
+    echo -e "\tTissue="$TYPE >> $PIPELINE_LOG;
+    echo -e "\tRefseq="$REFSEQ >> $PIPELINE_LOG;
+    hotspots=($(echo $HOTSPOTFILE | tr "/" " "));
+    echo -e "\tHotspots"=${hotspots[${#hotspots[@]}-1]} >> $PIPELINE_LOG;
+    indels=($(echo $INDELFILE | tr "/" " "));
+    echo -e "\tIndels"=${indels[ ${#indels[@]}-1]} >> $PIPELINE_LOG;
+    keep=($(echo $KEEPFILE | tr "/" " "));
+    echo -e "\tTumor_suppressor_regions"=${keep[ ${#keep[@]}-1]} >> $PIPELINE_LOG;
+    regions=($(echo $REGIONFILE | tr "/" " "));
+    echo -e "\tIntronic_regions"=${regions[ ${#regions[@]}-1]} >> $PIPELINE_LOG;
+    amp=($(echo $AMPLIFICATIONFILE | tr "/" " "));
+    echo -e "\tAmplification_regions"=${amp[ ${#amp[@]}-1]} >> $PIPELINE_LOG;
+    backg=($(echo $BACKGROUNDFILE | tr "/" " "));
+    echo -e "\tBackground_regions"=${backg[ ${#backg[@]}-1]} >> $PIPELINE_LOG;
+    
 	# loop over all available steps
 	for j in $(seq 0 6 $NUMBOFSTEPS); do
 
