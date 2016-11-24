@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 
 # Read input options
 ROOT_PATH_INPUT=""; INPUT_FILE=""; INTERFACE="" CNV_FILE=""; FORCE="";
@@ -49,9 +49,41 @@ fi
 if [[ ! -d "$ROOT_PATH/slurmOutput" && $SOFTWARE = "SLURM" ]]; then
 	mkdir slurmOutput;
 fi
-if [ ! -e "$LOG_FILE" ]; then
-	echo -e "<?xml version='1.0'?>\n<document info=\"$title\">\n</document>" > $LOG_FILE;
-fi
+#if [ ! -e "$LOG_FILE" ]; then
+#	echo -e "<?xml version='1.0'?>\n<document info=\"$title\">\n</document>" > $LOG_FILE;
+#fi
+
+# Create log file for pipeline
+rpath=($(echo $ROOT_PATH | tr "/" " "));
+rtpath=${rpath[ ${#rpath[@]}-1]};
+export PIPELINE_LOG="$ROOT_PATH/PipelineLog_"$rtpath".txt";
+
+echo -e "#####General#####" > $PIPELINE_LOG;
+echo -e "Analysis_date="`date +%Y-%m-%d` >> $PIPELINE_LOG;
+echo -e "Analysis_start_time="`date +%H:%M:%S` >> $PIPELINE_LOG;
+echo -e "Number_of_samples="$count >> $PIPELINE_LOG;
+echo -e "\n#####Programs#####" >> $PIPELINE_LOG;
+echo -e "SERA_version="$SERA_PATH >> $PIPELINE_LOG;
+echo -e "SNPmania_version="$ROOT_PATH_JSNPMANIA >> $PIPELINE_LOG; 
+echo -e "Annovar_version="$ROOT_PATH_ANNOVAR >> $PIPELINE_LOG;
+echo -e "Pindel_version="$ROOT_PATH_PINDEL >> $PIPELINE_LOG;
+echo -e "\n#####Files#####" >> $PIPELINE_LOG;
+echo -e "Genome_used="$GENOME_REF >> $PIPELINE_LOG;
+echo -e "Fasta_reference="$GENOME_FASTA_REF >> $PIPELINE_LOG;
+echo -e "Blacklist_file="$BLACKLIST_FILE >> $PIPELINE_LOG;
+echo -e "Convert_NC_to_chr="$NC2chr >> $PIPELINE_LOG;
+echo -e "BlastDB="$BLAST_DB >> $PIPELINE_LOG;
+
+echo -e "\n#####Modules#####" >> $PIPELINE_LOG;
+moduleList=$( (module list) 2>&1 );
+for mod in $moduleList
+do
+    if [[ ${mod} != *\)* && ${mod} != *Currently* && ${mod} != *Loaded* && ${mod} != *Module* ]]; then
+        echo -e "Loaded_module="$mod >> $PIPELINE_LOG;
+    fi
+done
+
+echo -e "\n#####Samples#####" >> $PIPELINE_LOG;
 
 # inputfile information 
 let ADJ_SAMPLENUMBER=NUMBEROFSAMPLES+1;
