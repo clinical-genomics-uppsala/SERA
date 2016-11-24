@@ -29,10 +29,10 @@ if [ $PLATFORM = "Illumina" ]; then
     # Do paired end library or not
     if [ "$MATE_PAIR" == "true" ]; then
         # Check that input files exist, if not print error message
-        if [[ -e ${PE1} && ${PE2} ]]; then
-            fastqc -o FastQC $PE1 $PE2 > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
+        if [[ -e ${RAWDATA_PE1} && ${RAWDATA_PE2} ]]; then
+            fastqc -o FastQC ${RAWDATA_PE1} ${RAWDATA_PE2} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
         else
-            ErrorLog "${SAMPLEID}" "${PE1} and/or ${PE2} do NOT exist!";
+            ErrorLog "${SAMPLEID}" "${RAWDATA_PE1} and/or ${RAWDATA_PE2} do NOT exist!";
         fi
         if [[ ! -e $ROOT_PATH/FastQC/${SAMPLEID}.read1_fastqc.html || ! -e $ROOT_PATH/FastQC/${SAMPLEID}.read2_fastqc.html || ! -z $FORCE ]]; then
             # Check if cutadapted files exist - if so run cutadapt on them
@@ -48,10 +48,10 @@ if [ $PLATFORM = "Illumina" ]; then
         # If single reads are used only care about the first read
         else
             # Check that input file exists, if not print error message
-            if [ -e ${PE1} ]; then
-                fastqc -o FastQC $PE1 > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
+            if [ -e ${RAWDATA_PE1} ]; then
+                fastqc -o FastQC ${RAWDATA_PE1} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
             else 
-                ErrorLog "${SAMPLEID}" "${PE1} does NOT exist!";
+                ErrorLog "${SAMPLEID}" "${RAWDATA_PE1} does NOT exist!";
             fi
             
             # Check if cutadapted files exist - if so run cutadapt on them
