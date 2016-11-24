@@ -230,7 +230,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[lineSplit[1]]['type'] == "ovarial":
+                elif info[lineSplit[1]]['type'] == "ovarial" or info[lineSplit[1]]['type'] == "ovarian" or info[lineSplit[1]]['type'] == "ovary" :
                     info[lineSplit[1]]['tissue'] = "ovarial"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['hotspot']):
