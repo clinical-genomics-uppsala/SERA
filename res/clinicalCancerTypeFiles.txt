@@ -31,9 +31,9 @@ AMPLIFICATION=false
 BACKGROUND=false
 
 TYPE=ovarial
-HOTSPOT=false
-INDEL=false
-REGION=false
+HOTSPOT=Hotspots_Colon_20150902.csv
+INDEL=Indels_Colon_20150422.txt
+REGION=Regions_Colon_20160225.bed
 KEEP=false
-AMPLIFICATION=false
-BACKGROUND=false
+AMPLIFICATION=Amplification_Colon_20160226.txt
+BACKGROUND=Background_Colon_20160226.txt
