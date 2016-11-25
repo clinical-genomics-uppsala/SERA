@@ -20,12 +20,6 @@ if [ $PLATFORM = "Illumina" ]; then
 	# get sequencing tags
 	. $SERA_PATH/config/sequencingTags.sh;
 
-	# if file ending not fasta/fastq
-	zcat $RAWDATA_PE1 > $SNIC_TMP/pe1.fastq;
-	zcat $RAWDATA_PE2 > $SNIC_TMP/pe2.fastq;
-	RAWDATA_PE1="$SNIC_TMP/pe1.fastq";
-	RAWDATA_PE2="$SNIC_TMP/pe2.fastq";
-
 	# If MATE_PAIR is set to true in the input file 
 	if [ "$MATE_PAIR" == "true" ]; then
 		# Check that output file doesn't exist then run cutAdapt, if it does print error message
