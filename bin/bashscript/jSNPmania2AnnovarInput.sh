@@ -43,7 +43,7 @@ if [ ${READS} == "true" ]; then
     		else
     			ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
     		fi
-        elif ${TYPE} == "plasma" ]; then
+        elif [ ${TYPE} == "plasma" ]; then
             # Check if the output contain amplicon information
             if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
                 if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
