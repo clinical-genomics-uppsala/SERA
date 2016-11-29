@@ -13,6 +13,7 @@ parser.add_argument('-b', '--blacklistfile', help = 'File with blacklisted varia
 parser.add_argument('-k', '--intronickeepfile', help = 'File with blacklisted variants')
 parser.add_argument('-g', '--genome1000', help = 'Set the maximum allowed frequency for a variant to be kept, default 0', default = 0, type = float, required = False)
 parser.add_argument('-o', '--outputfile', help = 'Output txt file (Required)', required = True)
+parser.add_argument('-a', '--ampliconmapped', help = 'Set if data is ampliconmapped. Default: False', action = "store_true")
 
 args = parser.parse_args()
 
@@ -113,30 +114,55 @@ with open(args.inputfile, 'r') as infile:
 					if not re.match('^synonymous', line[8]):
 						# Keep those without a value in 1000G or a value that is lower than the given input
 						if re.match('-', str(line[13])) or float(line[13]) <= args.genome1000:
-							# Remove blacklist variants
-							if not chr in blacklist:
-								outfile.write("\t".join(line) + "\n")
-								done = 1
-							else:
-								if not start in blacklist[chr]:
-									outfile.write ("\t".join(line) + "\n")
+
+							varOK = "true"
+							# Check if ampliconmapped is set and if so check amplicon status
+							if args.ampliconmapped:
+								varOK = "false"
+								# Set amplicon info
+								ref_plus = ref_minus = var_plus = var_minus = 0
+								if not re.match('-', line[26]):
+									var_plus = int(line[26])
+								if not re.match('-', line[27]):
+									var_minus = int(line[27])
+								if not re.match('-', line[28]):
+									ref_plus = int(line[28])
+								if not re.match('-', line[29]):
+									ref_minus = int(line[29])
+
+								if (ref_plus + ref_minus) >= 3 & (var_plus + var_minus) >= 2:
+									varOK = "true"
+								elif (ref_plus + ref_minus) >= 1 & (var_plus + var_minus) >= 1:
+									varOK = "true"
+								elif (ref_plus + ref_minus) >= 0 & (var_plus + var_minus) >= 0:
+									varOK = "true"
+
+							# Check if the amplicon info is okey
+							if re.match('true', varOK):
+								# Remove blacklist variants
+								if not chr in blacklist:
+									outfile.write("\t".join(line) + "\n")
 									done = 1
 								else:
-									if not end in blacklist[chr][start]:
+									if not start in blacklist[chr]:
 										outfile.write ("\t".join(line) + "\n")
 										done = 1
 									else:
-										if not ref in blacklist[chr][start][end]:
+										if not end in blacklist[chr][start]:
 											outfile.write ("\t".join(line) + "\n")
 											done = 1
 										else:
-											if not var in blacklist[chr][start][end][ref]:
+											if not ref in blacklist[chr][start][end]:
 												outfile.write ("\t".join(line) + "\n")
 												done = 1
 											else:
-												print("Exist in blacklist!\n")
-												print ("\t" + "\t".join(line) + "\n")
-												done = 1
+												if not var in blacklist[chr][start][end][ref]:
+													outfile.write ("\t".join(line) + "\n")
+													done = 1
+												else:
+													print("Exist in blacklist!\n")
+													print ("\t" + "\t".join(line) + "\n")
+													done = 1
 
 
 				# If the variant isn't printed or in blacklist
@@ -174,4 +200,3 @@ with open(args.inputfile, 'r') as infile:
 																	print("Exist in blacklist!\n")
 																	print ("\t" + "\t".join(line) + "\n")
 																	done = 1
-

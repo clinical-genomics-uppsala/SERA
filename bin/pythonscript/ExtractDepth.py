@@ -12,6 +12,7 @@ parser.add_argument('-s', '--sample', help = 'Sample ID', type = str, required =
 parser.add_argument('-chr2nc', '--chr2nc', help = 'File with conversion between NC-number and chr', type = str, required = True)
 parser.add_argument('-header', '--header', help = 'Set if you want header printed. Default: False', action = "store_true")
 
+
 args = parser.parse_args()
 
 
@@ -184,6 +185,12 @@ with open(args.variationfile, 'r') as variationfile:
                                     elif genes[chrom][s][e].startswith("ERBB2"):
                                         nm = "NM_001289937.1"
                                         np = "NP_001276866.1"
+                                    elif genes[chrom][s][e].startswith("BRCA1"):
+                                        nm = "NM_007294.3"
+                                        np = "NP_009225.1"
+                                    elif genes[chrom][s][e].startswith("BRCA2"):
+                                        nm = "NM_000059.3"
+                                        np = "NP_000050.2"
                                     cds = "-"
                                     aa = "-"
                                     if not "not analyzable" in found and chrom in mutations and pos in mutations[chrom]:
@@ -226,7 +233,6 @@ with open(args.variationfile, 'r') as variationfile:
 #                                                            ampSplit = mutationLine[24].split("|")
 #                                                            ampliconInfo = "-\t-\t" + ampSplit[0] + "\t" + ampSplit[1]
 #                                                            ampliconColumns = "-\t" + mutationLine[24]
-
 #                                                        elif "+" in mutationLine[25]:
 #                                                            ampSplit = mutationLine[25].split("|")
 #                                                            ampliconInfo = "-\t-\t" + ampSplit[0] + "\t" + ampSplit[1]
@@ -235,11 +241,10 @@ with open(args.variationfile, 'r') as variationfile:
                                                     outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\tyes\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + mutationLine[3] + "\t" + ref + "\t" + var + "\t" + mutationLine[11] + "\t" + mutationLine[10] + "\t" + mutationLine[9] + "\t" + mutationLine[13] + "\t" + mutationLine[8] + "\t" + cds + "\t" + aa + "\t" + ampliconInfo + "\t" + nm + "\t" + np + "\t" + ampliconColumns
                                                     outputfile.write(outStr + "\n")
                                     else:
-                                        # Output all positions in KIT and PDGFRA independent of mutation or not
-                                        if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA"):
+                                        # Output all positions in KIT, PDGFRA, BRCA1 and BRCA2 independent of mutation or not
+                                        if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA") or genes[chrom][s][e].startswith("BRCA1") or genes[chrom][s][e].startswith("BRCA2"):
                                             outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\t" + found + "\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-"
                                             outputfile.write(outStr + "\n")
-
 
 
 
