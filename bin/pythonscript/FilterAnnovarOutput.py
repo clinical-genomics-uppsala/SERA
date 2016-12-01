@@ -179,27 +179,54 @@ with open(args.inputfile, 'r') as infile:
 										if not re.match('^synonymous', line[8]):
 											# Keep those without a value in 1000G or a value that is lower than the given input
 											if re.match('-', str(line[13])) or float(line[13]) <= args.genome1000:
-												# Remove blacklist variants
-												if not regionChr in blacklist:
-													outfile.write("\t".join(line) + "\n")
-													done = 1
-												else:
-													if not start in blacklist[regionChr]:
-														outfile.write ("\t".join(line) + "\n")
+												varOK = "true"
+												# Check if ampliconmapped is set and if so check amplicon status
+												if args.ampliconmapped:
+													varOK = "false"
+													# Set amplicon info
+													ref_plus = ref_minus = var_plus = var_minus = 0
+													if not re.match('-', line[26]):
+														var_plus = int(line[26])
+													if not re.match('-', line[27]):
+														var_minus = int(line[27])
+													if not re.match('-', line[28]):
+														ref_plus = int(line[28])
+													if not re.match('-', line[29]):
+														ref_minus = int(line[29])
+
+													if (ref_plus + ref_minus) >= 3:
+														if (var_plus + var_minus) >= 2:
+															varOK = "true"
+													elif (ref_plus + ref_minus) >= 1:
+														if (var_plus + var_minus) >= 1:
+															varOK = "true"
+													elif (ref_plus + ref_minus) >= 0:
+														if (var_plus + var_minus) >= 0:
+															varOK = "true"
+
+												# Check if the amplicon info is okey
+												if re.match('true', varOK):
+													# Remove blacklist variants
+													if not regionChr in blacklist:
+														outfile.write("\t".join(line) + "\n")
 														done = 1
 													else:
-														if not end in blacklist[regionChr][start]:
+														if not start in blacklist[regionChr]:
 															outfile.write ("\t".join(line) + "\n")
 															done = 1
 														else:
-															if not ref in blacklist[regionChr][start][end]:
+															if not end in blacklist[regionChr][start]:
 																outfile.write ("\t".join(line) + "\n")
 																done = 1
 															else:
-																if not var in blacklist[regionChr][start][end][ref]:
+																if not ref in blacklist[regionChr][start][end]:
 																	outfile.write ("\t".join(line) + "\n")
 																	done = 1
 																else:
-																	print("Exist in blacklist!\n")
-																	print ("\t" + "\t".join(line) + "\n")
-																	done = 1
+																	if not var in blacklist[regionChr][start][end][ref]:
+																		outfile.write ("\t".join(line) + "\n")
+																		done = 1
+																	else:
+																		print("Exist in blacklist!\n")
+																		print ("\t" + "\t".join(line) + "\n")
+																		done = 1
