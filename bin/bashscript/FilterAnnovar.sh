@@ -26,7 +26,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
             if [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
                 if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
                     if [[ ${TISSUE} == "ovarial" ]]; then
-                        # Check if there are particular regions we want to keep                     
+                        # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
                             cat  $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02
                             echo "cat  $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02"

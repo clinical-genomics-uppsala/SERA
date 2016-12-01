@@ -130,12 +130,15 @@ with open(args.inputfile, 'r') as infile:
 								if not re.match('-', line[29]):
 									ref_minus = int(line[29])
 
-								if (ref_plus + ref_minus) >= 3 & (var_plus + var_minus) >= 2:
-									varOK = "true"
-								elif (ref_plus + ref_minus) >= 1 & (var_plus + var_minus) >= 1:
-									varOK = "true"
-								elif (ref_plus + ref_minus) >= 0 & (var_plus + var_minus) >= 0:
-									varOK = "true"
+								if (ref_plus + ref_minus) >= 3:
+									if (var_plus + var_minus) >= 2:
+										varOK = "true"
+								elif (ref_plus + ref_minus) >= 1:
+									if (var_plus + var_minus) >= 1:
+										varOK = "true"
+								elif (ref_plus + ref_minus) >= 0:
+									if (var_plus + var_minus) >= 0:
+										varOK = "true"
 
 							# Check if the amplicon info is okey
 							if re.match('true', varOK):
