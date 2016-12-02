@@ -782,7 +782,7 @@ sub printCosmicPos {
         print OUTPUT "\tMin_read_depth" . $minRD;
     }
     print OUTPUT
-"\tTotal_read_depth\tChr\tStart\tEnd\tReference\tVariant\tVariant_read_depth\tReference_read_depth\tVariant_allele_ratio\tRatio_in_1000G\tExonic_type\tCDS_change\tAA_change\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\tTranscript\tProtein\tRef_amplicons\tVar_amplicons";
+"\tTotal_read_depth\tChr\tStart\tEnd\tReference\tVariant\tVariant_read_depth\tReference_read_depth\tVariant_allele_ratio\tRatio_in_1000G\tExonic_type\tCDS_change\tAA_change\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\tTranscript\tProtein\tRef_amplicons\tVar_amplicons\tAll_transcripts";
 
     print OUTPUT "\n";
 
