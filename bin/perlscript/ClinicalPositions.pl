@@ -157,7 +157,8 @@ sub createCosmicHash {
         'protein'    => $line[9],
         'cds'        => $line[10],
         'aa'         => $line[14],
-        'clinical'   => $line[15]
+        'clinical'   => $line[15],
+        'allTrans'   => $line[17]
     };
 }
 
@@ -880,6 +881,10 @@ sub printCosmicPos {
                         else { print OUTPUT "\t-"; }
                         if ( $link->{'var_amplicons'} ) {
                             print OUTPUT "\t" . $link->{'var_amplicons'};
+                        }
+                        else { print OUTPUT "\t-"; }
+                        if ( $link->{'allTrans'} ) {
+                            print OUTPUT "\t" . $link->{'allTrans'};
                         }
                         else { print OUTPUT "\t-"; }
                         print OUTPUT "\n";
