@@ -35,15 +35,21 @@ if [ ${PLATFORM} == "Illumina" ]; then
 				# Querysort bam-file
 				samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 3 /dev/stdin $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted
 				# Run ampliconmapping
-				java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
+				# java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
+				java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
+                samtools sort -@ 3 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon;
+                samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
 
 				samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt;
 				# Remove the querysorted file
 				rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam;
-
+                rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam;
+                
 				SuccessLog "${SAMPLEID}" "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 3 /dev/stdin $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted";
-				SuccessLog "${SAMPLEID}" "java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0";
-
+				SuccessLog "${SAMPLEID}" "java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0";
+                SuccessLog "${SAMPLEID}" "samtools sort -@ 3 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon;";
+                SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
+                
 				# To create reference file dictionary
 				#java -Xmx2g -jar /sw/apps/bioinfo/picard/1.141/nestor/picard.jar CreateSequenceDictionary R=/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7.10_hg19_refseqs/hg19.with.mt.fasta O=/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7.10_hg19_refseqs/hg19.with.mt.fasta.dict
 
