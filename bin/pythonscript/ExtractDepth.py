@@ -91,8 +91,8 @@ with open(args.filteredAnnovarfile, 'r') as filteredAnnovar:
             ref = lineSplit[4]
             var = lineSplit[5]
 
-            # Add all known mutations to the mutation dictionary which are NOT indels
-            if not ("|" in lineSplit[24]) and not ("|" in lineSplit[25]):
+            # Add all known mutations to the mutation dictionary which are NOT from Pindel
+            if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
                 if not chrom in mutations:
                     mutations[chrom] = {}
                     mutations[chrom][start] = {}
@@ -188,9 +188,11 @@ with open(args.variationfile, 'r') as variationfile:
                                     elif genes[chrom][s][e].startswith("BRCA1"):
                                         nm = "NM_007294.3"
                                         np = "NP_009225.1"
+                                        flag = 3
                                     elif genes[chrom][s][e].startswith("BRCA2"):
                                         nm = "NM_000059.3"
                                         np = "NP_000050.2"
+                                        flag = 3
                                     cds = "-"
                                     aa = "-"
                                     if not "not analyzable" in found and chrom in mutations and pos in mutations[chrom]:
@@ -205,9 +207,10 @@ with open(args.variationfile, 'r') as variationfile:
                                                 for transcript in mutationLine[32:]:
                                                     # If it's not the first transcript add to all transcript column
                                                     if not re.match(transcript, mutationLine[32]):
-                                                        transInfo = row[i]
+                                                        transInfo = transcript
                                                         transInfo = re.sub('^[A-Z0-9]+:', "", transInfo)
                                                         allTrans += "|" + transInfo
+
                                                     nmNumber = nm.split(".")  # split on dot to exclude version number
                                                     if nmNumber[0] in transcript:  # Check that it is the correct transcript
                                                         transcript = transcript.split(":")
