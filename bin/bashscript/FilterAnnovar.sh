@@ -66,7 +66,7 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                         fi
                     fi
                 else
-                    ErrorLog "$SAMPLEID" "Using NORMAL_SAMPLEID=annovar none of the possible annovar input files exist ($ROOT_PATH/Annovar/${SAMPLEID}.annovarInput or $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput)!";
+                    ErrorLog "$SAMPLEID" "Either $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput and/or $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutputUsing does not exist!!!";
                 fi
             else
                 if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
