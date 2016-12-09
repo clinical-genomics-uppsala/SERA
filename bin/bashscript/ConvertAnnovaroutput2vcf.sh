@@ -18,42 +18,42 @@ if [[ ${READS} == "true" ]]; then
 	# Check for singleSamples without ampliconmapping
 	# Check if a combined file exist, then remove it
 	if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ]]; then
-		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.vcf) || ($FORCE == "true") ]]; then
-			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.vcf
+		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
+			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 
 		else 
-			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.vcf already exists and Force was not used!";
+			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
 			
 		fi
 
 	elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput ]]; then
-		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.vcf) || ($FORCE == "true") ]]; then
+		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
 #				if [[ -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
-#					python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -p $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.vcf
+#					python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -p $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 #				else
 				
-			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.vcf
+			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 #				fi
 		else 
-			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.ampliconmapped.vcf already exists and Force was not used!";
+			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
 		fi
 
 	elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ]]; then
-		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.filtered.vcf) || ($FORCE == "true") ]]; then
-			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.filtered.vcf
+		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
+			python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 		else
-			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.filtered.vcf already exists and Force was not used!";
+			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
 		fi
 
 	elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput ]]; then
-		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.vcf) || ($FORCE == "true") ]]; then
+		if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
 #				if [[ -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
-#					python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -p $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.vcf
+#					python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -p $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 #				else
 				
-				python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.vcf
+				python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 		else
-			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.singleSample.vcf already exists and Force was not used!";
+			ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
 		fi
 	else
 		ErrorLog "$SAMPLEID" "No output file from Annovar was found!";

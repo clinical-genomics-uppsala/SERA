@@ -12,6 +12,7 @@ parser.add_argument('-s', '--sample', help = 'Sample ID', type = str, required =
 parser.add_argument('-chr2nc', '--chr2nc', help = 'File with conversion between NC-number and chr', type = str, required = True)
 parser.add_argument('-header', '--header', help = 'Set if you want header printed. Default: False', action = "store_true")
 
+
 args = parser.parse_args()
 
 
@@ -90,8 +91,8 @@ with open(args.filteredAnnovarfile, 'r') as filteredAnnovar:
             ref = lineSplit[4]
             var = lineSplit[5]
 
-            # Add all known mutations to the mutation dictionary which are NOT indels
-            if not ("|" in lineSplit[24]) and not ("|" in lineSplit[25]):
+            # Add all known mutations to the mutation dictionary which are NOT from Pindel
+            if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
                 if not chrom in mutations:
                     mutations[chrom] = {}
                     mutations[chrom][start] = {}
@@ -129,7 +130,7 @@ with open(args.variationfile, 'r') as variationfile:
             commentStr = "#Sample\tGene\tCosmic_id\tReport\tFound"
             for mRD in minRDs:
                 commentStr += "\tMin_read_depth" + mRD
-                commentStr += "\tTotal_read_depth\tChr\tStart\tEnd\tReference\tVariant\tVariant_read_depth\tReference_read_depth\tVariant_allele_ratio\tRatio_in_1000G\tExonic_type\tCDS_change\tAA_change\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\tTranscript\tProtein\tRef_amplicons\tVar_amplicons"
+                commentStr += "\tTotal_read_depth\tChr\tStart\tEnd\tReference\tVariant\tVariant_read_depth\tReference_read_depth\tVariant_allele_ratio\tRatio_in_1000G\tExonic_type\tCDS_change\tAA_change\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\tTranscript\tProtein\tRef_amplicons\tVar_amplicons\tAll_transcripts"
                 outputfile.write (commentStr + "\n")
 
         # Go through the file line by line
@@ -184,14 +185,32 @@ with open(args.variationfile, 'r') as variationfile:
                                     elif genes[chrom][s][e].startswith("ERBB2"):
                                         nm = "NM_001289937.1"
                                         np = "NP_001276866.1"
+                                    elif genes[chrom][s][e].startswith("BRCA1"):
+                                        nm = "NM_007294.3"
+                                        np = "NP_009225.1"
+                                        flag = 3
+                                    elif genes[chrom][s][e].startswith("BRCA2"):
+                                        nm = "NM_000059.3"
+                                        np = "NP_000050.2"
+                                        flag = 3
                                     cds = "-"
                                     aa = "-"
                                     if not "not analyzable" in found and chrom in mutations and pos in mutations[chrom]:
                                         for ref in mutations[chrom][pos]:
                                             for var in mutations[chrom][pos][ref]:
                                                 mutationLine = mutations[chrom][pos][ref][var]['line']
+
+                                                # Save all transcripts without gene name
+                                                allTrans = mutationLine[32]
+                                                allTrans = re.sub('^[A-Z0-9]+:', "", allTrans)
                                                 # Look through all reported transcripts and report the cds and aa change for the right transcript
                                                 for transcript in mutationLine[32:]:
+                                                    # If it's not the first transcript add to all transcript column
+                                                    if not re.match(transcript, mutationLine[32]):
+                                                        transInfo = transcript
+                                                        transInfo = re.sub('^[A-Z0-9]+:', "", transInfo)
+                                                        allTrans += "|" + transInfo
+
                                                     nmNumber = nm.split(".")  # split on dot to exclude version number
                                                     if nmNumber[0] in transcript:  # Check that it is the correct transcript
                                                         transcript = transcript.split(":")
@@ -214,7 +233,7 @@ with open(args.variationfile, 'r') as variationfile:
                                                             found = "not analyzable"
 
                                                 if "not analyzable" in found:
-                                                    outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t1\t" + found + "\t" + okDepth + lineSplit[0] + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-"
+                                                    outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t1\t" + found + "\t" + okDepth + lineSplit[0] + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t" + allTrans
                                                     outputfile.write(outStr + "\n")
                                                 else:
                                                     # If mutation info comes from pindel change amplicon extraction fields
@@ -226,20 +245,18 @@ with open(args.variationfile, 'r') as variationfile:
 #                                                            ampSplit = mutationLine[24].split("|")
 #                                                            ampliconInfo = "-\t-\t" + ampSplit[0] + "\t" + ampSplit[1]
 #                                                            ampliconColumns = "-\t" + mutationLine[24]
-
 #                                                        elif "+" in mutationLine[25]:
 #                                                            ampSplit = mutationLine[25].split("|")
 #                                                            ampliconInfo = "-\t-\t" + ampSplit[0] + "\t" + ampSplit[1]
 #                                                            ampliconColumns = "-\t" + mutationLine[25]
 
-                                                    outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\tyes\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + mutationLine[3] + "\t" + ref + "\t" + var + "\t" + mutationLine[11] + "\t" + mutationLine[10] + "\t" + mutationLine[9] + "\t" + mutationLine[13] + "\t" + mutationLine[8] + "\t" + cds + "\t" + aa + "\t" + ampliconInfo + "\t" + nm + "\t" + np + "\t" + ampliconColumns
+                                                    outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\tyes\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + mutationLine[3] + "\t" + ref + "\t" + var + "\t" + mutationLine[11] + "\t" + mutationLine[10] + "\t" + mutationLine[9] + "\t" + mutationLine[13] + "\t" + mutationLine[8] + "\t" + cds + "\t" + aa + "\t" + ampliconInfo + "\t" + nm + "\t" + np + "\t" + ampliconColumns + "\t" + allTrans
                                                     outputfile.write(outStr + "\n")
                                     else:
-                                        # Output all positions in KIT and PDGFRA independent of mutation or not
-                                        if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA"):
-                                            outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\t" + found + "\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-"
+                                        # Output all positions in KIT, PDGFRA, BRCA1 and BRCA2 independent of mutation or not
+                                        if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA") or genes[chrom][s][e].startswith("BRCA1") or genes[chrom][s][e].startswith("BRCA2"):
+                                            outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\t" + found + "\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-\t-"
                                             outputfile.write(outStr + "\n")
-
 
 
 
