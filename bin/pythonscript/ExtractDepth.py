@@ -70,7 +70,6 @@ with open(args.regionfile, 'r') as regionfile:
 
 
 mutations = {}
-pindels = {}
 # Open filteredAnnovar file and add info about the filteredAnnovars to the hash
 with open(args.filteredAnnovarfile, 'r') as filteredAnnovar:
     # Go through the file line by line
