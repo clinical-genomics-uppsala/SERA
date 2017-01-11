@@ -25,13 +25,13 @@ if [ $PLATFORM = "Illumina" ]; then
 		# Check that output file doesn't exist then run cutAdapt, if it does print error message
 		if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
 		    
-		    if [[ ${TYPE} == "ffpe" ]]; then
+		    if [[ ${METHOD} == "haloplex" ]]; then
     			cutadapt -a $tTag -A `$SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
 	       		SuccessLog "${SAMPLEID}" "cutadapt -a $tTag -A `$SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;"
-            elif [[ ${TYPE} == "plasma" ]]; then
+            elif [[ ${METHOD} == "swift" ]]; then
                 if [ ${CUTADAPT_PREFIX} != "false" ]; then
-                
+
                     TMP1_PE1="$SNIC_TMP/pe1.tmp1.fastq.gz";
                     TMP1_PE2="$SNIC_TMP/pe2.tmp1.fastq.gz";
 
@@ -69,10 +69,10 @@ if [ $PLATFORM = "Illumina" ]; then
                     cutadapt -a file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
                 else
-                    ErrorLog "${SAMPLEID}" "CUTADAPT_PREFIX has to be set for plasma in order to be able to run cutadapt!";
+                    ErrorLog "${SAMPLEID}" "CUTADAPT_PREFIX has to be set for swift in order to be able to run cutadapt!";
                 fi
             else
-                ErrorLog "${SAMPLEID}" "Only implemented for TYPE ffpe and plasma so far!";
+                ErrorLog "${SAMPLEID}" "Only implemented for METHOD haloplex and swift so far!";
             fi
 
 		else 

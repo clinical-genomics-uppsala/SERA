@@ -9,7 +9,7 @@
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
-if [ ${TYPE} == "ffpe" ]; then
+if [ ${METHOD} == "haloplex" ]; then
     if [ ! -d $ROOT_PATH/AmpliconCoverage ]; then
     	mkdir $ROOT_PATH/AmpliconCoverage
     fi
@@ -65,11 +65,11 @@ if [ ${TYPE} == "ffpe" ]; then
     else
     	ErrorLog ${SAMPLEID} "So far only supported for Illumina!";
     fi
-elif [ ${TYPE} == "plasma" ]; then
-    SuccessLog "${SAMPLEID}" "Ampliconmapping is not needed for plasma samples - skipping!";
+elif [ ${METHOD} == "swift" ]; then
+    SuccessLog "${SAMPLEID}" "Ampliconmapping is not needed for swift samples - skipping!";
 
 else
-    ErrorLog "${SAMPLEID}" "ffpe and plasma are the only types supported so far!";
+    ErrorLog "${SAMPLEID}" "halo and swift are the only methods supported so far!";
 fi
 # Check if readsVSmolecules worked
 if [ "$?" != "0" ]; then

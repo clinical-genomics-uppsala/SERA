@@ -61,7 +61,7 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
 	if [[ $SOFTWARE = "SLURM" && ! $UPPNEX_PROJECT_ID ]]; then settingserror "Uppnex project id must be specified when running SLURM"; ERROR=1; fi;
 	if [[ $MATE_PAIR = "true" && ${RAWDATA_PE2_ARR_[${i}]} = "false" ]]; then settingserror "A second read file have to be specified for paired ends in sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
 	if [[ $NORMAL_SAMPLEID != "false" && $NORMAL_SAMPLEID != "annovar" && $TUMOR_NORMAL_FLAGS = "false" ]]; then settingserror "If Normal sample id isn't set to false or annovar the TUMOR_NORMAL_FLAGS have to be set (not false)"; ERROR=1; fi
-    if [[ ${TYPE_ARR_[${i}]} == "plasma" && ${CUTADAPT_PREFIX_ARR_[${i}]} == "false" ]]; then settingserror "If type is plasma then cutadapt_prefix also has to be set (not false) for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
+    if [[ ${METHOD_ARR_[${i}]} == "swift" && ${CUTADAPT_PREFIX_ARR_[${i}]} == "false" ]]; then settingserror "If method is swift then cutadapt_prefix also has to be set (not false) for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
 
 	# check for genefile
 #	if [[ ! -z $NORMAL_SAMPLEID && ! -e $GENEFILE && $GENEFILE != "false" && ! -z $GENEFILE ]]; then fileioerror "Gene file ${GENEFIGILE_ARR_[{$i}]} do not exist, set to false or specify correct location"; ERROR=1; fi;

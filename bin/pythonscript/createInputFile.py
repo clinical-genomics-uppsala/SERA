@@ -102,10 +102,11 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['design'] = lineSplit[2]
             info[lineSplit[1]]['refseq'] = lineSplit[3]
             info[lineSplit[1]]['cutadapt'] = lineSplit[4]
-            info[lineSplit[1]]['type'] = lineSplit[5].lower().strip()
-            info[lineSplit[1]]['tissue'] = lineSplit[6].lower().strip()
-            info[lineSplit[1]]['barcodeI7'] = lineSplit[7]
-            info[lineSplit[1]]['barcodeI5'] = lineSplit[8]
+            info[lineSplit[1]]['method'] = lineSplit[5].lower().strip()
+            info[lineSplit[1]]['type'] = lineSplit[6].lower().strip()
+            info[lineSplit[1]]['tissue'] = lineSplit[7].lower().strip()
+            info[lineSplit[1]]['barcodeI7'] = lineSplit[8]
+            info[lineSplit[1]]['barcodeI5'] = lineSplit[9]
 
             if info[lineSplit[1]]['cutadapt'] == "":
                 info[lineSplit[1]]['cutadapt'] = "false"
@@ -113,7 +114,6 @@ with open(args.infile, 'r') as infile:
                 info[lineSplit[1]]['barcodeI7'] = "false"
             if info[lineSplit[1]]['barcodeI5'] == "":
                 info[lineSplit[1]]['barcodeI5'] = "false"
-
 
             if len(lineSplit) > 9 and args.normal:
                 parser.print_usage()
@@ -128,6 +128,13 @@ with open(args.infile, 'r') as infile:
                     else:
                         parser.print_usage()
                         sys.exit("\nERROR: Either inputfile needs to have 7 columns with the normal given in the last column or the flag -normal has to be used!\n\n")
+
+            # Set the method type used
+            if info[lineSplit[1]]['method'] == "halo" or info[lineSplit[1]]['method'] == "haloplex":
+                info[lineSplit[1]]['method'] = "haloplex"
+            if info[lineSplit[1]]['method'] == "swift" or info[lineSplit[1]]['method'] == "accamp" or info[lineSplit[1]]['method'] == "AccelAmplicon":
+                info[lineSplit[1]]['method'] = "swift"
+
             # If clinical analysis is wanted add file names otherwise add false
             if not args.clinicalInfoFile.lower() == "false":
                 # ## COLON
@@ -438,6 +445,7 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("KEEPFILE_ARR_[${COUNT}]=\"" + info[sample]['keep'] + "\";\n")
         outfile.write ("AMPLIFICATIONFILE_ARR_[${COUNT}]=\"" + info[sample]['amplification'] + "\";\n")
         outfile.write ("BACKGROUNDFILE_ARR_[${COUNT}]=\"" + info[sample]['background'] + "\";\n")
+        outfile.write ("METHOD_ARR_[${COUNT}]=\"" + info[sample]['method'] + "\";\n")
         outfile.write ("TYPE_ARR_[${COUNT}]=\"" + info[sample]['type'] + "\";\n")
         outfile.write ("TISSUE_ARR_[${COUNT}]=\"" + info[sample]['tissue'] + "\";\n")
         outfile.write ("\n")
