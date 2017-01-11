@@ -115,13 +115,13 @@ with open(args.infile, 'r') as infile:
             if info[lineSplit[1]]['barcodeI5'] == "":
                 info[lineSplit[1]]['barcodeI5'] = "false"
 
-            if len(lineSplit) > 9 and args.normal:
+            if len(lineSplit) > 10 and args.normal:
                 parser.print_usage()
                 print("\nERROR: The normal has to be given either in the file or the commandline - NOT both!\n\n")
                 sys.exit()
             else:
-                if len(lineSplit) > 9:
-                    info[lineSplit[1]]['normal'] = lineSplit[6]
+                if len(lineSplit) > 10:
+                    info[lineSplit[1]]['normal'] = lineSplit[10]
                 else:
                     if args.normal:
                         info[lineSplit[1]]['normal'] = args.normal
@@ -252,7 +252,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[lineSplit[1]]['type'] == "ovarial" or info[lineSplit[1]]['type'] == "ovarian" or info[lineSplit[1]]['type'] == "ovary" :
+                elif info[lineSplit[1]]['tissue'] == "ovarial" or info[lineSplit[1]]['tissue'] == "ovarian" or info[lineSplit[1]]['tissue'] == "ovary" :
                     info[lineSplit[1]]['tissue'] = "ovarial"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['hotspot']):
@@ -328,7 +328,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file" + info[lineSplit[1]]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[lineSplit[1]]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[lineSplit[1]]['hotspot'] = "false"
