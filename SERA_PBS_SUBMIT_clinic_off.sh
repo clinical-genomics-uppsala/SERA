@@ -16,7 +16,7 @@ export SERA_PATH=$(dirname `readlink -f $0`)
 ##############
 
 # program title
-title="SlurmSERA v.1.0"
+title="SlurmSERA"
 
 # array structure:
 # id brief_explanation default_status associated_script dependency_on_id run_after_samples(0: do not wait, 1: wait and run all samples, 2: wait and run once)

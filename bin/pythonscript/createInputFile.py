@@ -245,7 +245,7 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[lineSplit[1]]['tissue'] == "ovarial":
+                elif info[lineSplit[1]]['type'] == "ovarial" or info[lineSplit[1]]['type'] == "ovarian" or info[lineSplit[1]]['type'] == "ovary" :
                     info[lineSplit[1]]['tissue'] = "ovarial"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['hotspot']):
@@ -347,27 +347,31 @@ for sample in infoSort:
 rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
 
+# Create folder if it doesn't exist and set permissions
 if not os.path.exists(rawPath):
-    os.makedirs(rawPath)
+    os.makedirs(rawPath, 0774)
+
+# Create folder if it doesn't exist and set permissions
 if not os.path.exists(filePath):
-    os.makedirs(filePath)
+    os.makedirs(filePath, 0774)
 
 # Check if a reference file dir is given, if so copy the files to refFiles in the analysis folder
 if args.refDir:
     # List files in the reference file directory
     refDir_files = os.listdir(args.refDir)
     refFilePath = filePath + "/refFiles"  # Setting output folder path
-    # Check if the output folder exists, if not create
+    # Check if the output folder exists, if not create and set permissions
     if not os.path.exists(refFilePath):
-        os.makedirs(refFilePath)
+        os.makedirs(refFilePath, 0774)
     # Go through all files in the reference file dir
     for file_name in refDir_files:
         full_file_name = os.path.join(args.refDir, file_name)
         # Check that it is a file
         if (os.path.isfile(full_file_name)):
              destFile = refFilePath + "/" + file_name  # Set the destination file name
-             shutil.copy(full_file_name, destFile)  # Copy
-
+             os.system("rsync -rlptD " + full_file_name + " " + destFile)  # Copy
+             if not re.match((oct(os.stat(destFile).st_mode & 0777)), "0664"):  # Check if the file has permission to read and write for all in the group
+                 os.chmod(destFile, 0664)  # If not change the permissions
 
 
 output = filePath + "/inputFile"

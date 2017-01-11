@@ -20,12 +20,6 @@ if [ $PLATFORM = "Illumina" ]; then
 	# get sequencing tags
 	. $SERA_PATH/config/sequencingTags.sh;
 
-	# if file ending not fasta/fastq
-# 	zcat $RAWDATA_PE1 > $SNIC_TMP/pe1.fastq;
-# 	zcat $RAWDATA_PE2 > $SNIC_TMP/pe2.fastq;
-# 	RAWDATA_PE1="$SNIC_TMP/pe1.fastq";
-# 	RAWDATA_PE2="$SNIC_TMP/pe2.fastq";
-
 	# If MATE_PAIR is set to true in the input file 
 	if [ "$MATE_PAIR" == "true" ]; then
 		# Check that output file doesn't exist then run cutAdapt, if it does print error message
@@ -85,7 +79,14 @@ if [ $PLATFORM = "Illumina" ]; then
 			ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
 		fi
 	else
-		ErrorLog "${SAMPLEID}" "Only implemented for paired-end sequencing!";
+		if [ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]; then
+
+            cutadapt -a $tTag -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz --minimum-length 1 $RAWDATA_PE1 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+            SuccessLog "${SAMPLEID}" "cutadapt -a $tTag -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz --minimum-length 1 $RAWDATA_PE1 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;"
+
+        else
+            ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz already exists and force was NOT used!";
+        fi
 	fi
 fi
 
