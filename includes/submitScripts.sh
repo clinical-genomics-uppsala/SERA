@@ -72,7 +72,9 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
 
     # Add info about samples to pipeline log
     echo -e "Sample="$SAMPLEID >> $PIPELINE_LOG;
-    echo -e "\tTissue="$TYPE >> $PIPELINE_LOG;
+    echo -e "\tTissue="$TISSUE >> $PIPELINE_LOG;
+    echo -e "\tType="$TYPE >> $PIPELINE_LOG;
+    echo -e "\tMethod="$METHOD >> $PIPELINE_LOG;
     echo -e "\tRefseq="$REFSEQ >> $PIPELINE_LOG;
     hotspots=($(echo $HOTSPOTFILE | tr "/" " "));
     echo -e "\tHotspots"=${hotspots[${#hotspots[@]}-1]} >> $PIPELINE_LOG;

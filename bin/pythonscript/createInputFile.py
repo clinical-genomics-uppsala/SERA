@@ -100,13 +100,14 @@ with open(args.infile, 'r') as infile:
             info[lineSplit[1]]['exp'] = lineSplit[0]
             info[lineSplit[1]]['sNummer'] = "S" + str(count)
             info[lineSplit[1]]['design'] = lineSplit[2]
-            info[lineSplit[1]]['refseq'] = lineSplit[3]
-            info[lineSplit[1]]['cutadapt'] = lineSplit[4]
-            info[lineSplit[1]]['method'] = lineSplit[5].lower().strip()
-            info[lineSplit[1]]['type'] = lineSplit[6].lower().strip()
-            info[lineSplit[1]]['tissue'] = lineSplit[7].lower().strip()
-            info[lineSplit[1]]['barcodeI7'] = lineSplit[8]
-            info[lineSplit[1]]['barcodeI5'] = lineSplit[9]
+            info[lineSplit[1]]['barcodeI7'] = lineSplit[3]
+            info[lineSplit[1]]['barcodeI5'] = lineSplit[4]
+            info[lineSplit[1]]['refseq'] = lineSplit[5]
+            info[lineSplit[1]]['cutadapt'] = lineSplit[6]
+            info[lineSplit[1]]['method'] = lineSplit[7].lower().strip()
+            info[lineSplit[1]]['type'] = lineSplit[8].lower().strip()
+            info[lineSplit[1]]['tissue'] = lineSplit[9].lower().strip()
+
 
             if info[lineSplit[1]]['cutadapt'] == "":
                 info[lineSplit[1]]['cutadapt'] = "false"
@@ -430,11 +431,11 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R2_001.fastq.gz" + "\";\n")
         outfile.write ("RAWDATA_INDEX_ARR_[${COUNT}]=\"false\";\n")
         outfile.write ("REFSEQ_ARR_[${COUNT}]=\"" + info[sample]['refseq'] + "\";\n")
-        if re.match(info[sample]['type'], "ffpe"):
+        if re.match(info[sample]['method'], "haloplex"):
             outfile.write ("ROIFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Regions.bed" + "\";\n")
         else:
             outfile.write ("ROIFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
-        if re.match(info[sample]['type'], "ffpe"):
+        if re.match(info[sample]['method'], "haloplex"):
             outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Amplicons.bed" + "\";\n")
         else:
             outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
