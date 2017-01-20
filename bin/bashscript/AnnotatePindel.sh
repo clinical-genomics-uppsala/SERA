@@ -47,7 +47,7 @@ if [[ ! -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.annovaroutput.txt |
 			$ROOT_PATH_PINDEL/pindel2vcf -P $ROOT_PATH/PindelOut/${SAMPLEID}.indels -r $GENOME_FASTA_REF -R Hg19 -d 20090401 -v $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.vcf -is 3
 			
 			# Check if ffpe or plasma crieteria should be used
-            if [ ${TYPE} == "ffpe" ]; then
+            if [ ${METHOD} == "haloplex" ]; then
                 # Filter indels
     			python2.7 $SERA_PATH/bin/pythonscript/FilterPindelVCF_onlyTumor.py -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.vcf -o $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput -del $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_D -ins $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_SI -r min ${PINDEL_ANNOVAR_FLAGS}
     
@@ -56,16 +56,34 @@ if [[ ! -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.annovaroutput.txt |
     
     			$SERA_PATH/bin/perlscript/createAnnovarOutput.pl -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput.hg19_multianno.txt -o $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -s -am
 
-            elif [ ${TYPE} == "plasma" ]; then
-                #Filter indels
-                python2.7 $SERA_PATH/bin/pythonscript/FilterPindelVCF_onlyTumor.py -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.vcf -o $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput -del $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_D -ins $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_SI -r min ${PINDEL_ANNOVAR_PLASMA_FLAGS}
+            elif [ ${METHOD} == "swift" ]; then
+                if [ ${TYPE} == "ffpe" ]; then
+                    #Filter indels
+                    python2.7 $SERA_PATH/bin/pythonscript/FilterPindelVCF_onlyTumor.py -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.vcf -o $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput -del $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_D -ins $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_SI -r min ${PINDEL_ANNOVAR_FLAGS}
+        
+                    #Annotate with annovar
+                    perl $ROOT_PATH_ANNOVAR/table_annovar.pl $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput $ANNOVAR_MODULES/annovar_humandb/ -protocol refGene,1000g2015aug_eur,snp138,snp138NonFlagged,esp6500siv2_ea,cosmic70,clinvar_20150629 -operation g,f,f,f,f,f,f -nastring "-" -otherinfo -buildver hg19 -remove -arg '-splicing_threshold 5',,,,,,
     
-                #Annotate with annovar
-                perl $ROOT_PATH_ANNOVAR/table_annovar.pl $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput $ANNOVAR_MODULES/annovar_humandb/ -protocol refGene,1000g2015aug_eur,snp138,snp138NonFlagged,esp6500siv2_ea,cosmic70,clinvar_20150629 -operation g,f,f,f,f,f,f -nastring "-" -otherinfo -buildver hg19 -remove -arg '-splicing_threshold 5',,,,,,
-    
-                $SERA_PATH/bin/perlscript/createAnnovarOutput.pl -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput.hg19_multianno.txt -o $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -s
-            else
+                    $SERA_PATH/bin/perlscript/createAnnovarOutput.pl -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput.hg19_multianno.txt -o $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -s
+                elif [ ${TYPE} == "plasma" ]; then
+                    #Filter indels
+                    python2.7 $SERA_PATH/bin/pythonscript/FilterPindelVCF_onlyTumor.py -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.vcf -o $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput -del $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_D -ins $ROOT_PATH/PindelOut/${SAMPLEID}.indels.onlyChr_SI -r min ${PINDEL_ANNOVAR_PLASMA_FLAGS}
+        
+                else
                     ErrorLog "${SAMPLEID}" "Only implemented for ffpe and plasma so far!!!"
+                fi
+            
+                if [ -e $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput ]; then
+                 
+                    #Annotate with annovar
+                    perl $ROOT_PATH_ANNOVAR/table_annovar.pl $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput $ANNOVAR_MODULES/annovar_humandb/ -protocol refGene,1000g2015aug_eur,snp138,snp138NonFlagged,esp6500siv2_ea,cosmic70,clinvar_20150629 -operation g,f,f,f,f,f,f -nastring "-" -otherinfo -buildver hg19 -remove -arg '-splicing_threshold 5',,,,,,
+            
+                    $SERA_PATH/bin/perlscript/createAnnovarOutput.pl -i $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput.hg19_multianno.txt -o $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -s
+                else
+                    ErrorLog "${SAMPLEID}" "Pindel annovar input file $ROOT_PATH/PindelAnnovar/${SAMPLEID}.pindel.filtered.annovarInput does NOT exist!!!"
+                fi
+            else
+                ErrorLog "${SAMPLEID}" "Only implemented for METHOD haloplex and swift so far!!!"
             fi
 	else
 
