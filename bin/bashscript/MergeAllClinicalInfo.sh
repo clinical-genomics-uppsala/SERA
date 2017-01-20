@@ -32,8 +32,8 @@ if [[ ${TYPE} == "ffpe" ]]; then
     				if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then 
     					python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
     			
-    				elif [  -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations]; then 
-    					python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s {$SAMPLEID} -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
+    				elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then 
+    					python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
     				else
     					ErrorLog "${SAMPLEID}" "Neither the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations nor the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.variations exist!";
     				fi
@@ -57,7 +57,7 @@ if [[ ${TYPE} == "ffpe" ]]; then
     			if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then 
     				python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt /dev/stdin > $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt ;
     
-    			elif [  -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations]; then 
+    			elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then 
     				python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt /dev/stdin > $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
     			else
     				ErrorLog "${SAMPLEID}" "Neither the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations nor the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.variations exist!";
@@ -70,7 +70,7 @@ if [[ ${TYPE} == "ffpe" ]]; then
     	fi
     fi
 elif [[ ${TYPE} == "plasma" ]]; then
-        if [ ${INDELFILE} != "false" ]; then
+    if [ ${INDELFILE} != "false" ]; then
         if [ -e $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt ]; then
             if [ -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]; then
                 python2.7 $SERA_PATH/bin/pythonscript/PindelClinicalInfo.py -i $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput -o /dev/stdout -s $SAMPLEID -g ${INDELFILE} -chr2nc $NC2chr ${PINDEL_CLINICAL_PLASMA_FLAGS} | cat $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt /dev/stdin > $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt
@@ -84,8 +84,8 @@ elif [[ ${TYPE} == "plasma" ]]; then
                     if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then 
                         python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
                 
-                    elif [  -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations]; then 
-                        python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s {$SAMPLEID} -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
+                    elif [[  -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then 
+                        python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat /dev/stdin >> $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
                     else
                         ErrorLog "${SAMPLEID}" "Neither the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations nor the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.variations exist!";
                     fi
@@ -109,7 +109,7 @@ elif [[ ${TYPE} == "plasma" ]]; then
                 if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then 
                     python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt /dev/stdin > $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt ;
     
-                elif [  -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations]; then 
+                elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then 
                     python2.7 $SERA_PATH/bin/pythonscript/ExtractDepth.py -r ${REGIONFILE} -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o /dev/stdout -s $SAMPLEID -chr2nc $NC2chr -f $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ${REGION_CLINICAL_FLAGS} | cat $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt /dev/stdin > $ROOT_PATH/ClinicalPositions/${SAMPLEID}.clinicalPositions.txt;
                 else
                     ErrorLog "${SAMPLEID}" "Neither the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations nor the combination of $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput & $ROOT_PATH/SNPmania/${SAMPLEID}.variations exist!";
