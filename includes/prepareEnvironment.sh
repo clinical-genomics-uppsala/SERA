@@ -56,7 +56,11 @@ fi
 # Create log file for pipeline
 rpath=($(echo $ROOT_PATH | tr "/" " "));
 rtpath=${rpath[ ${#rpath[@]}-1]};
-export PIPELINE_LOG="$ROOT_PATH/PipelineLog_"$rtpath".txt";
+PIPELINE_LOG="$ROOT_PATH/PipelineLog_"$rtpath".txt";
+if [[ -e $ROOT_PATH/PipelineLog_"$rtpath".txt ]]; then
+    PIPELINE_LOG="$ROOT_PATH/PipelineLog_"$rtpath"_2.txt"
+fi
+export PIPELINE_LOG;
 
 echo -e "#####General#####" > $PIPELINE_LOG;
 echo -e "Analysis_date="`date +%Y-%m-%d` >> $PIPELINE_LOG;
