@@ -36,6 +36,9 @@ SLURM_MISC_SETTINGS="-A $UPPNEX_PROJECT_ID"; 	#--qos=short";
 #export BLACKLIST_FILE="$SERA_PATH/res/blacklist_above300_20150902.txt";
 export BLACKLIST_FILE="$SERA_PATH/res/blacklist_variantClusterAllvarPindel_20151110.txt";
 
+# File with main trancripts
+export MAIN_TRANSCRIPTS="$ROOT_PATH/refFiles/mainTranscripts.txt";
+
 # Log file.
 export LOG_FILE="$ROOT_PATH/seralog.xml";
 
