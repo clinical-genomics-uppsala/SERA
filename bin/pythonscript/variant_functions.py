@@ -2,15 +2,15 @@ import re
 
 def createHotspotHash(lineSplit, hotspots, intronic):
     chrom = lineSplit[0]
-    start = int(lineSplit[1]) + 1
+    start = int(lineSplit[1])
     end = int(lineSplit[2])
     gene = lineSplit[3]
     cds = lineSplit[4]
     aa = lineSplit[5]
     report = lineSplit[6]
     comment = lineSplit[7]
-    accNum = lineSplit[8].split(".")[0]
-    protNum = lineSplit[9].split(".")[0]
+    exon = lineSplit[8]
+    accNum = lineSplit[9].split(".")[0]
     varInfo = "no"
 
     if not report in hotspots:
@@ -22,8 +22,8 @@ def createHotspotHash(lineSplit, hotspots, intronic):
         hotspots[report][chrom][start][end]['cds'] = cds
         hotspots[report][chrom][start][end]['aa'] = aa
         hotspots[report][chrom][start][end]['comment'] = comment
+        hotspots[report][chrom][start][end]['exon'] = exon
         hotspots[report][chrom][start][end]['accNum'] = accNum
-        hotspots[report][chrom][start][end]['protNum'] = protNum
         hotspots[report][chrom][start][end]['bwa'] = varInfo
         hotspots[report][chrom][start][end]['pindel'] = varInfo
         hotspots[report][chrom][start][end]['rd'] = "-"
@@ -36,8 +36,8 @@ def createHotspotHash(lineSplit, hotspots, intronic):
         hotspots[report][chrom][start][end]['cds'] = cds
         hotspots[report][chrom][start][end]['aa'] = aa
         hotspots[report][chrom][start][end]['comment'] = comment
+        hotspots[report][chrom][start][end]['exon'] = exon
         hotspots[report][chrom][start][end]['accNum'] = accNum
-        hotspots[report][chrom][start][end]['protNum'] = protNum
         hotspots[report][chrom][start][end]['bwa'] = varInfo
         hotspots[report][chrom][start][end]['pindel'] = varInfo
         hotspots[report][chrom][start][end]['rd'] = "-"
@@ -49,8 +49,8 @@ def createHotspotHash(lineSplit, hotspots, intronic):
         hotspots[report][chrom][start][end]['cds'] = cds
         hotspots[report][chrom][start][end]['aa'] = aa
         hotspots[report][chrom][start][end]['comment'] = comment
+        hotspots[report][chrom][start][end]['exon'] = exon
         hotspots[report][chrom][start][end]['accNum'] = accNum
-        hotspots[report][chrom][start][end]['protNum'] = protNum
         hotspots[report][chrom][start][end]['bwa'] = varInfo
         hotspots[report][chrom][start][end]['pindel'] = varInfo
         hotspots[report][chrom][start][end]['rd'] = "-"
@@ -61,21 +61,21 @@ def createHotspotHash(lineSplit, hotspots, intronic):
         hotspots[report][chrom][start][end]['cds'] = cds
         hotspots[report][chrom][start][end]['aa'] = aa
         hotspots[report][chrom][start][end]['comment'] = comment
+        hotspots[report][chrom][start][end]['exon'] = exon
         hotspots[report][chrom][start][end]['accNum'] = accNum
-        hotspots[report][chrom][start][end]['protNum'] = protNum
         hotspots[report][chrom][start][end]['bwa'] = varInfo
         hotspots[report][chrom][start][end]['pindel'] = varInfo
         hotspots[report][chrom][start][end]['rd'] = "-"
 
     else:
-        print ("Position already exists: " + chrom + " " + str(start - 1) + " " + str(end))
+        print ("Position already exists: " + chrom + " " + str(start) + " " + str(end))
 
     # If report is region_all add list for rdata_address
     if re.match("hotspot", report) or re.match("region_all", report):
         hotspots[report][chrom][start][end]['rd'] = ["-"] * (end - start + 1)
 
     # If this is intronic region add to intronic hash
-    if re.match("intronic", comment):
+    if re.match("intronic", exon):
         if not chrom in intronic:
             intronic[chrom] = {}
             intronic[chrom][start] = {}
@@ -460,7 +460,7 @@ def getTranscriptInfo(lineSplit, transcripts):
     gene = lineSplit[6]
     if re.match("splicing", lineSplit[7]):
         exonicType = lineSplit[7]
-    aa = cds = accNum = "-"  # set the parameters to - as defautl
+    aa = cds = accNum = exon = "-"  # set the parameters to - as default
     if not re.match("-", lineSplit[32]):  # Check that there are any transcript
         allTranscript = lineSplit[32].split(",")  # Split all transcripts on ,
         # If the gene exist in preferd transcript hash use that transcript, otherwise take the first
@@ -471,9 +471,14 @@ def getTranscriptInfo(lineSplit, transcripts):
                     if len(transcriptInfo) >= 5:
                         aa = transcriptInfo[4]
                         cds = transcriptInfo[3]
+                        exon = transcriptInfo[2]
                         accNum = transcriptInfo[1]
                     elif len(transcriptInfo) >= 4:
                         cds = transcriptInfo[3]
+                        exon = transcriptInfo[2]
+                        accNum = transcriptInfo[1]
+                    elif len(transcriptInfo) >= 3:
+                        exon = transcriptInfo[2]
                         accNum = transcriptInfo[1]
                     elif len(transcriptInfo) >= 2:
                         accNum = transcriptInfo[1]
@@ -483,14 +488,19 @@ def getTranscriptInfo(lineSplit, transcripts):
             if len(transcriptInfo) >= 5:
                 aa = transcriptInfo[4]
                 cds = transcriptInfo[3]
+                exon = transcriptInfo[2]
                 accNum = transcriptInfo[1]
             elif len(transcriptInfo) >= 4:
                 cds = transcriptInfo[3]
+                exon = transcriptInfo[2]
+                accNum = transcriptInfo[1]
+            elif len(transcriptInfo) >= 3:
+                exon = transcriptInfo[2]
                 accNum = transcriptInfo[1]
             elif len(transcriptInfo) >= 2:
                 accNum = transcriptInfo[1]
 
-    return aa, cds, accNum, exonicType
+    return aa, cds, accNum, exon, exonicType
 
 
 

@@ -7,7 +7,7 @@ import re
 parser = argparse.ArgumentParser(description = "This script takes a region file, a variation file from SNPmania and an filtered annovaroutput file and outputs the coverage per base in the regions")
 parser.add_argument('-i', '--hotspotfile', help = 'Name of the file with hotspot mutations to report in bed-format', type = str, required = True)
 parser.add_argument('-v', '--variationfile', help = 'File name of variation file from SNPmania', type = str, required = True)
-parser.add_argument('-f', '--filteredAnnovarfile', help = 'File name of the filtered annovar output file', type = str, required = True)
+parser.add_argument('-f', '--Annovarfile', help = 'File name of the annovar output file', type = str, required = True)
 parser.add_argument('-o', '--output', help = 'Output file name', type = str, required = True)
 parser.add_argument('-minRD', '--minRD', help = 'Minimum read depth to be counted as covered', type = str, required = True)
 parser.add_argument('-s', '--sample', help = 'Sample ID', type = str, required = True)
@@ -23,11 +23,7 @@ args = parser.parse_args()
 
 # Split the given min read depths
 minRDs = args.minRD.split(",")
-print "Sample\tGene\tVariant_type\tAA_change\tCDS_change\tAccession_number\tComment\tReport\tFound\tMin_read_depth300\tTotal_read_depth\t",
-print "Reference_read_depth\tVariant_read_depth\tVariant_allele_ratio\tdbSNP_id\tRatio_1000G\tRatio_ESP6500\tClinically_flagged_dbSNP\t",
-print "Cosmic\tClinVar_CLNDB\tClinval_CLINSIG\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\t",
-print "Strands_A_F+F-S+S-\tStrands_G_F+F-S+S-\tStrands_C_F+F-S+S-\tStrands_T_F+F-S+S-\tStrands_Ins\tStrands_Del\tRef_aligned_amplicons\t",
-print "Var_aligned_amplicons\tChr\tStart\tEnd\tReference_base\tVariant_base\tAll_transcripts_annotation"
+
 # Create dictionary for convertion between nc and chr
 nc2chr = {}
 with open(args.chr2nc, 'r') as cnfile:
@@ -59,6 +55,7 @@ with open(args.hotspotfile, 'r') as hotspotFile:
             if lineSplit[0].startswith("chrom"):
                 lineSplit[0] = nc2chr[lineSplit[0]]
             elif not lineSplit[0].startswith("NC") and not lineSplit[0].startswith("chr"):
+                print line
                 lineSplit[0] = nc2chr["chr" + lineSplit[1]]
 
             # Create a hash with the mutations that are ok
@@ -92,97 +89,105 @@ with open(args.transcript, 'r') as transcriptFile:
 
     if not transcriptFile.closed:
         transcriptFile.close()
+with open(args.output, 'w') as outputFile:
+    outputFile.write("Sample\tGene\tVariant_type\tExon\tAA_change\tCDS_change\tAccession_number\tComment\tReport\tFound\tMin_read_depth300\tTotal_read_depth\t",)
+    outputFile.write("Reference_read_depth\tVariant_read_depth\tVariant_allele_ratio\tdbSNP_id\tRatio_1000G\tRatio_ESP6500\tClinically_flagged_dbSNP\t",)
+    outputFile.write("Cosmic\tClinVar_CLNDB\tClinval_CLINSIG\tReference_plus_amplicons\tReference_minus_amplicons\tVariant_plus_amplicons\tVariant_minus_amplicons\t",)
+    outputFile.write("Strands_A_F+F-S+S-\tStrands_G_F+F-S+S-\tStrands_C_F+F-S+S-\tStrands_T_F+F-S+S-\tStrands_Ins\tStrands_Del\tRef_aligned_amplicons\t",)
+    outputFile.write("Var_aligned_amplicons\tChr\tStart\tEnd\tReference_base\tVariant_base\tAll_transcripts_annotation\n")
 
-# Open filteredAnnovar file and add info about the filteredAnnovars to the hash
-with open(args.filteredAnnovarfile, 'r') as filteredAnnovar:
+    # Open filteredAnnovar file and add info about the filteredAnnovars to the hash
+    with open(args.Annovarfile, 'r') as AnnovarFile:
+        # Go through the file line by line
+        for line in AnnovarFile:
+
+            # Check so the line isn't empty or starts with #
+            if not re.match('^#', line) and not re.match('^$', line) and not line.startswith('Sample'):
+
+                line = line.rstrip('\r\n')  # Remove new line character
+                lineSplit = line.split("\t")  # Split line by tab
+
+                # Get chromosome
+                if lineSplit[1].startswith("chr"):
+                    lineSplit[1] = nc2chr[lineSplit[1]]
+                elif not lineSplit[1].startswith("NC") and not lineSplit[1].startswith("chr"):
+                    lineSplit[1] = nc2chr["chr" + lineSplit[1]]
+
+                # Filter annovar output filesCreate a hash with the mutations that are ok
+                if not addVariantInfo(lineSplit, minRDs, blacklist, args.genome1000, args.ampliconmapped, hotspots, intronic):
+                    aa, cds, accNum, exon, exonicType = getTranscriptInfo(lineSplit, transcripts)  # Get transcript information
+                    # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
+                    found, readLevel = getReadLevel(minRDs, int(lineSplit[12]))  # Get the level of read depth and if it's not analyzable
+
+                    if re.match("-", found):
+                        found = "yes"
+                    outputFile.write (str(lineSplit[0]) + "\t" + str(lineSplit[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t-\tother\t" + found + "\t" + readLevel + "\t" + str(lineSplit[12]) + "\t" + str(lineSplit[10]) + "\t" + str(lineSplit[11]) + "\t" + str(lineSplit[9]) + "\t" + str(lineSplit[14]) + "\t" + str(lineSplit[13]) + "\t" + str(lineSplit[16]) + "\t" + str(lineSplit[15]) + "\t" + str(lineSplit[17]) + "\t" + str(lineSplit[18]) + "\t" + str(lineSplit[19]) + "\t" + str(lineSplit[28]) + "\t" + str(lineSplit[29]) + "\t" + str(lineSplit[26]) + "\t" + str(lineSplit[27]) + "\t" + str(lineSplit[20]) + "\t" + str(lineSplit[21]) + "\t" + str(lineSplit[22]) + "\t" + str(lineSplit[23]) + "\t" + str(lineSplit[24]) + "\t" + str(lineSplit[25]) + "\t" + str(lineSplit[31]) + "\t" + str(lineSplit[30]) + "\t" + str(lineSplit[1]) + "\t" + str(lineSplit[2]) + "\t" + str(lineSplit[3]) + "\t" + str(lineSplit[4]) + "\t" + str(lineSplit[5]) + "\t" + str(lineSplit[32]) + "\n")
+
+
+        # Check if the filteredAnnovarfile is closed, if not close it
+        if not AnnovarFile.closed:
+            AnnovarFile.close()
+    intronic = {}  # empty intronic hash
+
+    # Open variation file from SNPmania
+    with open(args.variationfile, 'r') as variationfile:
     # Go through the file line by line
-    for line in filteredAnnovar:
+        for line in variationfile:
+            # Check so the line isn't empty or starts with #
+            if not re.match('^#', line) and not re.match('^$', line):
+                line = line.rstrip('\r\n')  # Remove new line character
+                lineSplit = line.split("\t")  # Split line by tab
 
-        # Check so the line isn't empty or starts with #
-        if not re.match('^#', line) and not re.match('^$', line) and not line.startswith('Sample'):
+                chrom = lineSplit[3]
+                position = int(lineSplit[4])
 
-            line = line.rstrip('\r\n')  # Remove new line character
-            lineSplit = line.split("\t")  # Split line by tab
+                if chrom.startswith("chr"):
+                    chrom = nc2chr[chrom]
 
-            # Get chromosome
-            if lineSplit[1].startswith("chr"):
-                lineSplit[1] = nc2chr[lineSplit[1]]
-            elif not lineSplit[1].startswith("NC") and not lineSplit[1].startswith("chr"):
-                lineSplit[1] = nc2chr["chr" + lineSplit[1]]
+                # Go through region_all and add read depth to positions without variant
+                if chrom in hotspots['region_all']:
+                    for start in hotspots['region_all'][chrom]:
+                        if position >= int(start):
+                            for end in hotspots['region_all'][chrom][start]:
+                                if position <= int(end):
+                                    if isinstance(hotspots['region_all'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
+                                        hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                                    else:
+                                        rds = ["-"] * int(end) - int(start) + 1  # create array to add read depth in
+                                        hotspots['region_all'][chrom][start][end]['rd'] = rds  # Adding list to rd
+                                        hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
 
-            # Filter annovar output filesCreate a hash with the mutations that are ok
-            if not addVariantInfo(lineSplit, minRDs, blacklist, args.genome1000, args.ampliconmapped, hotspots, intronic):
-                aa, cds, accNum, exonicType = getTranscriptInfo(lineSplit, transcripts)  # Get transcript information
-                # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
-                found, readLevel = getReadLevel(minRDs, int(lineSplit[12]))  # Get the level of read depth and if it's not analyzable
-
-                if re.match("-", found):
-                    found = "yes"
-                print (str(lineSplit[0]) + "\t" + str(lineSplit[6]) + "\t" + exonicType + "\t" + aa + "\t" + cds + "\t" + accNum + "\t-\tother\t" + found + "\t" + readLevel + "\t" + str(lineSplit[12]) + "\t" + str(lineSplit[10]) + "\t" + str(lineSplit[11]) + "\t" + str(lineSplit[9]) + "\t" + str(lineSplit[14]) + "\t" + str(lineSplit[13]) + "\t" + str(lineSplit[16]) + "\t" + str(lineSplit[15]) + "\t" + str(lineSplit[17]) + "\t" + str(lineSplit[18]) + "\t" + str(lineSplit[19]) + "\t" + str(lineSplit[28]) + "\t" + str(lineSplit[29]) + "\t" + str(lineSplit[26]) + "\t" + str(lineSplit[27]) + "\t" + str(lineSplit[20]) + "\t" + str(lineSplit[21]) + "\t" + str(lineSplit[22]) + "\t" + str(lineSplit[23]) + "\t" + str(lineSplit[24]) + "\t" + str(lineSplit[25]) + "\t" + str(lineSplit[31]) + "\t" + str(lineSplit[30]) + "\t" + str(lineSplit[1]) + "\t" + str(lineSplit[2]) + "\t" + str(lineSplit[3]) + "\t" + str(lineSplit[4]) + "\t" + str(lineSplit[5]) + "\t" + str(lineSplit[32]))
-
-
-    # Check if the filteredAnnovarfile is closed, if not close it
-    if not filteredAnnovar.closed:
-        filteredAnnovar.close()
-intronic = {}  # empty intronic hash
-
-# Open variation file from SNPmania
-with open(args.variationfile, 'r') as variationfile:
-# Go through the file line by line
-    for line in variationfile:
-        # Check so the line isn't empty or starts with #
-        if not re.match('^#', line) and not re.match('^$', line):
-            line = line.rstrip('\r\n')  # Remove new line character
-            lineSplit = line.split("\t")  # Split line by tab
-
-            chrom = lineSplit[3]
-            position = int(lineSplit[4])
-
-            if chrom.startswith("chr"):
-                chrom = nc2chr[chrom]
-
-            # Go through region_all and add read depth to positions without variant
-            if chrom in hotspots['region_all']:
-                for start in hotspots['region_all'][chrom]:
-                    if position >= int(start):
-                        for end in hotspots['region_all'][chrom][start]:
-                            if position <= int(end):
-                                if isinstance(hotspots['region_all'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
-                                    hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
-                                else:
-                                    rds = ["-"] * int(end) - int(start) + 1  # create array to add read depth in
-                                    hotspots['region_all'][chrom][start][end]['rd'] = rds  # Adding list to rd
-                                    hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
-
-            # Go through hotspot and add read depth to positions without variant
-            if chrom in hotspots['hotspot']:
-                for start in hotspots['hotspot'][chrom]:
-                    if position >= int(start):
-                        for end in hotspots['hotspot'][chrom][start]:
-                            if position <= int(end):
-                                if isinstance(hotspots['hotspot'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
-                                    hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
-                                else:
-                                    rds = ["-"] * [(end - start + 1)]  # create array to add read depth in
-                                    hotspots['hotspot'][chrom][start][end]['rd'] = rds  # Adding list to rd
-                                    hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                # Go through hotspot and add read depth to positions without variant
+                if chrom in hotspots['hotspot']:
+                    for start in hotspots['hotspot'][chrom]:
+                        if position >= int(start):
+                            for end in hotspots['hotspot'][chrom][start]:
+                                if position <= int(end):
+                                    if isinstance(hotspots['hotspot'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
+                                        hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                                    else:
+                                        rds = ["-"] * [(end - start + 1)]  # create array to add read depth in
+                                        hotspots['hotspot'][chrom][start][end]['rd'] = rds  # Adding list to rd
+                                        hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
 
     if not variationfile.closed:
         variationfile.close()
 
-# Print hotspot positions
-if "hotspot" in hotspots:
-    printHotspots(hotspots, minRDs, args.sample, transcripts)
+    # Print hotspot positions
+    if "hotspot" in hotspots:
+        printHotspots(hotspots, minRDs, args.sample, transcripts, outputFile)
 
-if "region" in hotspots:
-    printRegion(hotspots, minRDs, args.sample, transcripts)
+    if "region" in hotspots:
+        printRegion(hotspots, minRDs, args.sample, transcripts, outputFile)
 
-if "indel" in hotspots:
-    printIndel(hotspots, minRDs, args.sample, transcripts)
+    if "indel" in hotspots:
+        printIndel(hotspots, minRDs, args.sample, transcripts, outputFile)
 
-if "region_all" in hotspots:
-    printRegionAll(hotspots, minRDs, args.sample, transcripts)
+    if "region_all" in hotspots:
+        printRegionAll(hotspots, minRDs, args.sample, transcripts, outputFile)
 
+    if not outputFile.closed:
+        outputFile.close()
 
 
 
