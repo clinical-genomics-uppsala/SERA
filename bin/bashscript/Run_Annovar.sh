@@ -15,9 +15,6 @@ SuccessLog $SAMPLEID "Starts Annovar ...";
 if [ ! -d $ROOT_PATH/AnnovarOutput ]; then 
 	mkdir $ROOT_PATH/AnnovarOutput;
 fi
-if [ ! -d $ROOT_PATH/FilteredAnnovarOutput ]; then 
-	mkdir $ROOT_PATH/FilteredAnnovarOutput;
-fi 
 
 
 if [ ${NORMAL_SAMPLEID} != "false" ]; then
