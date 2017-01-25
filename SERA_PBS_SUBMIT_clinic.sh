@@ -31,12 +31,10 @@ steps=(
 12 "SNPmania output to Annovar input" on "jSNPmania2AnnovarInput.sh" "11" 0 \
 13 "Run Annovar" on "Run_Annovar.sh" "12" 0 \
 14 "Combine Annovar output to one file" off "Combine_annovarOutput_to_one_file.sh" "13" 2 \
-15 "Extract info about clinical positions" on "ExtractInfoClinicalPositions.sh" "11" 0 \
 20 "Run Pindel" on "Run_Pindel.sh" "4" 0 \
 21 "Annotate Pindel with Annovar" on "AnnotatePindel.sh" "20" 0 \
-25 "Filter Annovar and Pindelannovar output" on "FilterAnnovar.sh" "13:21" 0 \
-26 "Merge info about clinical positions, indels from Pindel and regions" on "MergeAllClinicalInfo.sh" "15:21:25" 0 \
-27 "Convert Annovar output to vcf-format" on "ConvertAnnovaroutput2vcf.sh" "25" 0 \
+25 "Output all mutations (hotspots and others)" on "FilterMutations.sh" "13:21" 0 \
+26 "Convert Annovar output to vcf-format" on "ConvertAnnovaroutput2vcf.sh" "25" 0 \
 30 "Extract MSI markers" on "ExtractMSI.sh" "13:21:25" 0 \
 31 "Combine extracted MSI markers to one file" on "Combine_extracted_MSI.sh" "30" 2 \
 32 "Extract EGFR information" on "Extract_T790M.sh" "11" 0 \
