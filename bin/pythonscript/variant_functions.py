@@ -461,6 +461,8 @@ def getTranscriptInfo(lineSplit, transcripts):
     if re.match("splicing", lineSplit[7]):
         exonicType = lineSplit[7]
     aa = cds = accNum = exon = "-"  # set the parameters to - as default
+    comm = "-"  # If variable to add comment in
+    found = False;
     if not re.match("-", lineSplit[32]):  # Check that there are any transcript
         allTranscript = lineSplit[32].split(",")  # Split all transcripts on ,
         # If the gene exist in preferd transcript hash use that transcript, otherwise take the first
@@ -468,6 +470,7 @@ def getTranscriptInfo(lineSplit, transcripts):
             for tr in allTranscript:  # if so go through and see if any transcript overlaps with the main transcript in hash
                 if transcripts[gene] in tr:
                     transcriptInfo = tr.split(":")
+                    found = True  # The main transript is found in the list of transcript for this mutation
                     if len(transcriptInfo) >= 5:
                         aa = transcriptInfo[4]
                         cds = transcriptInfo[3]
@@ -482,6 +485,9 @@ def getTranscriptInfo(lineSplit, transcripts):
                         accNum = transcriptInfo[1]
                     elif len(transcriptInfo) >= 2:
                         accNum = transcriptInfo[1]
+
+            if not found:
+                comm = "altTranscript"
         else:
             transcriptInfo = allTranscript[0].split(":")
 
@@ -500,10 +506,18 @@ def getTranscriptInfo(lineSplit, transcripts):
             elif len(transcriptInfo) >= 2:
                 accNum = transcriptInfo[1]
 
-    return aa, cds, accNum, exon, exonicType
+    return aa, cds, accNum, exon, exonicType, comm
 
-
-
+# Give the comment to report
+def setComment(transcriptComm, inputComm):
+    comm = "-"
+    if not re.match("-", transcriptComm):
+        if not re.match("-", inputComm):
+            comm = transcriptComm + " " + inputComm
+        else:
+            comm = transcriptComm
+    else:
+        comm = inputComm
 
 
 

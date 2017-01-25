@@ -12,9 +12,7 @@
 SuccessLog $SAMPLEID "Starts Annovar ...";
 
 # Check if the directory exists, if not create it
-if [[ ! -d $ROOT_PATH/AnnovarOutput ]]; then 
-    mkdir $ROOT_PATH/AnnovarOutput;
-fi
+
 if [[ ! -d $ROOT_PATH/FilteredMutations ]]; then 
     mkdir $ROOT_PATH/FilteredMutations;
 fi 
@@ -28,12 +26,12 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 	if [[ ${READS} == "true" ]]; then
         if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
             if [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
-                if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.variations]]; then
+                if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
                     ANNOVARFILE="$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput";
                     PINDELANNOVARFILE="$ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput";
                     SNPMANIAFILE="$ROOT_PATH/SNPmania/${SAMPLEID}.variations";
                 
-                elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations]]; then
+                elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput && -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
                     ANNOVARFILE="$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput";
                     PINDELANNOVARFILE="$ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput";
                     SNPMANIAFILE="$ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations";
@@ -43,15 +41,18 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                     ErrorLog "$SAMPLEID" "All inputfiles needed can not be found!";
                 fi
             
-                if [[ -e $ANNOVARFILE && $PINDELANNOVARFILE && $SNPMANIAFILE]]; then
-                    if [[ ${TYPE} == "ovarial" ]]; then
-                        cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/ExtractDepth_new.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.singleSample.filteredMutations -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPT} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}
-                        echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/ExtractDepth_new.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.singleSample.filteredMutations -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPT} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}"
-                        
-                    else
-                        cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/ExtractDepth_new.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.singleSample.filteredMutations -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPT} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}
-                        echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/ExtractDepth_new.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.singleSample.filteredMutations -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPT} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}"
+                if [[ -e $ANNOVARFILE && -e $PINDELANNOVARFILE && -e $SNPMANIAFILE ]]; then
+                    if [[ (! -e $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv) || ($FORCE == "true") ]]; then
+                        if [[ ${TYPE} == "ovarial" ]]; then
+                            cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}
+                            echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}"
+                            
+                        else
+                            cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}
+                            echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} ${MUTATION_FLAGS}"
                         fi
+                    else
+                        ErrorLog "$SAMPLEID" "Output file $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv already exists and Force was not used!";
                     fi
                 else
                     ErrorLog "$SAMPLEID" "The annovar output file $ANNOVARFILE and/or pindel annovar output file $PINDELANNOVARFILE and/or SNPmania varition file $SNPMANIAFILE do NOT exist!!!";
