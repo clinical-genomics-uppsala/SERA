@@ -16,7 +16,7 @@ parser.add_argument('-g', '--genome1000', help = 'Set the maximum allowed freque
 parser.add_argument('-b', '--blacklistfile', help = 'File with blacklisted variants (Required)', required = True)
 parser.add_argument('-a', '--ampliconmapped', help = 'Set if data is ampliconmapped. Default: False', action = "store_true")
 parser.add_argument('-t', '--transcript', help = 'File with the \"main\" transcript for each gene.', required = True, type = str)
-
+parser.add_argument('-minVaf', '--minVaf', help = 'Minimum variant allele frequency for a variant to be included in the output', type = float, required = True)
 
 args = parser.parse_args()
 
@@ -114,7 +114,7 @@ with open(args.output, 'w') as outputFile:
                     lineSplit[1] = nc2chr["chr" + lineSplit[1]]
 
                 # Filter annovar output filesCreate a hash with the mutations that are ok
-                if not addVariantInfo(lineSplit, minRDs, blacklist, args.genome1000, args.ampliconmapped, hotspots, intronic):
+                if not addVariantInfo(lineSplit, minRDs, blacklist, args.genome1000, args.ampliconmapped, hotspots, intronic, args.minVaf):
                     aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(lineSplit, transcripts)  # Get transcript information
                     # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                     found, readLevel = getReadLevel(minRDs, int(lineSplit[12]))  # Get the level of read depth and if it's not analyzable

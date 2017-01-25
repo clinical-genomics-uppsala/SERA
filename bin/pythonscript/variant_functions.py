@@ -99,13 +99,13 @@ def hotspotVariant(lineSplit, hotspots):
             if end - start == 0:
                 if start in hotspots['hotspot'][chrom]:
                     if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # if bwa results
-                        if re.match("no", hotspots['hotspot'][chrom][start][start]['bwa']):  # If no bwa variant is added before
+                        if isinstance(hotspots['hotspot'][chrom][start][start]['bwa'], list):  # If no bwa variant is added before
                             hotspots['hotspot'][chrom][start][end]['bwa'] = []  # Create list for the variant
 
                         hotspots['hotspot'][chrom][start][end]['bwa'].append(lineSplit)  # Add the variant to the list
                         return True  # return True that the variant is added
                     else:  # Pindel result
-                        if re.match("no", hotspots['hotspot'][chrom][start][start]['pindel']):  # If no pindel variant was added before
+                        if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
                             hotspots['hotspot'][chrom][start][end]['pindel'] = []  # Create list for the variant
 
                         hotspots['hotspot'][chrom][start][end]['pindel'].append(lineSplit)  # Add the variant to the list
@@ -115,7 +115,7 @@ def hotspotVariant(lineSplit, hotspots):
                 if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # bwa results
                     # start of the variant exist in hotspot hash add variant to start position
                     if start in hotspots['hotspot'][chrom]:
-                        if re.match("no", hotspots['hotspot'][chrom][start][start]['bwa']):
+                        if isinstance(hotspots['hotspot'][chrom][start][start]['bwa'], list):  # If no bwa variant is added before
                             hotspots['hotspot'][chrom][start][start]['bwa'] = []
 
                         hotspots['hotspot'][chrom][start][start]['bwa'].append(lineSplit)
@@ -125,13 +125,13 @@ def hotspotVariant(lineSplit, hotspots):
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
                                 if start <= e and end > s:
-                                    if re.match("no", hotspots['hotspot'][chrom][s][e]['bwa']):
+                                    if isinstance(hotspots['hotspot'][chrom][start][start]['bwa'], list):  # If no bwa variant is added before
                                         hotspots['hotspot'][chrom][s][e]['bwa'] = []
                                     hotspots['hotspot'][chrom][s][e]['bwa'].append(lineSplit)
                                     return True
                 else:  # pindel result
                     if start in hotspots['hotspot'][chrom]:
-                        if re.match("no", hotspots['hotspot'][chrom][start][start]['pindel']):
+                        if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
                             hotspots['hotspot'][chrom][start][start]['pindel'] = []
                         hotspots['hotspot'][chrom][start][start]['pindel'].append(lineSplit)
                         return True
@@ -140,7 +140,7 @@ def hotspotVariant(lineSplit, hotspots):
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
                                 if start <= e and end > s:
-                                    if re.match("no", hotspots['hotspot'][chrom][s][e]['pindel']):
+                                    if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
                                         hotspots['hotspot'][chrom][s][e]['pindel'] = []
                                     hotspots['hotspot'][chrom][s][e]['pindel'].append(lineSplit)
                                     return True
@@ -309,76 +309,79 @@ def indelVariant(lineSplit, hotspots):
 
     return False
 
-def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic):
+def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, minVaf):
     chrom = lineSplit[1]
     start = lineSplit[2]
     end = lineSplit[3]
     ref = lineSplit[4]
     var = lineSplit[5]
     gene = lineSplit[6]
+    vaf = lineSplit[9]
+    rd = int(lineSplit[12])
 
-    intr = False  # This is not an intronic position to save
-    if chrom in intronic:
-        for c in intronic:
-            for s in intronic[c]:
-                for e in intronic[c][s]:
-                    if start <= e and end >= s:  # Check if the variant overlaps an intronic region to keep
-                        intr = True
+    if rd >= minRD[0] and float(vaf) >= minVaf:  # Total read depth is above lowest minRd and that the variant allele frequency is above the given value
+        intr = False  # This is not an intronic position to save
+        if chrom in intronic:
+            for c in intronic:
+                for s in intronic[c]:
+                    for e in intronic[c][s]:
+                        if start <= e and end >= s:  # Check if the variant overlaps an intronic region to keep
+                            intr = True
 
-    # Keep if it's exonic or splicing or intronic to keep
-    if re.match('^exonic', lineSplit[7]) or re.match('splicing', lineSplit[7]) or intr:
+        # Keep if it's exonic or splicing or intronic to keep
+        if re.match('^exonic', lineSplit[7]) or re.match('splicing', lineSplit[7]) or intr:
 
-        # Remove all synonymous variants
-        if (not re.match('^synonymous', lineSplit[8])) or intr:
+            # Remove all synonymous variants
+            if (not re.match('^synonymous', lineSplit[8])) or intr:
 
-            # Keep those without a value in 1000G or a value that is lower than the given input
-            if re.match('-', str(lineSplit[13])) or float(lineSplit[13]) <= g1000:
+                # Keep those without a value in 1000G or a value that is lower than the given input
+                if re.match('-', str(lineSplit[13])) or float(lineSplit[13]) <= g1000:
 
-                varOK = True
-                # Check if ampliconmapped is set and if so check amplicon status
-                if ampliconmapped:
-                    varOK = False
-                    # Set amplicon info
+                    varOK = True
+                    # Check if ampliconmapped is set and if so check amplicon status
+                    if ampliconmapped:
+                        varOK = False
+                        # Set amplicon info
 
-                    ref_plus = ref_minus = var_plus = var_minus = 0
-                    if not re.match('-', lineSplit[26]):
-                        var_plus = int(lineSplit[26])
-                    if not re.match('-', lineSplit[27]):
-                        var_minus = int(lineSplit[27])
-                    if not re.match('-', lineSplit[28]):
-                        ref_plus = int(lineSplit[28])
-                    if not re.match('-', lineSplit[29]):
-                        ref_minus = int(lineSplit[29])
+                        ref_plus = ref_minus = var_plus = var_minus = 0
+                        if not re.match('-', lineSplit[26]):
+                            var_plus = int(lineSplit[26])
+                        if not re.match('-', lineSplit[27]):
+                            var_minus = int(lineSplit[27])
+                        if not re.match('-', lineSplit[28]):
+                            ref_plus = int(lineSplit[28])
+                        if not re.match('-', lineSplit[29]):
+                            ref_minus = int(lineSplit[29])
 
-                    if (ref_plus + ref_minus) >= 3:
-                        if (var_plus + var_minus) >= 2:
-                            varOK = True
-                    elif (ref_plus + ref_minus) >= 1:
-                        if (var_plus + var_minus) >= 1:
-                            varOK = True
-                    elif (ref_plus + ref_minus) >= 0:
-                        if (var_plus + var_minus) >= 0:
-                            varOK = True
+                        if (ref_plus + ref_minus) >= 3:
+                            if (var_plus + var_minus) >= 2:
+                                varOK = True
+                        elif (ref_plus + ref_minus) >= 1:
+                            if (var_plus + var_minus) >= 1:
+                                varOK = True
+                        elif (ref_plus + ref_minus) >= 0:
+                            if (var_plus + var_minus) >= 0:
+                                varOK = True
 
-                # Check if the amplicon info is okey
-                if varOK:
-                    # Remove blacklist variants
-                    if not chrom in blacklist:
-                        return True
-                    else:
-                        if not start in blacklist[chrom]:
+                    # Check if the amplicon info is okey
+                    if varOK:
+                        # Remove blacklist variants
+                        if not chrom in blacklist:
                             return True
                         else:
-                            if not end in blacklist[chrom][start]:
+                            if not start in blacklist[chrom]:
                                 return True
                             else:
-                                if not ref in blacklist[chrom][start][end]:
+                                if not end in blacklist[chrom][start]:
                                     return True
                                 else:
-                                    if not var in blacklist[chrom][start][end][ref]:
+                                    if not ref in blacklist[chrom][start][end]:
                                         return True
                                     else:
-                                        return False
+                                        if not var in blacklist[chrom][start][end][ref]:
+                                            return True
+                                        else:
+                                            return False
 
     return False
 
@@ -416,14 +419,14 @@ def createBlacklist(line, blacklist):
         blacklist[chrom][start][end][ref][var] = gene
 
 # Add info about a variant existing in the hotspot hash
-def addVariantInfo(lineSplit, minRD, blacklist, g1000, ampliconmapped, hotspots, intronic):
+def addVariantInfo(lineSplit, minRD, blacklist, g1000, ampliconmapped, hotspots, intronic, minVaf):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
     ref = lineSplit[4]
     var = lineSplit[5]
 
     # If the variant is okey add to hash
-    varOK = filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic)
+    varOK = filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, minVaf)
 
     variantAdded = False
     if varOK:

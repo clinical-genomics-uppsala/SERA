@@ -163,13 +163,15 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                                 found, readLevel = getReadLevel (minRDs, int(hotspots['region_all'][chrom][start][end]['rd'][c]))
                                 if re.match("-", found):
                                     found = "no"
-                                rd = getReadLevel (minRDs, int(hotspots['region_all'][chrom][start][end]['rd'][c]))
+
                         else:  # position is not within design
                             found = "not in design"
                             readLevel = "-"
                             rd = "-"
 
                         OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\tregion_all\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
+#                        if re.match("low", readLevel) or re.match("-", readLevel):  # Only print if the readLevel is low or -
+#                            OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\tregion_all\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
 
 # OUTPUT.write variants within region, both bwa and pindel. However it does not OUTPUT.write total read depth for all positions without variant
 def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
