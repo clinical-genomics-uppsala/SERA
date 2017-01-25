@@ -35,12 +35,10 @@ parser.add_argument('-annovarFlags', '--annovarFlags', help = 'Set parameters fo
 parser.add_argument('-annovarPlasmaFlags', '--annovarPlasmaFlags', help = 'Set parameters for pre-annovar filtering when only tumor is present. Default: -minRD 20 -minVarRatio 0.001', type = str, default = " -minRD 20 -minVarRatio 0.001")
 parser.add_argument('-pindelAnnovarFlags', '--pindelAnnovarFlags', help = 'Set parameters for pre-annovar filtering of pindel results. Default: -m 20 -v 0.01', type = str, default = "-m 20 -v 0.01")
 parser.add_argument('-pindelAnnovarPlasmaFlags', '--pindelAnnovarPlasmaFlags', help = 'Set parameters for pre-annovar filtering of pindel results. Default: -m 20 -v 0.001', type = str, default = "-m 20 -v 0.001")
-parser.add_argument('-clinicalFlags', '--clinicalFlags', help = 'Set parameters for extracting clinical positions. Default: -minRD 30,300 -minVarRatio 0.01 -minAmpRD 5', type = str, default = "-minRD 30,300 -minVarRatio 0.01 -minAmpRD 5")
-parser.add_argument('-clinicalPlasmaFlags', '--clinicalPlasmaFlags', help = 'Set parameters for extracting clinical positions. Default: -minRD 30,300 -minVarRatio 0.001', type = str, default = "-minRD 30,300 -minVarRatio 0.001")
-parser.add_argument('-pindelClinicalFlags', '--pindelClinicalFlags', help = 'Set parameters for extracting indels from pindel in clinical genes. Default: -minRD 30,300 -minVarRatio 0.01', type = str, default = "-minRD 30,300 -minVarRatio 0.01")
-parser.add_argument('-pindelClinicalPlasmaFlags', '--pindelClinicalPlasmaFlags', help = 'Set parameters for extracting indels from pindel in clinical genes. Default: -minRD 30,300 -minVarRatio 0.001', type = str, default = "-minRD 30,300 -minVarRatio 0.001")
+parser.add_argument('-mutationFlags', '--mutationsFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others. Default: -minRD 30,300 -minVaf 0.01', type = str, default = " -minRD 30,300 -minVaf 0.01")
+parser.add_argument('-mutationPlasmaFlags', '--mutationsPlasmaFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others in plasma. Default: -minRD 30,300 -minVaf 0.001', type = str, default = " -minRD 30,300 -minVaf 0.001")
 parser.add_argument('-clinicalInfoFile', '--clinicalInfoFile', help = 'File with clinical hotspot and indel filenames per cancer type. If not wanted set to false! Default: clinicalCancerTypeFiles.txt', type = str, default = "clinicalCancerTypeFiles.txt")
-parser.add_argument('-regionClinicalFlags', '--regionClinicalFlags', help = 'Set parameters for reporting all positions in whole regions. Default: -minRD 30,300', type = str, default = "-minRD 30,300")
+
 
 args = parser.parse_args()
 info = {}
@@ -146,23 +144,6 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['hotspot'] = "false"
                     else:
                         info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['hotspot']
-                    # If the given indel file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["colon"]['indel']):
-                        info[lineSplit[1]]['indel'] = "false"
-                    else:
-                        info[lineSplit[1]]['indel'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['indel']
-
-                    # If the given region file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["colon"]['region']):
-                        info[lineSplit[1]]['region'] = "false"
-                    else:
-                        info[lineSplit[1]]['region'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['region']
-
-                    # If the given keep file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["colon"]['keep']):
-                        info[lineSplit[1]]['keep'] = "false"
-                    else:
-                        info[lineSplit[1]]['keep'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['keep']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["colon"]['amplification']):
@@ -184,23 +165,6 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['hotspot'] = "false"
                     else:
                         info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['hotspot']
-                    # If the given indel file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["lung"]['indel']):
-                        info[lineSplit[1]]['indel'] = "false"
-                    else:
-                        info[lineSplit[1]]['indel'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['indel']
-
-                    # If the given region file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["lung"]['region']):
-                        info[lineSplit[1]]['region'] = "false"
-                    else:
-                        info[lineSplit[1]]['region'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['region']
-
-                     # If the given keep file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["lung"]['keep']):
-                        info[lineSplit[1]]['keep'] = "false"
-                    else:
-                        info[lineSplit[1]]['keep'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['keep']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["lung"]['amplification']):
@@ -222,23 +186,6 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['hotspot'] = "false"
                     else:
                         info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['hotspot']
-                    # If the given indel file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["gist"]['indel']):
-                        info[lineSplit[1]]['indel'] = "false"
-                    else:
-                        info[lineSplit[1]]['indel'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['indel']
-
-                    # If the given region file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["gist"]['region']):
-                        info[lineSplit[1]]['region'] = "false"
-                    else:
-                        info[lineSplit[1]]['region'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['region']
-
-                     # If the given keep file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["gist"]['keep']):
-                        info[lineSplit[1]]['keep'] = "false"
-                    else:
-                        info[lineSplit[1]]['keep'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['keep']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["gist"]['amplification']):
@@ -260,23 +207,6 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['hotspot'] = "false"
                     else:
                         info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['hotspot']
-                    # If the given indel file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['indel']):
-                        info[lineSplit[1]]['indel'] = "false"
-                    else:
-                        info[lineSplit[1]]['indel'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['indel']
-
-                    # If the given region file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['region']):
-                        info[lineSplit[1]]['region'] = "false"
-                    else:
-                        info[lineSplit[1]]['region'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['region']
-
-                     # If the given keep file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['keep']):
-                        info[lineSplit[1]]['keep'] = "false"
-                    else:
-                        info[lineSplit[1]]['keep'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['keep']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['amplification']):
@@ -298,23 +228,6 @@ with open(args.infile, 'r') as infile:
                         info[lineSplit[1]]['hotspot'] = "false"
                     else:
                         info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['hotspot']
-                    # If the given indel file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["melanom"]['indel']):
-                        info[lineSplit[1]]['indel'] = "false"
-                    else:
-                        info[lineSplit[1]]['indel'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['indel']
-
-                    # If the given region file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["melanom"]['region']):
-                        info[lineSplit[1]]['region'] = "false"
-                    else:
-                        info[lineSplit[1]]['region'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['region']
-
-                     # If the given keep file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["melanom"]['keep']):
-                        info[lineSplit[1]]['keep'] = "false"
-                    else:
-                        info[lineSplit[1]]['keep'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['keep']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["melanom"]['amplification']):
@@ -333,9 +246,6 @@ with open(args.infile, 'r') as infile:
                     sys.exit()
             else:
                 info[lineSplit[1]]['hotspot'] = "false"
-                info[lineSplit[1]]['indel'] = "false"
-                info[lineSplit[1]]['region'] = "false"
-                info[lineSplit[1]]['keep'] = "false"
                 info[lineSplit[1]]['amplification'] = "false"
                 info[lineSplit[1]]['background'] = "false"
 
@@ -408,13 +318,9 @@ with (open(output, mode = 'w'))as outfile:
     outfile.write("export ANNOVAR_PLASMA_FLAGS=\"" + args.annovarPlasmaFlags + "\";\n")
     outfile.write("export PINDEL_ANNOVAR_FLAGS=\"" + args.pindelAnnovarFlags + "\";\n")
     outfile.write("export PINDEL_ANNOVAR_PLASMA_FLAGS=\"" + args.pindelAnnovarPlasmaFlags + "\";\n")
+    outfile.write("export MUTATION_FLAGS=\"" + args.mutationsFlags + "\";\n")
+    outfile.write("export MUTATION_PLASMA_FLAGS=\"" + args.mutationsPlasmaFlags + "\";\n")
 
-    outfile.write("\n## Clinical filtering\n")
-    outfile.write("export CLINICAL_FLAGS=\"" + args.clinicalFlags + "\";\n")
-    outfile.write("export CLINICAL_PLASMA_FLAGS=\"" + args.clinicalPlasmaFlags + "\";\n")
-    outfile.write("export PINDEL_CLINICAL_FLAGS=\"" + args.pindelClinicalFlags + "\";\n")
-    outfile.write("export PINDEL_CLINICAL_PLASMA_FLAGS=\"" + args.pindelClinicalPlasmaFlags + "\";\n")
-    outfile.write("export REGION_CLINICAL_FLAGS=\"" + args.regionClinicalFlags + "\";\n")
 
 
 
@@ -441,9 +347,6 @@ with (open(output, mode = 'w'))as outfile:
             outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
         outfile.write ("NORMAL_SAMPLEID_ARR_[${COUNT}]=\"" + info[sample]['normal'] + "\";\n")
         outfile.write ("HOTSPOTFILE_ARR_[${COUNT}]=\"" + info[sample]['hotspot'] + "\";\n")
-        outfile.write ("INDELFILE_ARR_[${COUNT}]=\"" + info[sample]['indel'] + "\";\n")
-        outfile.write ("REGIONFILE_ARR_[${COUNT}]=\"" + info[sample]['region'] + "\";\n")
-        outfile.write ("KEEPFILE_ARR_[${COUNT}]=\"" + info[sample]['keep'] + "\";\n")
         outfile.write ("AMPLIFICATIONFILE_ARR_[${COUNT}]=\"" + info[sample]['amplification'] + "\";\n")
         outfile.write ("BACKGROUNDFILE_ARR_[${COUNT}]=\"" + info[sample]['background'] + "\";\n")
         outfile.write ("METHOD_ARR_[${COUNT}]=\"" + info[sample]['method'] + "\";\n")
