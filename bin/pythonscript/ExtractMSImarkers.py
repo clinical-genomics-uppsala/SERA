@@ -29,12 +29,12 @@ with open(args.inputfile, 'r') as infile:
 
             else:
                 line = line.rstrip('\r\n').split("\t")  # Remove new line character and split on tab
-                start = int(line[2])
-                end = int(line[3])
-                ref = line[4]
-                var = line[5]
-                gene = line[6]
-                vaf = float(line[9])
+                start = int(line[35])
+                end = int(line[36])
+                ref = line[37]
+                var = line[38]
+                gene = line[1]
+                vaf = float(line[14])
 
                 if ("A" in ref and "A" in var) or "A" in ref or "A" in var:
                     if re.match('^TGFBR2$', gene):
