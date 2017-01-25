@@ -29,25 +29,26 @@ with open(args.inputfile, 'r') as infile:
 
             else:
                 line = line.rstrip('\r\n').split("\t")  # Remove new line character and split on tab
-                start = int(line[35])
-                end = int(line[36])
-                ref = line[37]
-                var = line[38]
-                gene = line[1]
-                vaf = float(line[14])
+                if re.match("yes", line[9]):
+                    start = int(line[35])
+                    end = int(line[36])
+                    ref = line[37]
+                    var = line[38]
+                    gene = line[1]
+                    vaf = float(line[14])
 
-                if ("A" in ref and "A" in var) or "A" in ref or "A" in var:
-                    if re.match('^TGFBR2$', gene):
-                        if end - start == 0 and len(var) == 1:
-                            if vaf >= args.tgfbr2Ratio_1bp:
-                                outannovar.write("\t".join(line) + "\n")
-                        else:
-                            if vaf >= args.tgfbr2Ratio_2bp:
-                                outannovar.write("\t".join(line) + "\n")
-                    elif re.match('^ACVR2A$' , gene):
-                        if end - start == 0 and len(var) == 1:
-                            if vaf >= args.acvr2aRatio_1bp:
-                                outannovar.write("\t".join(line) + "\n")
-                        else:
-                            if vaf >= args.acvr2aRatio_2bp:
-                                outannovar.write("\t".join(line) + "\n")
+                    if ("A" in ref and "A" in var) or "A" in ref or "A" in var:
+                        if re.match('^TGFBR2$', gene):
+                            if end - start == 0 and len(var) == 1:
+                                if vaf >= args.tgfbr2Ratio_1bp:
+                                    outannovar.write("\t".join(line) + "\n")
+                            else:
+                                if vaf >= args.tgfbr2Ratio_2bp:
+                                    outannovar.write("\t".join(line) + "\n")
+                        elif re.match('^ACVR2A$' , gene):
+                            if end - start == 0 and len(var) == 1:
+                                if vaf >= args.acvr2aRatio_1bp:
+                                    outannovar.write("\t".join(line) + "\n")
+                            else:
+                                if vaf >= args.acvr2aRatio_2bp:
+                                    outannovar.write("\t".join(line) + "\n")
