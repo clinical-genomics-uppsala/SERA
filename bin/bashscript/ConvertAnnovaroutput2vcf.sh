@@ -15,38 +15,39 @@ if [[ ! -d $ROOT_PATH/vcfOutput ]]; then
 fi 
 ANNOVARFILE=""
 if [[ ${READS} == "true" ]]; then
-
-    # Check which output file from Annovar that exists
-	if [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput ]]; then
-		ANNOVARFILE=$ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.filtered.annovarOutput
-
-	elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput ]]; then
-	    ANNOVARFILE=$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput
-
-	elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ]]; then
-	    ANNOVARFILE=$ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput
-
-	elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput ]]; then
-		ANNOVARFILE=$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput
-
-	else
-		ErrorLog "$SAMPLEID" "No output file from Annovar was found!";
-	fi
-    
-    if [[ -e $ANNOVARFILE ]]; then
-        if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
-                
-                python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v ${ANNOVARFILE} -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+    if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
+        # Check which output file from Annovar that exists
+    	if [[ -e $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv ]]; then
+            python ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+            if [[ ${METHOD} == "swift" && ${TISSUE} == "ovarial" ]]; then
+                awk 'BEGIN{FS="\t"}{if($1!~/^Sample/ && $15>=0.05){print $0}}' $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv | python ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m /dev/stdin -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+            fi
         else
-            ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
-        fi
-        if [[ ${METHOD} == "swift" && ${TISSUE} == "ovarial" ]]; then
-            awk 'BEGIN{FS="\t"}{if($1!~/^Sample/ && $10>=0.05){print $0}}' ${ANNOVARFILE} | python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v /dev/stdin -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}._vaf0.05.vcf
+            elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput ]]; then
+                ANNOVARFILE=$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput
+    
+    	    elif [[ -e $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput ]]; then
+                ANNOVARFILE=$ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput
+    
+            elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput ]]; then
+                ANNOVARFILE=$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput
+    
+    	    else
+    		    ErrorLog "$SAMPLEID" "No output file from Annovar was found!";
+    	    fi
+    
+            if [[ -e $ANNOVARFILE ]]; then
+                    python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v ${ANNOVARFILE} -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+                if [[ ${METHOD} == "swift" && ${TISSUE} == "ovarial" ]]; then
+                    awk 'BEGIN{FS="\t"}{if($1!~/^Sample/ && $10>=0.05){print $0}}' ${ANNOVARFILE} | python ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v /dev/stdin -s $ROOT_PATH/Files/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}._vaf0.05.vcf
+                fi
+            else
+                ErrorLog "$SAMPLEID" "Neither filtered mutations output ($ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv) nor the output file from Annovar ($ANNOVARFILE) was not found!";
+            fi
         fi
     else
-        ErrorLog "$SAMPLEID" "The output file from Annovar ($ANNOVARFILE] was not found!";
+        ErrorLog "$SAMPLEID" "$ROOT_PATH/vcfOutput/${SAMPLEID}.vcf already exists and Force was not used!";
     fi
-
 else
 	ErrorLog "$SAMPLEID" "READS has to be true for the analysis to run!";
 	
