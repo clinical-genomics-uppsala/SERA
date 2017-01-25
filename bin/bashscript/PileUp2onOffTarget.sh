@@ -10,19 +10,19 @@
 . $SERA_PATH/includes/logging.sh;
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/Specificity" ]; then
+if [[ ! -d "$ROOT_PATH/Specificity" ]]; then
 	mkdir $ROOT_PATH/Specificity;
 fi
 
 SuccessLog "${SAMPLEID}" "Starting counting on- and offtarget bases...";
 
 # Check if the call type are set to h.sapiens and that reads true, otherwise print error messages
-if [ ${CALL_TYPE} == "h.sapiens" ]; then 
-	if [ ${READS} == "true" ]; then
+if [[ ${CALL_TYPE} == "h.sapiens" ]]; then 
+	if [[ ${READS} == "true" ]]; then
 		# Check that the input file exists
-		if [ -e $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz ]; then
+		if [[ -e $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz ]]; then
 			# Check if the reference file with ampregion exists
-			if [ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]; then
+			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
 				zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion;
 				
 				# gzip the output files
@@ -33,7 +33,7 @@ if [ ${CALL_TYPE} == "h.sapiens" ]; then
 			fi
 			
 			# Check if the reference file seqregion exists
-			if [ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]; then
+			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
 				zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion;
 				# gzip output files
 				gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
@@ -52,7 +52,7 @@ else
 fi
 
 # Check if the extraction of on- and offtarget bases worked
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "${SAMPLEID}" "failed in extracting on- and offtarget bases...";
 else
 	SuccessLog "${SAMPLEID}" "on- and offtarget bases extracted...";

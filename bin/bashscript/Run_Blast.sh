@@ -14,11 +14,11 @@
 NUMPROC="4";
 
 # Check if BLAST analysis is possible.
-if [ $PLATFORM == "SOLiD" ]; then
+if [[ $PLATFORM == "SOLiD" ]]; then
 	ErrorLog "${SAMPLEID}" "${0##*/}" "Analysis is not supported for SOLiD data.";
 	exit 0;
 fi
-if [ $MATE_PAIR != "true" ]; then
+if [[ $MATE_PAIR != "true" ]]; then
 	ErrorLog "${SAMPLEID}" "${0##*/}" "Mate-pair data needed for this analysis.";
 	exit 0;
 fi
@@ -30,7 +30,7 @@ if [[ ! -f "$ROOT_PATH/BLAST/Databases/${SAMPLEID}.ReadsDB.nhr" ]] && [[ ! -f "$
 fi
 
 # Check if folder exist.
-if [ ! -d "$ROOT_PATH/BLAST/Runs" ]; then
+if [[ ! -d "$ROOT_PATH/BLAST/Runs" ]]; then
 	mkdir $ROOT_PATH/BLAST/Runs;
 fi
 
@@ -39,7 +39,7 @@ SuccessLog "${SAMPLEID}" "${0##*/}" "Starting Blast analysis.";
 # Running BlastAll
 cd $ROOT_PATH/BLAST/Runs;
 
-if [ ${READS} == "true" ]; then 
+if [[ ${READS} == "true" ]]; then 
 	zcat $ROOT_PATH/BLAST/Databases/${SAMPLEID}.fragments.fasta.gz | blastall -p blastn -a ${NUMPROC} -b 1000000 -d $ROOT_PATH/BLAST/Databases/${SAMPLEID}.ReadsDB -i /dev/stdin -m 8 | gzip - > $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.gz;
 
 	SuccessLog "${SAMPLEID}" "${0##*/}" "Filtering BLAST Results with max mm = ${BLAST_MM} bp, and minimal match length of ${BLAST_ML} bp.";
@@ -52,7 +52,7 @@ if [ ${READS} == "true" ]; then
 		fragId=$i;
 	
 		hits=$(zcat $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.filtered.gz | grep "${fragId}\b" | cut -f 2);
-		if [ "$hits" != "" ]; then
+		if [[ "$hits" != "" ]]; then
 			echo -e "$fragId\t$hits" >> $ROOT_PATH/BLAST/${SAMPLEID}.blast.hits.txt;
 		else
 			echo -e "$fragId\t0" >> $ROOT_PATH/BLAST/${SAMPLEID}.blast.hits.txt;

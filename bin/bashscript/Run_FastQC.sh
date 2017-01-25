@@ -10,11 +10,11 @@
 . $SERA_PATH/includes/logging.sh
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/FastQC" ]; then
+if [[ ! -d "$ROOT_PATH/FastQC" ]]; then
     mkdir $ROOT_PATH/FastQC;
 fi
 
-if [ "$MATE_PAIR" == "true" ]; then
+if [[ "$MATE_PAIR" == "true" ]]; then
     extraLoginfo="mate-pair/pair-ends";
 else
     extraLoginfo="single";
@@ -24,11 +24,11 @@ SuccessLog "${SAMPLEID}" "Building $extraLoginfo reads Mosaik input file...";
 
 # Run FastQC
 # If platform is Illumina
-if [ $PLATFORM = "Illumina" ]; then
+if [[ $PLATFORM = "Illumina" ]]; then
 
     # Check that the output file doesn't exist or if force is given
     # Do paired end library or not
-    if [ "$MATE_PAIR" == "true" ]; then
+    if [[ "$MATE_PAIR" == "true" ]]; then
         # Check that input files exist, if not print error message
         if [[ -e ${RAWDATA_PE1} && ${RAWDATA_PE2} ]]; then
             fastqc -o FastQC ${RAWDATA_PE1} ${RAWDATA_PE2} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
@@ -50,7 +50,7 @@ if [ $PLATFORM = "Illumina" ]; then
     # If single reads are used only care about the first read
     else
         # Check that input file exists, if not print error message
-        if [ -e ${RAWDATA_PE1} ]; then
+        if [[ -e ${RAWDATA_PE1} ]]; then
             fastqc -o FastQC ${RAWDATA_PE1} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
         else 
             ErrorLog "${SAMPLEID}" "${RAWDATA_PE1} does NOT exist!";
@@ -69,7 +69,7 @@ else
 fi
     
 # Check if MosaikBuild worked
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
     ErrorLog "${SAMPLEID}" "Failed in FastQC...";
 else
     SuccessLog "${SAMPLEID}" "Passed FastQC ($extraLoginfo reads)";

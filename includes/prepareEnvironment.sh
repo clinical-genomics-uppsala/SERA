@@ -33,13 +33,13 @@ count=${#SAMPLEID_ARR_[@]};
 let NUMBEROFSAMPLES=count-1;
 
 # Include home or proj specific globals
-if [ $GLOBALS = "HOME" ]; then 
+if [[ $GLOBALS = "HOME" ]]; then 
 	. $SERA_PATH/config/globalsHome.sh;
 else
 	. $SERA_PATH/config/globalsProj.sh;
 fi
 ## Include server-specific globals
-#if [ "$SOFTWARE" = "SLURM" ]; then
+#if [[ "$SOFTWARE" = "SLURM" ]]; then
 #	. $SERA_PATH/config/globalsUppnex.sh;
 #else
 #	. $SERA_PATH/config/globalsSmaug.sh;
@@ -49,7 +49,7 @@ fi
 if [[ ! -d "$ROOT_PATH/slurmOutput" && $SOFTWARE = "SLURM" ]]; then
 	mkdir slurmOutput;
 fi
-#if [ ! -e "$LOG_FILE" ]; then
+#if [[ ! -e "$LOG_FILE" ]]; then
 #	echo -e "<?xml version='1.0'?>\n<document info=\"$title\">\n</document>" > $LOG_FILE;
 #fi
 
@@ -95,9 +95,9 @@ MP="single end"; if [[ $MATE_PAIR = "true" ]]; then MP="paired end"; fi;
 if [[ $SOFTWARE = "SLURM" ]]; then INFO="Running on $SOFTWARE with project $UPPNEX_PROJECT_ID. ";
 else INFO="Running in pure bash environment. "; fi
 INFO=${INFO}"Analyzing $ADJ_SAMPLENUMBER samples from $DESIGN_TYPE design with $READ_LENGTH bp $PLATFORM $MP sequencing data. ";
-if [ ! -z $FORCE ]; then INFO=${INFO}"All previous data will be overwritten for associated steps. "; fi
+if [[ ! -z $FORCE ]]; then INFO=${INFO}"All previous data will be overwritten for associated steps. "; fi
 if [[ $ALIGN_NONUNIQUE == "true" ]]; then INFO=${INFO}"Analyzing both unique and nonunique. "; else INFO=${INFO}"Analyzing only unique reads. "; fi
-if [ ! -z $CALL_TYPE ]; then INFO=${INFO}"SNP calling on $CALL_TYPE."; fi
+if [[ ! -z $CALL_TYPE ]]; then INFO=${INFO}"SNP calling on $CALL_TYPE."; fi
 
 #prepare variable array for concatenation for running post submit scripts
 POST="";

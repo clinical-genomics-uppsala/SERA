@@ -3,17 +3,17 @@
 function runStep {
 	
 	# if submitting to slurm cluster
-	if [ "$SOFTWARE" = "SLURM" ]; then
+	if [[ "$SOFTWARE" = "SLURM" ]]; then
 		
 		#transform dependency list to sbatch parameter
 		DEP="";
-		if [ ${3} != "false" ]; then
+		if [[ ${3} != "false" ]]; then
 			DEP_ARR=( `echo ${3} | awk 'BEGIN{FS=":"}{for (i=1; i<=NF; i++) printf $i" "}'` );
 			
 			# if elements found in array, add the correct dependency
 			for depstep in ${DEP_ARR[@]}; do
-				if [ ! -z "${RUN_STEP[${depstep}]}" ]; then
-					if [ ! -z ${DEP} ]; then
+				if [[ ! -z "${RUN_STEP[${depstep}]}" ]]; then
+					if [[ ! -z ${DEP} ]]; then
 						DEP_TMP=$DEP
 						DEP="$DEP_TMP:`echo ${RUN_STEP[${depstep}]} | awk '{print $4}'`";
 						DEP_TMP=""
@@ -24,7 +24,7 @@ function runStep {
 				
 				# if it is a POST step, add the correct dependency from the array with all stepts and dependencies to the POST array
 				if [[ ${4} = 1 || ${4} = 2 ]]; then
-					if [ ! -z "${ALL_STEP[${depstep}]}" ]; then
+					if [[ ! -z "${ALL_STEP[${depstep}]}" ]]; then
 						for dependency in ${ALL_STEP[${depstep}]}; do
 							POST+=":"$dependency;
 						done;
@@ -39,7 +39,7 @@ function runStep {
 #				echo "Running post steps with dependency $DEP";	# TMP REMOVE ME!
 
 			# if there are jobs in queue that this step depends upon, add dependency
-			elif [ ! -z $DEP ]; then
+			elif [[ ! -z $DEP ]]; then
 				DEP="-d afterok${DEP}";
 			fi;
 		fi
@@ -50,7 +50,7 @@ function runStep {
 		
 		RUN_STEP[${1}]=$SUBMIT_TEXT
 				
-		if [ ! -z ALL_STEP[${1}] ]; then
+		if [[ ! -z ALL_STEP[${1}] ]]; then
 			ALL_STEP[${1}]+=" "${SUBMIT_TEXT_ARR[3]}
 		else
 			ALL_STEP[${1}]=${SUBMIT_TEXT_ARR[3]}
@@ -64,7 +64,7 @@ function runStep {
 
 
 # SUBMIT SCRIPTS
-if [ "$SOFTWARE" = "SLURM" ]; then echo "Submitting to cluster..."; else echo "Running scripts..."; fi
+if [[ "$SOFTWARE" = "SLURM" ]]; then echo "Submitting to cluster..."; else echo "Running scripts..."; fi
 for i in $(seq 0 $NUMBEROFSAMPLES); do
 	
 	#export sample-specific variables
@@ -78,12 +78,6 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
     echo -e "\tRefseq="$REFSEQ >> $PIPELINE_LOG;
     hotspots=($(echo $HOTSPOTFILE | tr "/" " "));
     echo -e "\tHotspots"=${hotspots[${#hotspots[@]}-1]} >> $PIPELINE_LOG;
-    indels=($(echo $INDELFILE | tr "/" " "));
-    echo -e "\tIndels"=${indels[ ${#indels[@]}-1]} >> $PIPELINE_LOG;
-    keep=($(echo $KEEPFILE | tr "/" " "));
-    echo -e "\tTumor_suppressor_regions"=${keep[ ${#keep[@]}-1]} >> $PIPELINE_LOG;
-    regions=($(echo $REGIONFILE | tr "/" " "));
-    echo -e "\tIntronic_regions"=${regions[ ${#regions[@]}-1]} >> $PIPELINE_LOG;
     amp=($(echo $AMPLIFICATIONFILE | tr "/" " "));
     echo -e "\tAmplification_regions"=${amp[ ${#amp[@]}-1]} >> $PIPELINE_LOG;
     backg=($(echo $BACKGROUNDFILE | tr "/" " "));

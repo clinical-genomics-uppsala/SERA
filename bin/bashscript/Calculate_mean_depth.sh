@@ -12,15 +12,15 @@
 SuccessLog "${SAMPLEID}" "Running mean depth calculation...";
 
 # Calculating mean depth amregion
-if [ ${READS} == "true" ]; then
-	if [ ${CALL_TYPE} == "h.sapiens" ]; then
-		if [ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map ]; then
+if [[ ${READS} == "true" ]]; then
+	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
+		if [[ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map ]]; then
 			depthSeqRegionUniq=`awk 'BEGIN{s=0;}{s+=\$3}END{print FILENAME"\tDEPTH_SEQREGION_UNIQ="(s/NR);}' $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map`;
 			echo -e "${depthSeqRegionUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;
 		else
 			ErrorLog "${SAMPLEID}" "Input file $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map does NOT exist!";
 		fi
-		if [ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map ]; then
+		if [[ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map ]]; then
 			depthSeqRoiUniq=`awk 'BEGIN{s=0;}{s+=\$3}END{print FILENAME"\tDEPTH_SEQROI_UNIQ="(s/NR);}' $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map`;
 			echo -e "${depthSeqRoiUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;
 		else

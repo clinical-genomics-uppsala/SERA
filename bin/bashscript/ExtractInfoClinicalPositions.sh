@@ -12,16 +12,16 @@
 SuccessLog $SAMPLEID "Starts extrating info about clinical positions ...";
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/ClinicalVariants" ]; then
+if [[ ! -d "$ROOT_PATH/ClinicalVariants" ]]; then
 	mkdir $ROOT_PATH/ClinicalVariants;
 fi
 
-if [ ${HOTSPOTFILE}!="false" ]; then
+if [[ ${HOTSPOTFILE}!="false" ]]; then
 	# Check that READS are true
-	if [ ${READS} == "true" ]; then
+	if [[ ${READS} == "true" ]]; then
 		# Check that the call type are set to h.sapiens
-		if [ ${CALL_TYPE} == "h.sapiens" ]; then
-            if [ ${TYPE} == "ffpe" ]; then
+		if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
+            if [[ ${TYPE} == "ffpe" ]]; then
                 if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
     				echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
     				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
@@ -32,7 +32,7 @@ if [ ${HOTSPOTFILE}!="false" ]; then
     			else
     				ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
     			fi
-            elif [ ${TYPE} == "plasma" ]; then
+            elif [[ ${TYPE} == "plasma" ]]; then
                 if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
                     echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
                     perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
@@ -59,7 +59,7 @@ else
 
 fi
 
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "$SAMPLEID" "Failed in extracting info for clinical positions";
 else
 	SuccessLog "$SAMPLEID" "Passed extracting info for clinical positions";

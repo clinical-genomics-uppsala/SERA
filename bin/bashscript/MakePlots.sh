@@ -13,7 +13,7 @@
 SuccessLog ${REFSEQ} "Starts generating plot files...";
 
 # Check if data exist.
-if [ ! -d "$ROOT_PATH/plotValues" ]; then
+if [[ ! -d "$ROOT_PATH/plotValues" ]]; then
 	ErrorLog ${REFSEQ} "Failed to locate a plotValues folder.";	
 	exit 1;
 fi
@@ -24,8 +24,8 @@ fi
 #echo "perl $SERA_PATH/bin/perlscript/makeGnuplotFile.pl -i $SERA_PATH/plotFile.xml -o $ROOT_PATH/plotPdfs -p $ROOT_PATH/plotValues -plot;"
 #perl $SERA_PATH/bin/perlscript/makeGnuplotFile_old.pl -i $SERA_PATH/plotFileOld -o $ROOT_PATH/plotPdfs;
 if [[ -d $ROOT_PATH/plotPdfs || ! -z $FORCE ]]; then
-	if [ ${READS} == "true" ]; then
-		if [ ${CALL_TYPE} == "h.sapiens" ]; then
+	if [[ ${READS} == "true" ]]; then
+		if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 			perl $SERA_PATH/bin/perlscript/makeGnuplotFile_old.pl -i $ROOT_PATH/plotPdfs/plotFile.txt -o $ROOT_PATH/plotPdfs;
 		fi
 	fi
@@ -34,7 +34,7 @@ if [[ -d $ROOT_PATH/plotPdfs || ! -z $FORCE ]]; then
 	find . -name "*.gnuplot" -exec gnuplot '{}' \;
 
 	# Check if makeGnuplotFile.pl worked
-	if [ "$?" != "0" ]; then
+	if [[ "$?" != "0" ]]; then
 		ErrorLog $REFSEQ "Nusbaum and stenberg plots failed to be generated.";
 	else
 		SuccessLog $REFSEQ "Nusbaum and stenberg plots successfully created.";

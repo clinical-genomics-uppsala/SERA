@@ -9,12 +9,12 @@
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
-if [ ${METHOD} == "haloplex" ]; then
-    if [ ! -d $ROOT_PATH/AmpliconCoverage ]; then
+if [[ ${METHOD} == "haloplex" ]]; then
+    if [[ ! -d $ROOT_PATH/AmpliconCoverage ]]; then
     	mkdir $ROOT_PATH/AmpliconCoverage
     fi
     
-    if [ ! -d $ROOT_PATH/AmpliconMapped ]; then
+    if [[ ! -d $ROOT_PATH/AmpliconMapped ]]; then
     	mkdir $ROOT_PATH/AmpliconMapped
     fi
     
@@ -65,14 +65,14 @@ if [ ${METHOD} == "haloplex" ]; then
     else
     	ErrorLog ${SAMPLEID} "So far only supported for Illumina!";
     fi
-elif [ ${METHOD} == "swift" ]; then
+elif [[ ${METHOD} == "swift" ]]; then
     SuccessLog "${SAMPLEID}" "Ampliconmapping is not needed for swift samples - skipping!";
 
 else
     ErrorLog "${SAMPLEID}" "halo and swift are the only methods supported so far!";
 fi
 # Check if readsVSmolecules worked
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "${SAMPLEID}" "Failed in ampliconMapping...";
 else
 	SuccessLog "${SAMPLEID}" "Passed ampliconMapping...";

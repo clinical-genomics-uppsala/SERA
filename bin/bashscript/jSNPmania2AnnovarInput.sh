@@ -11,20 +11,20 @@
 SuccessLog $SAMPLEID "Starts creating annovar input from jSNPmania ...";
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/Annovar" ]; then
+if [[ ! -d "$ROOT_PATH/Annovar" ]]; then
 	mkdir $ROOT_PATH/Annovar;
 fi
 
 # Check that READS are true
-if [ ${READS} == "true" ]; then
+if [[ ${READS} == "true" ]]; then
 	# Check if NORMAL_SAMPLEID is set to false - in that case we are done
-	if [ ${NORMAL_SAMPLEID} == "false" ]; then
+	if [[ ${NORMAL_SAMPLEID} == "false" ]]; then
 		SuccessLog "$SAMPLEID" "NORMAL_SAMPLEID is set to false - no annovar input will be created!";
 
 	# Check if the NORMAL_SAMPLEID is set to annovar - then the sample should be run without tumor - normal comparison
-	elif [ ${NORMAL_SAMPLEID} == "annovar" ]; then
+	elif [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
 	    # Check if the type is ffpe
-	    if [ ${TYPE} == "ffpe" ]; then
+	    if [[ ${TYPE} == "ffpe" ]]; then
 	        # Check if the output contain amplicon information
     		if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
     			if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
@@ -43,7 +43,7 @@ if [ ${READS} == "true" ]; then
     		else
     			ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
     		fi
-        elif [ ${TYPE} == "plasma" ]; then
+        elif [[ ${TYPE} == "plasma" ]]; then
             # Check if the output contain amplicon information
             if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
                 if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
@@ -68,14 +68,14 @@ if [ ${READS} == "true" ]; then
             
 	# Run tumor-normal analysis
 	else
-		ErrorLog "$SAMPLEID" "Only implemented for NORMAL_SAMPLEID false so far!";
+		ErrorLog "$SAMPLEID" "Only implemented for NORMAL_SAMPLEID annovar and false so far!";
 	fi
 else
 	ErrorLog "$SAMPLEID" "READS has to be true to run the analysis!";
 fi
 
 
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "$SAMPLEID" "Failed in jSNPmania2annovarInput";
 else
 	SuccessLog "$SAMPLEID" "Passed jSNPmania2annovarInput";

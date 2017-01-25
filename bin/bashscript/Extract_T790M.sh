@@ -11,15 +11,15 @@
 SuccessLog $SAMPLEID "Starts extracting info about EGFR positions ...";
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/Extracted_sampleInfo" ]; then
+if [[ ! -d "$ROOT_PATH/Extracted_sampleInfo" ]]; then
 	mkdir $ROOT_PATH/Extracted_sampleInfo;
 fi
 
 # Check that READS are true
-if [ ${READS} == "true" ]; then
+if [[ ${READS} == "true" ]]; then
 	# Check that the call type are set to h.sapiens
-	if [ ${CALL_TYPE} == "h.sapiens" ]; then
-		if [ ${TISSUE} == "lung" ]; then
+	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
+		if [[ ${TISSUE} == "lung" ]]; then
 			# Check if the output contain amplicon information
 			if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
 				
@@ -90,7 +90,7 @@ else
 fi
 
 
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "$SAMPLEID" "Failed in extractin info about EGFR positions";
 else
 	SuccessLog "$SAMPLEID" "Passed extracting info about EGFR positions";

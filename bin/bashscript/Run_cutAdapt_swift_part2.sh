@@ -77,11 +77,11 @@ export -f r1reformat
 export -f r2reformat
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/seqdata" ]; then
+if [[ ! -d "$ROOT_PATH/seqdata" ]]; then
     mkdir $ROOT_PATH/seqdata;
 fi
 
-if [ $PLATFORM = "Illumina" ]; then
+if [[ $PLATFORM = "Illumina" ]]; then
 
 <<'comm'
     # get sequencing tags
@@ -89,7 +89,7 @@ if [ $PLATFORM = "Illumina" ]; then
     ILLUMINA_ADAPTER_TRIMMOMATIC="/proj/b2013222/private/nobackup/20170103_AccelAmplicon_BRCA_ctDNA_all/refFiles/TruSeq3-PE-2.fa";
 
     # If MATE_PAIR is set to true in the input file
-    if [ "$MATE_PAIR" == "true" ]; then
+    if [[ "$MATE_PAIR" == "true" ]]; then
         # Check that output file doesn't exist then run cutAdapt, if it does print error message
         if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
             PE1_G_T="${PREFIX}_R1_trimd.fq.gz";
@@ -160,7 +160,7 @@ comm
 fi
 
 
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
     ErrorLog "${SAMPLEID}" "Failed in cutadapt...";
 else
     SuccessLog "${SAMPLEID}" "Passed cutadapt";

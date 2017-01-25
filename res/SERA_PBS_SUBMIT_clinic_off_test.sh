@@ -71,7 +71,7 @@ let NUMBOFSTEPS=${#steps[@]}-1;
 ##############
 
 # Start interface
-if [ -z "$INTERFACE" ]; then
+if [[ -z "$INTERFACE" ]]; then
     . $SERA_PATH/includes/commandLineInterface.sh
 else
     . $SERA_PATH/includes/dialogInterface.sh

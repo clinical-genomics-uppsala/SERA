@@ -10,12 +10,12 @@
 . $SERA_PATH/includes/logging.sh;
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/Specificity" ]; then
+if [[ ! -d "$ROOT_PATH/Specificity" ]]; then
 	mkdir $ROOT_PATH/Specificity;
 fi
 
 SuccessLog "${SAMPLEID}" "Starting counting on- and offtarget bases...";
-if [ ${READS} == "true" ]; then
+if [[ ${READS} == "true" ]]; then
 	# Check if the ampregion input files exists
 	if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget.gz && $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget.gz ]]; then 
 		gunzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget.gz;
@@ -54,7 +54,7 @@ if [ ${READS} == "true" ]; then
 fi
 
 # Check if specificity calculations worked
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
         ErrorLog "${SAMPLEID}" "failed in calculating specificity...";
 else
         SuccessLog "${SAMPLEID}" "passed calculating specificity...";

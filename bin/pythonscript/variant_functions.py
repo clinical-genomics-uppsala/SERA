@@ -99,13 +99,13 @@ def hotspotVariant(lineSplit, hotspots):
             if end - start == 0:
                 if start in hotspots['hotspot'][chrom]:
                     if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # if bwa results
-                        if isinstance(hotspots['hotspot'][chrom][start][start]['bwa'], list):  # If no bwa variant is added before
+                        if isinstance(hotspots['hotspot'][chrom][start][end]['bwa'], list):  # If no bwa variant is added before
                             hotspots['hotspot'][chrom][start][end]['bwa'] = []  # Create list for the variant
 
                         hotspots['hotspot'][chrom][start][end]['bwa'].append(lineSplit)  # Add the variant to the list
                         return True  # return True that the variant is added
                     else:  # Pindel result
-                        if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
+                        if isinstance(hotspots['hotspot'][chrom][start][end]['pindel'], list):  # If no pindel variant was added before
                             hotspots['hotspot'][chrom][start][end]['pindel'] = []  # Create list for the variant
 
                         hotspots['hotspot'][chrom][start][end]['pindel'].append(lineSplit)  # Add the variant to the list
@@ -125,13 +125,13 @@ def hotspotVariant(lineSplit, hotspots):
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
                                 if start <= e and end > s:
-                                    if isinstance(hotspots['hotspot'][chrom][start][start]['bwa'], list):  # If no bwa variant is added before
+                                    if isinstance(hotspots['hotspot'][chrom][s][e]['bwa'], list):  # If no bwa variant is added before
                                         hotspots['hotspot'][chrom][s][e]['bwa'] = []
                                     hotspots['hotspot'][chrom][s][e]['bwa'].append(lineSplit)
                                     return True
                 else:  # pindel result
                     if start in hotspots['hotspot'][chrom]:
-                        if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
+                        if isinstance(hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
                             hotspots['hotspot'][chrom][start][start]['pindel'] = []
                         hotspots['hotspot'][chrom][start][start]['pindel'].append(lineSplit)
                         return True
@@ -140,7 +140,7 @@ def hotspotVariant(lineSplit, hotspots):
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
                                 if start <= e and end > s:
-                                    if isinstance("no", hotspots['hotspot'][chrom][start][start]['pindel'], list):  # If no pindel variant was added before
+                                    if isinstance(hotspots['hotspot'][chrom][s][e]['pindel'], list):  # If no pindel variant was added before
                                         hotspots['hotspot'][chrom][s][e]['pindel'] = []
                                     hotspots['hotspot'][chrom][s][e]['pindel'].append(lineSplit)
                                     return True
@@ -160,7 +160,7 @@ def regionVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['region_all'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['region_all'][chrom][start][e]['bwa']):
+                            if isinstance(hotspots['region_all'][chrom][start][e]['bwa'], list):  # If no variant was added before
                                 hotspots['region_all'][chrom][start][e]['bwa'] = []
                             hotspots['region_all'][chrom][start][e]['bwa'].append(lineSplit)
                             added = True  # set the variant to added
@@ -172,7 +172,7 @@ def regionVariant(lineSplit, hotspots):
                     for s in hotspots['region_all'][chrom]:
                         for e in hotspots['region_all'][chrom][s]:
                             if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['region_all'][chrom][s][e]['bwa']):
+                                if isinstance(hotspots['region_all'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['region_all'][chrom][s][e]['bwa'] = []
                                 hotspots['region_all'][chrom][s][e]['bwa'].append(lineSplit)
                                 added = True
@@ -183,7 +183,7 @@ def regionVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['region_all'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['region_all'][chrom][start][e]['pindel']):
+                            if isinstance(hotspots['region_all'][chrom][start][e]['pindel'], list):  # If no variant was added before
                                 hotspots['region_all'][chrom][start][e]['pindel'] = []
                             hotspots['region_all'][chrom][start][e]['pindel'].append(lineSplit)
                             added = True  # set the variant to added
@@ -195,7 +195,7 @@ def regionVariant(lineSplit, hotspots):
                     for s in hotspots['region_all'][chrom]:
                         for e in hotspots['region_all'][chrom][s]:
                             if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['region_all'][chrom][s][e]['pindel']):
+                                if isinstance(hotspots['region_all'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['region_all'][chrom][s][e]['pindel'] = []
                                 hotspots['region_all'][chrom][s][e]['pindel'].append(lineSplit)
                                 added = True
@@ -209,7 +209,7 @@ def regionVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['region'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['region'][chrom][start][e]['bwa']):
+                            if isinstance(hotspots['region'][chrom][start][e]['bwa'], list):  # If no variant was added before
                                 hotspots['region'][chrom][start][e]['bwa'] = []
                             hotspots['region'][chrom][start][e]['bwa'].append(lineSplit)
                             added = True  # set the variant to added
@@ -221,7 +221,7 @@ def regionVariant(lineSplit, hotspots):
                     for s in hotspots['region'][chrom]:
                         for e in hotspots['region'][chrom][s]:
                             if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['region'][chrom][s][e]['bwa']):
+                                if isinstance(hotspots['region'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['region'][chrom][s][e]['bwa'] = []
                                 hotspots['region'][chrom][s][e]['bwa'].append(lineSplit)
                                 added = True
@@ -232,7 +232,7 @@ def regionVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['region'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['region'][chrom][start][e]['pindel']):
+                            if isinstance(hotspots['region'][chrom][start][e]['pindel'], list):  # If no variant was added before
                                 hotspots['region'][chrom][start][e]['pindel'] = []
                             hotspots['region'][chrom][start][e]['pindel'].append(lineSplit)
                             added = True  # set the variant to added
@@ -244,7 +244,7 @@ def regionVariant(lineSplit, hotspots):
                     for s in hotspots['region'][chrom]:
                         for e in hotspots['region'][chrom][s]:
                             if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['region'][chrom][s][e]['pindel']):
+                                if isinstance(hotspots['region'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['region'][chrom][s][e]['pindel'] = []
                                 hotspots['region'][chrom][s][e]['pindel'].append(lineSplit)
                                 added = True
@@ -266,7 +266,7 @@ def indelVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['indel'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['indel'][chrom][start][e]['bwa']):
+                            if isinstance(hotspots['region'][chrom][start][e]['bwa'], list):  # If no variant was added before
                                 hotspots['indel'][chrom][start][e]['bwa'] = []
                             hotspots['indel'][chrom][start][e]['bwa'].append(lineSplit)
                             added = True  # set the variant to added
@@ -278,7 +278,7 @@ def indelVariant(lineSplit, hotspots):
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
                             if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['indel'][chrom][s][e]['bwa']):
+                                if isinstance(hotspots['region'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['bwa'] = []
                                 hotspots['indel'][chrom][s][e]['bwa'].append(lineSplit)
                                 added = True
@@ -289,7 +289,7 @@ def indelVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['indel'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if re.match("no", hotspots['indel'][chrom][start][e]['pindel']):
+                            if isinstance(hotspots['region'][chrom][start][e]['pindel'], list):  # If no variant was added before
                                 hotspots['indel'][chrom][start][e]['pindel'] = []
                             hotspots['indel'][chrom][start][e]['pindel'].append(lineSplit)
                             added = True  # set the variant to added
@@ -301,7 +301,7 @@ def indelVariant(lineSplit, hotspots):
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
                             if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if re.match("no", hotspots['indel'][chrom][s][e]['pindel']):
+                                if isinstance(hotspots['region'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['pindel'] = []
                                 hotspots['indel'][chrom][s][e]['pindel'].append(lineSplit)
                                 added = True
