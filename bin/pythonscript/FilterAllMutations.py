@@ -147,46 +147,48 @@ with open(args.output, 'w') as outputFile:
                     chrom = nc2chr[chrom]
 
                 # Go through region_all and add read depth to positions without variant
-                if chrom in hotspots['region_all']:
-                    for start in hotspots['region_all'][chrom]:
-                        if position >= int(start):
-                            for end in hotspots['region_all'][chrom][start]:
-                                if position <= int(end):
-                                    if isinstance(hotspots['region_all'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
-                                        hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
-                                    else:
-                                        rds = ["-"] * int(end) - int(start) + 1  # create array to add read depth in
-                                        hotspots['region_all'][chrom][start][end]['rd'] = rds  # Adding list to rd
-                                        hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                if "region_all" in hotspots:
+                    if chrom in hotspots['region_all']:
+                        for start in hotspots['region_all'][chrom]:
+                            if position >= int(start):
+                                for end in hotspots['region_all'][chrom][start]:
+                                    if position <= int(end):
+                                        if isinstance(hotspots['region_all'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
+                                            hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                                        else:
+                                            rds = ["-"] * int(end) - int(start) + 1  # create array to add read depth in
+                                            hotspots['region_all'][chrom][start][end]['rd'] = rds  # Adding list to rd
+                                            hotspots['region_all'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
 
                 # Go through hotspot and add read depth to positions without variant
-                if chrom in hotspots['hotspot']:
-                    for start in hotspots['hotspot'][chrom]:
-                        if position >= int(start):
-                            for end in hotspots['hotspot'][chrom][start]:
-                                if position <= int(end):
-                                    if isinstance(hotspots['hotspot'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
-                                        hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
-                                    else:
-                                        rds = ["-"] * [(end - start + 1)]  # create array to add read depth in
-                                        hotspots['hotspot'][chrom][start][end]['rd'] = rds  # Adding list to rd
-                                        hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                if "hotspot" in hotspots:
+                    if chrom in hotspots['hotspot']:
+                        for start in hotspots['hotspot'][chrom]:
+                            if position >= int(start):
+                                for end in hotspots['hotspot'][chrom][start]:
+                                    if position <= int(end):
+                                        if isinstance(hotspots['hotspot'][chrom][start][end]['rd'], list):  # if a list already exist only add read depth otherwise create list first
+                                            hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
+                                        else:
+                                            rds = ["-"] * [(end - start + 1)]  # create array to add read depth in
+                                            hotspots['hotspot'][chrom][start][end]['rd'] = rds  # Adding list to rd
+                                            hotspots['hotspot'][chrom][start][end]['rd'][(position - start)] = lineSplit[0]  # Adding total read depth might want to change this to reference read depth....
 
     if not variationfile.closed:
         variationfile.close()
 
     # Print hotspot positions
     if "hotspot" in hotspots:
-        printHotspots(hotspots, minRDs, args.sample, transcripts, outputFile)
+        printHotspots(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
 
     if "region" in hotspots:
-        printRegion(hotspots, minRDs, args.sample, transcripts, outputFile)
+        printRegion(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
 
     if "indel" in hotspots:
-        printIndel(hotspots, minRDs, args.sample, transcripts, outputFile)
+        printIndel(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
 
     if "region_all" in hotspots:
-        printRegionAll(hotspots, minRDs, args.sample, transcripts, outputFile)
+        printRegionAll(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
 
     if not outputFile.closed:
         outputFile.close()

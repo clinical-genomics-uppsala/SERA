@@ -520,4 +520,19 @@ def setComment(transcriptComm, inputComm):
         comm = inputComm
 
 
+# Give the amplicon info
+def getAmpliconInfo(lineSplit, ampliconMapped):
+    if ampliconMapped:
+        refPlus = lineSplit[28]
+        refMinus = lineSplit[29]
+        varPlus = lineSplit[26]
+        varMinus = lineSplit[27]
+        refAll = lineSplit[31]
+        varAll = lineSplit[30]
+    else:
+        refPlus, refMinus, varPlus, varMinus, refAll, varAll = "NA"
+
+    return refPlus, refMinus, varPlus, varMinus, refAll, varAll
+
+
 
