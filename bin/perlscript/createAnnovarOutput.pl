@@ -170,13 +170,13 @@ sub printSingleSample {
 			if (! $line[5] =~ m/ncRNA/i ) { # if it's not a ncRNA
                 my ( $gene1, $gene2 ) = split( /;/, $line[6] );
                 my $spliceTrans = $line[7];
-                $spliceTrans =~ s/NM/$gene1.":NM"/g; 
+                $spliceTrans =~ s/NM/$gene1:NM/g; 
 			    $transcriptString = $spliceTrans.",".$line[9];
 			}
 			else{
 				$line[5] =~ s/ncRNA_exonic;//;
 				my ( $gene1, $gene2 ) = split( /;/, $line[6] );
-                my $spliceTrans =~ s/NM/$gene2.":NM"/g; 
+                my $spliceTrans =~ s/NM/$gene2:NM/g; 
                 $transcriptString = $spliceTrans;
                 $gene = $gene2;
 			}
@@ -184,7 +184,7 @@ sub printSingleSample {
 		else {
 			$gene = $line[6];
 			$transcriptString = $line[7];
-			$transcriptString =~ s/NM/$gene.":NM"/g; 
+			$transcriptString =~ s/NM/$gene:NM/g; 
 		}
 
 #		# Substitute end parenthesis with nothing
