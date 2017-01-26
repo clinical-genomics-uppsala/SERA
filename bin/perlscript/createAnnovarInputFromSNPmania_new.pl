@@ -775,13 +775,13 @@ sub checkMultipleBpVariant {
                                     $totRd = $nextLine[13];
                                 }
                                 if ($ampliconMapped) {
-                                    print OUTPUT $ncToChr{ $chrom } . "\t".$keyPos[$i]."\t".$keyPos[$j]. "\t". $ref."\t".$var."\tcomments: sample=".$sample
+                                    print OUTPUT $ncToChr{ $chrom } . "\t".$keyPos[$i]."\t".$keyPos[$j]. "\t". $ref."\t".$var."\tcomments: sample=".$sample. " variantAlleleRatio=".$vaf
                                         . " alleleFreq=".$allelFreq." readDepth=".$totRd. " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=- Tumor_var_plusAmplicons=-"
                                         ." Tumor_var_minusAmplicons=- Tumor_ref_plusAmplicons=- Tumor_ref_minusAmplicons=- Tumor_var_ampliconInfo=- Tumor_ref_ampliconInfo=-\n";
 
                                 }
                                 else {
-                                    print OUTPUT $ncToChr{ $chrom } . "\t".$keyPos[$i]."\t".$keyPos[$j]. "\t". $ref."\t".$var."\tcomments: sample=".$sample
+                                    print OUTPUT $ncToChr{ $chrom } . "\t".$keyPos[$i]."\t".$keyPos[$j]. "\t". $ref."\t".$var."\tcomments: sample=".$sample. " variantAlleleRatio=".$vaf
                                         . " alleleFreq=".$allelFreq." readDepth=".$totRd. " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=-\n";
                                 }
                             }
@@ -796,6 +796,7 @@ sub checkMultipleBpVariant {
         }
     }
 }
+
 
 sub getMajorVaf{
     my $variants = shift;
