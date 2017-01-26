@@ -149,8 +149,8 @@ def hotspotVariant(lineSplit, hotspots):
 
 def regionVariant(lineSplit, hotspots):
     chrom = lineSplit[1]
-    start = lineSplit[2]
-    end = lineSplit[3]
+    start = int(lineSplit[2])
+    end = (lineSplit[3])
 
     if "region_all" in hotspots:
         # start with checking if the chromosome exists in the region_all part of the hash
@@ -255,8 +255,8 @@ def regionVariant(lineSplit, hotspots):
 
 def indelVariant(lineSplit, hotspots):
     chrom = lineSplit[1]
-    start = lineSplit[2]
-    end = lineSplit[3]
+    start = int(lineSplit[2])
+    end = (lineSplit[3])
 
     if "indel" in hotspots:
         # start with checking if the chromosome exists in the indel part of the hash
@@ -266,7 +266,7 @@ def indelVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['indel'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if not isinstance(hotspots['region'][chrom][start][e]['bwa'], list):  # If no variant was added before
+                            if not isinstance(hotspots['indel'][chrom][start][e]['bwa'], list):  # If no variant was added before
                                 hotspots['indel'][chrom][start][e]['bwa'] = []
                             hotspots['indel'][chrom][start][e]['bwa'].append(lineSplit)
                             added = True  # set the variant to added
@@ -278,7 +278,7 @@ def indelVariant(lineSplit, hotspots):
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
                             if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if not isinstance(hotspots['region'][chrom][s][e]['bwa'], list):  # If no variant was added before
+                                if not isinstance(hotspots['indel'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['bwa'] = []
                                 hotspots['indel'][chrom][s][e]['bwa'].append(lineSplit)
                                 added = True
@@ -289,7 +289,7 @@ def indelVariant(lineSplit, hotspots):
                     added = False
                     for e in hotspots['indel'][chrom][start]:
                         if not added:  # if the variant is not added already
-                            if not isinstance(hotspots['region'][chrom][start][e]['pindel'], list):  # If no variant was added before
+                            if not isinstance(hotspots['indel'][chrom][start][e]['pindel'], list):  # If no variant was added before
                                 hotspots['indel'][chrom][start][e]['pindel'] = []
                             hotspots['indel'][chrom][start][e]['pindel'].append(lineSplit)
                             added = True  # set the variant to added
@@ -301,7 +301,7 @@ def indelVariant(lineSplit, hotspots):
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
                             if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
-                                if not isinstance(hotspots['region'][chrom][s][e]['pindel'], list):  # If no variant was added before
+                                if not isinstance(hotspots['indel'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['pindel'] = []
                                 hotspots['indel'][chrom][s][e]['pindel'].append(lineSplit)
                                 added = True
@@ -535,7 +535,7 @@ def getAmpliconInfo(lineSplit, ampliconMapped):
         refAll = lineSplit[31]
         varAll = lineSplit[30]
     else:
-        refPlus, refMinus, varPlus, varMinus, refAll, varAll = "NA"
+        refPlus = refMinus = varPlus = varMinus = refAll = varAll = "NA"
 
     return refPlus, refMinus, varPlus, varMinus, refAll, varAll
 
