@@ -124,7 +124,7 @@ with open(args.output, 'w') as outputFile:
                     if not re.match("altTranscript", comm):
                         comm = "-"
 
-                    refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
+                    refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(lineSplit, args.ampliconmapped)  # add amplicon information
 
                     outputFile.write (str(lineSplit[0]) + "\t" + str(lineSplit[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comm + "\tother\t" + found + "\t" + readLevel + "\t" + str(lineSplit[12]) + "\t" + str(lineSplit[10]) + "\t" + str(lineSplit[11]) + "\t" + str(lineSplit[9]) + "\t" + str(lineSplit[14]) + "\t" + str(lineSplit[13]) + "\t" + str(lineSplit[16]) + "\t" + str(lineSplit[15]) + "\t" + str(lineSplit[17]) + "\t" + str(lineSplit[18]) + "\t" + str(lineSplit[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(lineSplit[20]) + "\t" + str(lineSplit[21]) + "\t" + str(lineSplit[22]) + "\t" + str(lineSplit[23]) + "\t" + str(lineSplit[24]) + "\t" + str(lineSplit[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(lineSplit[1]) + "\t" + str(lineSplit[2]) + "\t" + str(lineSplit[3]) + "\t" + str(lineSplit[4]) + "\t" + str(lineSplit[5]) + "\t" + str(lineSplit[32]) + "\n")
 
