@@ -50,7 +50,7 @@ for i in $(seq 0 $NUMBEROFSAMPLES); do
 	if [[ -z "$ANNOVAR_FLAGS" ]]; then settingserror "Annovar flags has to be set (or false)"; ERROR=1; fi;
 	if [[ -z "$PINDEL_ANNOVAR_FLAGS" ]]; then settingserror "Pindel annovar flags has to be set (or false)"; ERROR=1; fi;
 	if [[ -z "$MUTATION_FLAGS" ]]; then settingserror "Mutation flags has to be set (or false)"; ERROR=1; fi;
-	if [[ -z "$MUTATION_PLASMA" ]]; then settingserror "Mutation plasma flags has to be set (or false)"; ERROR=1; fi;
+	if [[ -z "$MUTATION_PLASMA_FLAGS" ]]; then settingserror "Mutation plasma flags has to be set (or false)"; ERROR=1; fi;
 	if [[ -z "${BARCODE_I7_ARR_[${i}]}" ]]; then settingserror "Sequencing tag must be specified or set to false for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
     if [[ -z "${BARCODE_I5_ARR_[${i}]}" ]]; then settingserror "Sequencing tag must be specified or set to false for sample ${SAMPLEID_ARR_[${i}]}"; ERROR=1; fi;
 
