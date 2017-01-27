@@ -22,10 +22,10 @@ export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"
 
 #Since you have allocated a whole node you have the whole scratch area on the node to yourself.
 #Therefore, use the scratch area for the tmp directory:
-export MOSAIK_TMP=$TMPDIR;	# set to empty if not desirable
+export MOSAIK_TMP=$TMPDIR;  # set to empty if not desirable
 
 # Include SLURM submit information
-SLURM_MISC_SETTINGS="-A $UPPNEX_PROJECT_ID"; 	#--qos=short";
+SLURM_MISC_SETTINGS="-A $UPPNEX_PROJECT_ID";    #--qos=short";
 
 
 ###########################
@@ -38,6 +38,9 @@ export BLACKLIST_FILE="$SERA_PATH/res/blacklist_variantClusterAllvarPindel_20151
 
 # File with main trancripts
 export MAIN_TRANSCRIPTS="$ROOT_PATH/refFiles/mainTranscripts.txt";
+
+# Trimmomatic adapter file
+export ILLUMINA_ADAPTER_TRIMMOMATIC="$ROOT_PATH/refFiles/TruSeq3-PE-2.fa";
 
 # Log file.
 export LOG_FILE="$ROOT_PATH/seralog.xml";
@@ -52,8 +55,7 @@ export GENOME_REF="/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7
 export GENOME_FASTA_REF="/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7.10_hg19_refseqs/hg19.with.mt.fasta"; # Aligner reference genome files
 
 # Blast DB
-export BLAST_DB="/proj/a2013225/private/reference_genomes/SERA_references/hg19/blastdb/human_genomic";	# local hg 19
+export BLAST_DB="/proj/a2013225/private/reference_genomes/SERA_references/hg19/blastdb/human_genomic";  # local hg 19
 
 #NC to chr conversion
 export NC2chr="$SERA_PATH/config/reference.hg19.Info";
-

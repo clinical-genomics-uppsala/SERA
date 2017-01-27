@@ -1,12 +1,10 @@
 #!/bin/bash -l
+
 #SBATCH -p devcore  -n 6
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 
-module load bioinfo-tools trimmomatic/0.32 gnuparallel/20150522
-
-# Include functions
-. $SERA_PATH/includes/logging.sh;
+module load bioinfo-tools 
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -16,49 +14,28 @@ SuccessLog "${SAMPLEID}" "Start running cutadapt";
 export TRIM_LOG="${ROOT_PATH}/seqdata/${SAMPLEID}.trim.log"
 PREFIX="${SNIC_TMP}/${SAMPLEID}";
 
-cputhreads=12;
+cputhreads=4;
 
 ptrim()
 {
     fqt1=$1
     fqt2=$2
     tprefix=${fqt1%%_R1_001.fastq}
-    #trim5pfa=/path/to/your/5prime_primertrim.fasta
-    #trim3pfa=/path/to/your/3prime_primertrim.fasta
 
-    trim5pfa="/proj/b2013222/private/nobackup/20170103_AccelAmplicon_BRCA_ctDNA_all/refFiles/BRCA_5prime.fa";
-    trim3pfa="/proj/b2013222/private/nobackup/20170103_AccelAmplicon_BRCA_ctDNA_all/refFiles/BRCA_3prime.fa";
+    cutadaptFile3prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_3ptrim.fa";
 
-<<'comm'    
-    #5’trim
-    cutadapt \
-        -g file:$trim5pfa \
-        -o ${tprefix}_tmpR1.fq -p ${tprefix}_tmpR2.fq \
-    $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-    SuccessLog "${SAMPLEID}" "cutadapt -g file:$trim5pfa -o ${tprefix}_tmpR1.fq -p ${tprefix}_tmpR2.fq $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;";
-
-    #5’trim
-    cutadapt \
-        -g file:$trim5pfa \
-        -o ${tprefix}_5ptmpR2.fq -p ${tprefix}_5ptmpR1.fq \
-        ${tprefix}_tmpR2.fq ${tprefix}_tmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-    SuccessLog "${SAMPLEID}" "cutadapt -g file:$trim5pfa -o ${tprefix}_5ptmpR2.fq -p ${tprefix}_5ptmpR1.fq ${tprefix}_tmpR2.fq ${tprefix}_tmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;";
 
     #3' trim
     cutadapt \
-        -a file:$trim3pfa \
+        -a file:$cutadaptFile3prim \
         -o ${tprefix}_tmp3R1.fq -p ${tprefix}_tmp3R2.fq \
-        ${tprefix}_5ptmpR1.fq ${tprefix}_5ptmpR2.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-    SuccessLog "${SAMPLEID}" "cutadapt -a file:$trim3pfa -o ${tprefix}_tmp3R1.fq -p ${tprefix}_tmp3R2.fq ${tprefix}_5ptmpR1.fq ${tprefix}_5ptmpR2.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;";
-
-comm
+        $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
 
     #3’trim
     cutadapt \
-        -a file:$trim3pfa \
+        -a file:$cutadaptFile3prim \
         -o ${tprefix}_R2_primertrimd.fq -p ${tprefix}_R1_primertrimd.fq \
         ${tprefix}_tmp3R2.fq ${tprefix}_tmp3R1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-    SuccessLog "${SAMPLEID}" "cutadapt -a file:$trim3pfa -o ${tprefix}_R2_primertrimd.fq -p ${tprefix}_R1_primertrimd.fq ${tprefix}_tmp3R2.fq ${tprefix}_tmp3R1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;";
 
 }
 
@@ -82,88 +59,73 @@ if [[ ! -d "$ROOT_PATH/seqdata" ]]; then
 fi
 
 if [[ $PLATFORM = "Illumina" ]]; then
-
-<<'comm'
-    # get sequencing tags
-    . $SERA_PATH/config/sequencingTags.sh;
-    ILLUMINA_ADAPTER_TRIMMOMATIC="/proj/b2013222/private/nobackup/20170103_AccelAmplicon_BRCA_ctDNA_all/refFiles/TruSeq3-PE-2.fa";
-
     # If MATE_PAIR is set to true in the input file
-    if [[ "$MATE_PAIR" == "true" ]]; then
-        # Check that output file doesn't exist then run cutAdapt, if it does print error message
-        if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
-            PE1_G_T="${PREFIX}_R1_trimd.fq.gz";
-            PE2_G_T="${PREFIX}_R2_trimd.fq.gz";
+    if [[ "$MATE_PAIR" == "true" ]]; then    
+        if [[ ${METHOD} == "swift" ]]; then
+            # Check that input files exist
+            if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz ]]; then
+                # Check that output file doesn't exist then run cutAdapt, if it does print error message
+                if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
+        
+                    # Set parameters for data to continue trimming
+                    PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz";
+                    PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz";
+                    gunzip -f ${PE1_G_T};
+                    gunzip -f ${PE2_G_T};
+                    PE1_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq";
+                    PE2_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq";
 
-            ## NOTE: custom adapter file for Accel-amplicon Illumina adapter trimming
-            ##       (included as attachment in email containing this script)
-#            java -Xmx24g -Xms16g -jar ${ROOT_PATH_TRIMMOMATIC}/trimmomatic-0.35.jar PE \
-#                -threads 12 -trimlog $TRIM_LOG \
-#                $RAWDATA_PE1 $RAWDATA_PE2 ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
-#                ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
-#                ILLUMINACLIP:${ILLUMINA_ADAPTER_TRIMMOMATIC}:2:30:10 \
-#                MINLEN:30
+                    # convert fastq format to one line per record for splitting
+                    paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
+                    paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1;
 
-             java -Xmx24g -Xms16g -jar $TRIMMOMATIC_HOME/trimmomatic.jar PE \
-                -threads 12 -trimlog $TRIM_LOG \
-                $RAWDATA_PE1 $RAWDATA_PE2 ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
-                ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
-                ILLUMINACLIP:${ILLUMINA_ADAPTER_TRIMMOMATIC}:2:30:10 \
-                MINLEN:30
-                rm ${PREFIX}*unpaired*.fq.gz
+                    # get number of fastq records in sample before converting back to fastq format
+                    l=$(wc -l ${PE1_T}.tmp1 | awk '{print $1}')
+                    chunklinecnt=$(( $l / $cputhreads ))
 
-comm
-                PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz";
-                PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz";
-                gunzip -f ${PE1_G_T};
-                gunzip -f ${PE2_G_T};
-                PE1_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq";
-                PE2_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq";
+                    # split re-formatted fastq files into chunks
+                    split -d -l $chunklinecnt ${PE1_T}.tmp1 ${PREFIX}_r1split
+                    split -d -l $chunklinecnt ${PE2_T}.tmp1 ${PREFIX}_r2split
 
-                # convert fastq format to one line per record for splitting
-                paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
-                paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1;
+                    # 20160722 NOTE: adding the sample-specific prefix to the temporary fastq
+                    #                files should fix the sample concatenation bug
+                    # convert each chunk back to fastq format
+                    parallel r1reformat ::: ${PREFIX}_r1split*
+                    parallel r2reformat ::: ${PREFIX}_r2split*
 
-                # get number of fastq records in sample before converting back to fastq format
-#                wc -l ${PE1_T}.tmp1 | tee /dev/tty | awk '{print $1}' > fqcnt
-                l=$(wc -l ${PE1_T}.tmp1 | awk '{print $1}')
-                chunklinecnt=$(( $l / $cputhreads ))
+                    ls ${PREFIX}_r1*.fastq > ${SNIC_TMP}/r1infiles
+                    ls ${PREFIX}_r2*.fastq > ${SNIC_TMP}/r2infiles
 
-                # split re-formatted fastq files into chunks
-                split -d -l $chunklinecnt ${PE1_T}.tmp1 ${PREFIX}_r1split
-                split -d -l $chunklinecnt ${PE2_T}.tmp1 ${PREFIX}_r2split
+                    # run parallel on paired chunks of fastq files with ptrim() function
+                    parallel --xapply ptrim {1} {2} ::: $(cat ${SNIC_TMP}/r1infiles) ::: $(cat ${SNIC_TMP}/r2infiles)
 
-                # 20160722 NOTE: adding the sample-specific prefix to the temporary fastq
-                #                files should fix the sample concatenation bug
-                # convert each chunk back to fastq format
-                parallel r1reformat ::: ${PREFIX}_r1split*
-                parallel r2reformat ::: ${PREFIX}_r2split*
+                    # concatenate primer-trimmed fastq chunks
+                    cat ${PREFIX}*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
+                    cat ${PREFIX}*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
 
-                ls ${PREFIX}_r1*.fastq > ${SNIC_TMP}/r1infiles
-                ls ${PREFIX}_r2*.fastq > ${SNIC_TMP}/r2infiles
-
-                # run parallel on paired chunks of fastq files with ptrim() function
-                parallel --xapply ptrim {1} {2} ::: $(cat ${SNIC_TMP}/r1infiles) ::: $(cat ${SNIC_TMP}/r2infiles)
-
-                # concatenate primer-trimmed fastq chunks
-                cat ${PREFIX}*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
-                cat ${PREFIX}*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
-
-                rm ${PREFIX}_r[1,2]split*
-                rm ${PREFIX}*_R[1,2]_primertrimd.fq
-#        else 
-#            ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
-#        fi
-#    else
-#        ErrorLog "${SAMPLEID}" "Only implemented for paired-end sequencing!";
-#    fi
+                    # remove all intermediate files
+                    rm ${PREFIX}_r[1,2]split*
+                    rm ${PE1_T}
+                    rm ${PE2_T}
+                    rm ${PE1_T}.tmp1
+                    rm ${PE2_T}.tmp1
+                else 
+                    ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
+                fi
+            else
+                ErrorLog "${SAMPLEID}" "One or both of the input files (${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz & ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz) do not exist!";
+            fi
+        else 
+            ErrorLog "This step only has to be run for METHOD swift!";
+        fi
+     else
+        ErrorLog "${SAMPLEID}" "Only implemented for paired-end sequencing!";
+    fi
 fi
 
 
 if [[ "$?" != "0" ]]; then
-    ErrorLog "${SAMPLEID}" "Failed in cutadapt...";
+    ErrorLog "${SAMPLEID}" "Failed in cutadapt step 2...";
 else
-    SuccessLog "${SAMPLEID}" "Passed cutadapt";
+    SuccessLog "${SAMPLEID}" "Passed cutadapt step 2";
 fi
-                                                                                                                                                                                                  167,1         Bot
-
