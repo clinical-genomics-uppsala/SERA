@@ -83,7 +83,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE1_G_T="${PREFIX}_R1_trimd.fq.gz";
                 PE2_G_T="${PREFIX}_R2_trimd.fq.gz";
 
-                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_HOME}/trimmomatic.jar PE \
+                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_PATH}/trimmomatic.jar PE \
                     -threads 12 -trimlog $TRIM_LOG \
                     $RAWDATA_PE1 $RAWDATA_PE2 ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
                     ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
