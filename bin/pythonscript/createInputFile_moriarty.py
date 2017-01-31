@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(description = "This script creates a SERA input
 parser.add_argument('-i', '--infile', help = 'Input file name', type = str, required = True)
 parser.add_argument('-p', '--project', help = 'Name of the project', type = str, required = True)
 parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ', 'MORIARTY'], type = str, required = True)
+parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning].', choices = ['klinik', 'utveckling', 'forskning'], required = True, type = str)
 parser.add_argument('-refDir', '--refDir', help = 'If a directory for reference files is given, they will be copied to the analysis folder', type = str)
 parser.add_argument('-n', '--normal', help = 'Name of normal sample to compare with.', type = str)
 parser.add_argument('-s', '--software', help = 'Queing system for', type = str, default = "SLURM")
@@ -59,14 +60,14 @@ if not args.clinicalInfoFile.lower() == "false":
     # Go through the cancer type file and add info about the corresponding files to a directory
     with open(ciFilePath, 'r') as cifile:
         for line in cifile:
-            if not line:  # If line is not empty start working
-                line = line.strip()
+            line = line.strip()
+            if line:  # If line is not empty start working
                 infoParts = line.split("=")
                 cancer = infoParts[1].lower()
                 clinicalInfo[cancer] = {}
 
                 # Retrieve file info for each cancer type and add to dictionary
-                for i in range (0, 4):
+                for i in range (0, 3):
                     line = next(cifile)
                     line = line.strip()
                     infoParts = line.split("=")
@@ -263,11 +264,11 @@ for sample in infoSort:
         count += 1
     else:
         expFolder += "-" + sample
-year = +info[sample]['exp'][:4]
-rawPath = "/projects/" + args.project + "/wp1/ngs/klinik/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
-filePath = "/projects/" + args.project + "/wp1/ngs/klinik/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/wp1/ngs/klinik/OUTBOX/" + year + "/" + info[sample]['exp']
-storagePath = "/projects/" + args.project + "/wp1/ngs/klinik/lagring/" + year + "/" + info[sample]['exp']
+year = info[sample]['exp'][:4]
+rawPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
+filePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
+outboxPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/OUTBOX/" + year + "/" + info[sample]['exp']
+storagePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
 
