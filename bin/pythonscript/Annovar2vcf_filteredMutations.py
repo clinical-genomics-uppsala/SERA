@@ -147,8 +147,8 @@ with open(args.output, 'w') as outputfile:
                     # print ("Variant")
                     outputfile.write (chrom + "\t" + str(start) + "\t" + id + "\t" + ref + "\t" + var + "\t" + qual + "\t" + filter + "\t" + info + "\tGT:DP:AD\t0/1:" + rd + ":" + refRd + "," + varRd + "\n")
         # If the file is not closed, close
-        if not variantfile.closed:
-            variantfile.close()
+        if not mutationFile.closed:
+            mutationFile.close()
 
     if args.pindelfile:
         with open(args.pindelfile, 'r') as pindelfile:
