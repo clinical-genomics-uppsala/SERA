@@ -24,12 +24,13 @@ ptrim()
 
     cutadaptFile3prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_3ptrim.fa";
 
-
-    #3' trim
+    #3’trim
     cutadapt \
         -a file:$cutadaptFile3prim \
-        -o ${tprefix}_tmp3R1.fq -p ${tprefix}_tmp3R2.fq \
-        $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
+        -o ${tprefix}_R2_primertrimd.fq -p ${tprefix}_R1_primertrimd.fq \
+       $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
+
+
 }
 
 r1reformat()
@@ -61,12 +62,12 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
         
                     # Set parameters for data to continue trimming
-                    PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz";
-                    PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz";
+                    PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz";
+                    PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz";
                     gunzip -f ${PE1_G_T};
                     gunzip -f ${PE2_G_T};
-                    PE1_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq";
-                    PE2_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq";
+                    PE1_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq";
+                    PE2_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq";
 
                     # convert fastq format to one line per record for splitting
                     paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
@@ -93,8 +94,8 @@ if [[ $PLATFORM = "Illumina" ]]; then
                     parallel --xapply ptrim {1} {2} ::: $(cat ${SNIC_TMP}/r1infiles) ::: $(cat ${SNIC_TMP}/r2infiles)
 
                     # concatenate primer-trimmed fastq chunks
-                    cat ${PREFIX}*_tmp3R1.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz;
-                    cat ${PREFIX}*_tmp3R2.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz
+                    cat ${PREFIX}*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
+                    cat ${PREFIX}*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
 
                     # remove all intermediate files
                     rm ${PREFIX}_r[1,2]split*
@@ -102,6 +103,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                     rm ${PE2_T}
                     rm ${PE1_T}.tmp1
                     rm ${PE2_T}.tmp1
+
                 else 
                     ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
                 fi

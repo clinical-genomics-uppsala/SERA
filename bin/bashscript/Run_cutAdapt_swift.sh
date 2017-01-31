@@ -124,6 +124,8 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 cat ${PREFIX}*_5ptmpR2.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz
 
                 rm ${PREFIX}_r[1,2]split*
+                rm ${PE1_T}.tmp1
+                rm ${PE2_T}.tmp1
             else
                 ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz already exists and force was NOT used!";
             fi
