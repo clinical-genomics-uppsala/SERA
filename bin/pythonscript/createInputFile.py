@@ -94,25 +94,27 @@ with open(args.infile, 'r') as infile:
             elif re.search(",", line):
                 splitPattern = ','
             lineSplit = line.split(splitPattern)  # Split line by tab
-            info[lineSplit[1]] = {}
-            info[lineSplit[1]]['exp'] = lineSplit[0]
-            info[lineSplit[1]]['sNummer'] = "S" + str(count)
-            info[lineSplit[1]]['design'] = lineSplit[2]
-            info[lineSplit[1]]['barcodeI7'] = lineSplit[3]
-            info[lineSplit[1]]['barcodeI5'] = lineSplit[4]
-            info[lineSplit[1]]['refseq'] = lineSplit[5]
-            info[lineSplit[1]]['cutadapt'] = lineSplit[6]
-            info[lineSplit[1]]['method'] = lineSplit[7].lower().strip()
-            info[lineSplit[1]]['type'] = lineSplit[8].lower().strip()
-            info[lineSplit[1]]['tissue'] = lineSplit[9].lower().strip()
+            sample = lineSplit[1]
+
+            info[sample] = {}
+            info[sample]['exp'] = lineSplit[0]
+            info[sample]['sNummer'] = "S" + str(count)
+            info[sample]['barcodeI7'] = lineSplit[2]
+            info[sample]['barcodeI5'] = lineSplit[3]
+            info[sample]['design'] = lineSplit[4]
+            info[sample]['refseq'] = lineSplit[5]
+            info[sample]['cutadapt'] = lineSplit[6]
+            info[sample]['method'] = lineSplit[7].lower().strip()
+            info[sample]['type'] = lineSplit[8].lower().strip()
+            info[sample]['tissue'] = lineSplit[9].lower().strip()
 
 
-            if info[lineSplit[1]]['cutadapt'] == "":
-                info[lineSplit[1]]['cutadapt'] = "false"
-            if info[lineSplit[1]]['barcodeI7'] == "":
-                info[lineSplit[1]]['barcodeI7'] = "false"
-            if info[lineSplit[1]]['barcodeI5'] == "":
-                info[lineSplit[1]]['barcodeI5'] = "false"
+            if info[sample]['cutadapt'] == "":
+                info[sample]['cutadapt'] = "false"
+            if info[sample]['barcodeI7'] == "":
+                info[sample]['barcodeI7'] = "false"
+            if info[sample]['barcodeI5'] == "":
+                info[sample]['barcodeI5'] = "false"
 
             if len(lineSplit) > 10 and args.normal:
                 parser.print_usage()
@@ -120,134 +122,134 @@ with open(args.infile, 'r') as infile:
                 sys.exit()
             else:
                 if len(lineSplit) > 10:
-                    info[lineSplit[1]]['normal'] = lineSplit[10]
+                    info[sample]['normal'] = lineSplit[10]
                 else:
                     if args.normal:
-                        info[lineSplit[1]]['normal'] = args.normal
+                        info[sample]['normal'] = args.normal
                     else:
                         parser.print_usage()
                         sys.exit("\nERROR: Either inputfile needs to have 7 columns with the normal given in the last column or the flag -normal has to be used!\n\n")
 
             # Set the method type used
-            if info[lineSplit[1]]['method'] == "halo" or info[lineSplit[1]]['method'] == "haloplex":
-                info[lineSplit[1]]['method'] = "haloplex"
-            if info[lineSplit[1]]['method'] == "swift" or info[lineSplit[1]]['method'] == "accamp" or info[lineSplit[1]]['method'] == "AccelAmplicon":
-                info[lineSplit[1]]['method'] = "swift"
+            if info[sample]['method'] == "halo" or info[sample]['method'] == "haloplex":
+                info[sample]['method'] = "haloplex"
+            if info[sample]['method'] == "swift" or info[sample]['method'] == "accamp" or info[sample]['method'] == "AccelAmplicon":
+                info[sample]['method'] = "swift"
 
             # If clinical analysis is wanted add file names otherwise add false
             if not args.clinicalInfoFile.lower() == "false":
                 # ## COLON
-                if info[lineSplit[1]]['tissue'] == "colon" or info[lineSplit[1]]['tissue'] == "kolon" :
-                    info[lineSplit[1]]['tissue'] = "colon"
+                if info[sample]['tissue'] == "colon" or info[sample]['tissue'] == "kolon" :
+                    info[sample]['tissue'] = "colon"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo['colon']['hotspot']):
-                        info[lineSplit[1]]['hotspot'] = "false"
+                        info[sample]['hotspot'] = "false"
                     else:
-                        info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["colon"]['amplification']):
-                        info[lineSplit[1]]['amplification'] = "false"
+                        info[sample]['amplification'] = "false"
                     else:
-                        info[lineSplit[1]]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["colon"]['background']):
-                        info[lineSplit[1]]['background'] = "false"
+                        info[sample]['background'] = "false"
                     else:
-                        info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["colon"]['background']
 
                 # ## LUNG
-                elif info[lineSplit[1]]['tissue'] == "lung" or info[lineSplit[1]]['tissue'] == "lunga":
-                    info[lineSplit[1]]['tissue'] = "lung"
+                elif info[sample]['tissue'] == "lung" or info[sample]['tissue'] == "lunga":
+                    info[sample]['tissue'] = "lung"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["lung"]['hotspot']):
-                        info[lineSplit[1]]['hotspot'] = "false"
+                        info[sample]['hotspot'] = "false"
                     else:
-                        info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["lung"]['amplification']):
-                        info[lineSplit[1]]['amplification'] = "false"
+                        info[sample]['amplification'] = "false"
                     else:
-                        info[lineSplit[1]]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["lung"]['background']):
-                        info[lineSplit[1]]['background'] = "false"
+                        info[sample]['background'] = "false"
                     else:
-                        info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["lung"]['background']
 
                 # ## GIST
-                elif info[lineSplit[1]]['tissue'] == "gist":
-                    info[lineSplit[1]]['tissue'] = "gist"
+                elif info[sample]['tissue'] == "gist":
+                    info[sample]['tissue'] = "gist"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["gist"]['hotspot']):
-                        info[lineSplit[1]]['hotspot'] = "false"
+                        info[sample]['hotspot'] = "false"
                     else:
-                        info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["gist"]['amplification']):
-                        info[lineSplit[1]]['amplification'] = "false"
+                        info[sample]['amplification'] = "false"
                     else:
-                        info[lineSplit[1]]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["gist"]['background']):
-                        info[lineSplit[1]]['background'] = "false"
+                        info[sample]['background'] = "false"
                     else:
-                        info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[lineSplit[1]]['tissue'] == "ovarial" or info[lineSplit[1]]['tissue'] == "ovarian" or info[lineSplit[1]]['tissue'] == "ovary" :
-                    info[lineSplit[1]]['tissue'] = "ovarial"
+                elif info[sample]['tissue'] == "ovarial" or info[sample]['tissue'] == "ovarian" or info[sample]['tissue'] == "ovary" :
+                    info[sample]['tissue'] = "ovarial"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['hotspot']):
-                        info[lineSplit[1]]['hotspot'] = "false"
+                        info[sample]['hotspot'] = "false"
                     else:
-                        info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['amplification']):
-                        info[lineSplit[1]]['amplification'] = "false"
+                        info[sample]['amplification'] = "false"
                     else:
-                        info[lineSplit[1]]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["ovarial"]['background']):
-                        info[lineSplit[1]]['background'] = "false"
+                        info[sample]['background'] = "false"
                     else:
-                        info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['background']
 
                 # ## MELANOM
-                elif info[lineSplit[1]]['tissue'] == "melanom" or info[lineSplit[1]]['tissue'] == "melanoma":
-                    info[lineSplit[1]]['tissue'] = "melanom"
+                elif info[sample]['tissue'] == "melanom" or info[sample]['tissue'] == "melanoma":
+                    info[sample]['tissue'] = "melanom"
                     # If the given hotspot file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["melanom"]['hotspot']):
-                        info[lineSplit[1]]['hotspot'] = "false"
+                        info[sample]['hotspot'] = "false"
                     else:
-                        info[lineSplit[1]]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["melanom"]['amplification']):
-                        info[lineSplit[1]]['amplification'] = "false"
+                        info[sample]['amplification'] = "false"
                     else:
-                        info[lineSplit[1]]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
                     if re.match("false", clinicalInfo["melanom"]['background']):
-                        info[lineSplit[1]]['background'] = "false"
+                        info[sample]['background'] = "false"
                     else:
-                        info[lineSplit[1]]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file " + info[lineSplit[1]]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
                     sys.exit()
             else:
-                info[lineSplit[1]]['hotspot'] = "false"
-                info[lineSplit[1]]['amplification'] = "false"
-                info[lineSplit[1]]['background'] = "false"
+                info[sample]['hotspot'] = "false"
+                info[sample]['amplification'] = "false"
+                info[sample]['background'] = "false"
 
     if not infile.closed:
         infile.close()
