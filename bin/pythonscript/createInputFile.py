@@ -18,7 +18,7 @@ import module_locator
 parser = argparse.ArgumentParser(description = "This script creates a SERA input file from a file with sample name and barcode")
 parser.add_argument('-i', '--infile', help = 'Input file name', type = str, required = True)
 parser.add_argument('-p', '--project', help = 'Name of the project', type = str, required = True)
-parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ'], type = str, required = True)
+parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ', 'MORIARTY'], type = str, required = True)
 parser.add_argument('-refDir', '--refDir', help = 'If a directory for reference files is given, they will be copied to the analysis folder', type = str)
 parser.add_argument('-n', '--normal', help = 'Name of normal sample to compare with.', type = str)
 parser.add_argument('-s', '--software', help = 'Queing system for', type = str, default = "SLURM")
@@ -66,7 +66,7 @@ if not args.clinicalInfoFile.lower() == "false":
                 clinicalInfo[cancer] = {}
 
                 # Retrieve file info for each cancer type and add to dictionary
-                for i in range (0, 6):
+                for i in range (0, 4):
                     line = next(cifile)
                     line = line.strip()
                     infoParts = line.split("=")
