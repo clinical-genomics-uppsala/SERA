@@ -32,11 +32,15 @@ COUNT=-1;
 count=${#SAMPLEID_ARR_[@]};
 let NUMBEROFSAMPLES=count-1;
 
-# Include home or proj specific globals
+# Include home, proj or moriarty specific globals
 if [[ $GLOBALS = "HOME" ]]; then 
-	. $SERA_PATH/config/globalsHome.sh;
+    . $SERA_PATH/config/globalsHome.sh;
+
+elif [[ $GLOBALS = "MORIARTY" ]]; then 
+    . $SERA_PATH/config/globalsMoriarty.sh;
+
 else
-	. $SERA_PATH/config/globalsProj.sh;
+    . $SERA_PATH/config/globalsProj.sh;
 fi
 ## Include server-specific globals
 #if [[ "$SOFTWARE" = "SLURM" ]]; then
