@@ -57,7 +57,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
     if [[ "$MATE_PAIR" == "true" ]]; then    
         if [[ ${METHOD} == "swift" ]]; then
             # Check that input files exist
-            if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz ]]; then
+            if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz ]]; then
                 # Check that output file doesn't exist then run cutAdapt, if it does print error message
                 if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
         
