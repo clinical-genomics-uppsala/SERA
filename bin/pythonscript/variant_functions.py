@@ -539,5 +539,16 @@ def getAmpliconInfo(lineSplit, ampliconMapped):
 
     return refPlus, refMinus, varPlus, varMinus, refAll, varAll
 
+# Check if the variant is an indel, (has a ref or var which is - or a + sign in the insertion or deletion column)
+def checkMutationType(lineSplit, mutType):
+    ref = str(lineSplit[4])
+    var = str(lineSplit[5])
+
+    if re.match("-", ref) or re.match("-", var):
+        return "2-indel"
+    elif ("+" in lineSplit[24]) or ("+" in lineSplit[25]):
+        return "2-indel"
+    return mutType
+
 
 
