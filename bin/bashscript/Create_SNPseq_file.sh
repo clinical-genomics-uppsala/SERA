@@ -2,7 +2,7 @@
 #
 # Script creates SNPseq file.
 #
-#SBATCH -p devcore  -n 2
+#SBATCH -p core  -n 2
 #SBATCH -t 01:00:00
 
 # Include functions

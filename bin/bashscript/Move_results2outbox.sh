@@ -2,17 +2,17 @@
 #
 # Script to run jSNPmania
 ##SBATCH --qos=short 
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 01:00:00
 
 
-# Include functions
-#. $SERA_PATH/includes/logging.sh;
+#Include functions
+. $SERA_PATH/includes/logging.sh;
 
 SuccessLog $SAMPLEID "Starts copying files to OUTBOX ...";
 
 # Check if the directory exists, if not create it
-if [[ -d ${OUTBOX_PATH} ]]; then
+if [[ -d "${OUTBOX_PATH}" ]]; then
     
     # If OUTBOX_PATH ends with a / remove the /
     if [[ ${OUTBOX_PATH} == */ ]]; then
@@ -25,103 +25,122 @@ if [[ -d ${OUTBOX_PATH} ]]; then
 
     # Copy AmpliconMapped
     if [[ -d "${ROOT_PATH}/AmpliconMapped" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/AmpliconMapped" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/AmpliconMapped" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/AmpliconMapped does not exist!";
     fi
 
     # Go through all bwa files in the Bwa folder
-    for bwaFile in "${ROOT_PATH}/Bwa/*"
+    for bwaFile in `ls ${ROOT_PATH}/Bwa/*bam`
     do
-        parts=$(echo $bwaFile | tr "/" "\n");
-        sampleFile=${parts[-1]}; # Extract filename from path
-        fileParts=$(echo $sampleFile | tr "." "\n");
-        sample=${fileParts[1]}; # Extract sample name
+        echo "Bwafile: ${bwaFile}"
+        parts=($(echo $bwaFile | tr "/" " "));
+        partsLen=${#parts[@]}; # Calculate array length
+        sampleFile=${parts[($partsLen-1)]}; # Extract filename from path
+        fileParts=($(echo $sampleFile | tr "." " "));
+        sample=${fileParts[0]}; # Extract sample name
         if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
             if [[ ! -d "${OUTBOX_PATH}/Bwa" ]]; then # If not check if Bwa folder exists in OUTBOX_PATH
-                mkdir -m 664 "${OUTBOX_PATH}/Bwa"; # If not create
+                mkdir -m 774 "${OUTBOX_PATH}/Bwa"; # If not create
             fi
-            rsync -carvl --progress $bwaFile "${OUTBOX_PATH}/Bwa"; # Copy the bwa file for the non-ampliconmapped sample
+            echo "rsync -carvl --progress $bwaFile* ${OUTBOX_PATH}/Bwa"
+            rsync -carvl --progress "$bwaFile* ${OUTBOX_PATH}/Bwa" # Copy the bwa file for the non-ampliconmapped sample
         fi
     done
 
     # Copy FilteredMutations
     if [[ -d "${ROOT_PATH}/FilteredMutations" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/FilteredMutations" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/FilteredMutations" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/FilteredMutations does not exist!";
     fi
 
     # Copy FilteredAnnovarOutput
     if [[ -d "${ROOT_PATH}/FilteredAnnovarOutput" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/FilteredAnnovarOutput" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/FilteredAnnovarOutput" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/FilteredAnnovarOutput does not exist!";
     fi
 
     # Copy ClinicalPositions
     if [[ -d "${ROOT_PATH}/ClinicalPositions" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/ClinicalPositions" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/ClinicalPositions" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/ClinicalPositions does not exist!";
     fi
 
     # Copy AnnovarOutput
     if [[ -d "${ROOT_PATH}/AnnovarOutput" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/AnnovarOutput" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/AnnovarOutput" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/AnnovarOutput does not exist!";
     fi
 
     # Copy PindelAnnovarOutput
     if [[ -d "${ROOT_PATH}/PindelAnnovarOutput" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/PindelAnnovarOutput" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/PindelAnnovarOutput" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/PindelAnnovarOutput does not exist!";
     fi
 
     # Copy vcfOutput
     if [[ -d "${ROOT_PATH}/vcfOutput" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/vcfOutput" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/vcfOutput" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/vcfOutput does not exist!";
     fi
 
     # Copy MSIanalysis
     if [[ -d "${ROOT_PATH}/MSIanalysis" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/MSIanalysis" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/MSIanalysis" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/MSIanalysis does not exist!";
     fi
 
     # Copy ExtractedSNPs
     if [[ -d "${ROOT_PATH}/ExtractedSNPs" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/ExtractedSNPs" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/ExtractedSNPs" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/ExtractedSNPs does not exist!";
     fi
 
     # Copy ExtractedEGFR
     if [[ -d "${ROOT_PATH}/ExtractedEGFR" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/ExtractedEGFR" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/ExtractedEGFR" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/ExtractedEGFR does not exist!";
     fi
 
     # Copy Amplification
     if [[ -d "${ROOT_PATH}/Amplification" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/Amplification" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/Amplification" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/Amplification does not exist!";
     fi
 
     # Copy FastQC
     if [[ -d "${ROOT_PATH}/FastQC" ]]; then
-        rsync -carvl --progress "${ROOT_PATH}/FastQC" ${OUTBOX_PATH}
+        echo ""
+#rsync -carvl --progress "${ROOT_PATH}/FastQC" ${OUTBOX_PATH}
     else
         ErrorLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
     fi
 
+    echo "DONE" > "${OUTBOX_PATH}/Done.txt";
+else
+    ErrorLog "$SAMPLEID" "Directory ${OUTBOX_PATH} does not exist!";
+fi
 if [[ "$?" != "0" ]]; then
     ErrorLog "$SAMPLEID" "Failed in copying results to outbox";
 else

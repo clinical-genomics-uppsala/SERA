@@ -2,7 +2,7 @@
 #
 # Script to run jSNPmania
 ##SBATCH --qos=short 
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 15:00
 
 

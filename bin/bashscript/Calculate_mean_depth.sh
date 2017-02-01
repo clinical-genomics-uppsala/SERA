@@ -2,7 +2,7 @@
 #
 # Script calculating mean depth on ampregion.
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 15:00
 ##SBATCH --qos=short
 

@@ -2,7 +2,7 @@
 #
 # Script to extract specificities from the on- and offtarget files
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 

@@ -2,7 +2,7 @@
 #
 # Script to export aligment archives as BAM-files.
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 15:00
 ##SBATCH --qos=short
 

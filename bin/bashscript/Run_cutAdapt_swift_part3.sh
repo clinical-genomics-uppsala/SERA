@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH -p devcore  -n 6
+#SBATCH -p core  -n 6
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 

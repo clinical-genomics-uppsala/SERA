@@ -2,9 +2,9 @@
 #
 # Script creates plot data files seqroi vs seqregion.
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 30:00
-##SBATCH -p devcore -t 00:15:00 --qos=short
+##SBATCH -p core -t 00:15:00 --qos=short
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;

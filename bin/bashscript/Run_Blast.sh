@@ -2,7 +2,7 @@
 #
 # Script creats BlastDB on mate-pair reads.
 #
-#SBATCH -p devcore -n 2
+#SBATCH -p core -n 2
 #SBATCH -t 1:00:00
 #module load bioinfo-tools blast/2.2.25
 

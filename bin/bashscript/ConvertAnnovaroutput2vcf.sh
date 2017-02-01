@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script to convert Annovar output to VCF
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 15:00
 
 # Include functions

@@ -2,7 +2,7 @@
 #
 # Script running bwa
 #
-#SBATCH -p devcore  -n 3
+#SBATCH -p core  -n 3
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 

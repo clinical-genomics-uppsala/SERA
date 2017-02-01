@@ -2,7 +2,7 @@
 #
 # Script to run jSNPmania
 ##SBATCH --qos=short 
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 01:00:00
 
 
@@ -32,17 +32,20 @@ if [[ -d ${STORAGE_PATH} ]]; then
     fi
 
    # Go through all bwa files in the Bwa folder
-    for bwaFile in "${ROOT_PATH}/Bwa/*"
+    for bwaFile in `ls ${ROOT_PATH}/Bwa/*bam`
     do
-        parts=$(echo $bwaFile | tr "/" "\n");
-        sampleFile=${parts[-1]}; # Extract filename from path
-        fileParts=$(echo $sampleFile | tr "." "\n");
-        sample=${fileParts[1]}; # Extract sample name
+        echo "Bwafile: ${bwaFile}"
+        parts=($(echo $bwaFile | tr "/" " "));
+        partsLen=${#parts[@]}; # Calculate array length
+        sampleFile=${parts[($partsLen-1)]}; # Extract filename from path
+        fileParts=($(echo $sampleFile | tr "." " "));
+        sample=${fileParts[0]}; # Extract sample name
         if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
-            if [[ ! -d "${OUTBOX_PATH}/Bwa" ]]; then # If not check if Bwa folder exists in OUTBOX_PATH
-                mkdir -m 664 "${OUTBOX_PATH}/Bwa"; # If not create
+            if [[ ! -d "${STORAGE_PATH}/Bwa" ]]; then # If not check if Bwa folder exists in STORAGE_PATH
+                mkdir -m 774 "${STORAGE_PATH}/Bwa"; # If not create
             fi
-            rsync -carvl --progress $bwaFile "${OUTBOX_PATH}/Bwa"; # Copy the bwa file for the non-ampliconmapped sample
+            echo "rsync -carvl --progress $bwaFile* ${STORAGE_PATH}/Bwa"
+            rsync -carvl --progress "$bwaFile* ${STORAGE_PATH}/Bwa" # Copy the bwa file for the non-ampliconmapped sample
         fi
     done
 

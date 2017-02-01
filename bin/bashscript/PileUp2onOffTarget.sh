@@ -2,7 +2,7 @@
 #
 # Script to calculate bases on and off target
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 30:00
 ##SBATCH --qos=short
 

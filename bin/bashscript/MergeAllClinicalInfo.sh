@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script to convert Pindel output to VCF, filter to normal and annotate with annovar
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 30:00
 ##SBATCH --mail-user=elin.falk_sorqvist@igp.uu.se
 ##SBATCH --mail-type=END

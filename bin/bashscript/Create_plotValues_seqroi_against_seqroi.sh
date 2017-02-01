@@ -2,7 +2,7 @@
 #
 # Script creates plot data files seqroi vs seqroi.
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 30:00
 ##SBATCH --qos=short
 

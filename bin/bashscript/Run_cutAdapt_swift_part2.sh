@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH -p devcore  -n 6
+#SBATCH -p core  -n 6
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 
@@ -56,15 +56,17 @@ if [[ $PLATFORM = "Illumina" ]]; then
     if [[ "$MATE_PAIR" == "true" ]]; then    
         if [[ ${METHOD} == "swift" ]]; then
             # Check that input files exist
-            if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz ]]; then
+            if [[ (-e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz) || (-e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq ) ]]; then
                 # Check that output file doesn't exist then run cutAdapt, if it does print error message
                 if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
-        
-                    # Set parameters for data to continue trimming
-                    PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz";
-                    PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz";
-                    gunzip -f ${PE1_G_T};
-                    gunzip -f ${PE2_G_T};
+                    
+                    if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz ]]; then
+                        # Set parameters for data to continue trimming
+                        PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz";
+                        PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz";
+                        gunzip -f ${PE1_G_T};
+                        gunzip -f ${PE2_G_T};
+                    fi
                     PE1_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq";
                     PE2_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq";
 
