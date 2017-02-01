@@ -28,7 +28,7 @@ ptrim()
     cutadapt \
         -a file:$cutadaptFile3prim \
         -o ${tprefix}_R2_primertrimd.fq -p ${tprefix}_R1_primertrimd.fq \
-       $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
+        $fqt2 $fqt1 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
 
 
 }
