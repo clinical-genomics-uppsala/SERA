@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -p core  -n 6
-#SBATCH -t 01:00:00
+#SBATCH -t 03:00:00
 ##SBATCH --qos=short
 
 module load bioinfo-tools;
@@ -10,6 +10,14 @@ module load bioinfo-tools;
 . $SERA_PATH/includes/logging.sh;
 
 export TRIM_LOG="${ROOT_PATH}/seqdata/${SAMPLEID}.trim.log"
+
+if [[ $GLOBALS == "MORIARTY" ]]; then 
+    SNIC_TMP="${ROOT_PATH}/tmp";
+    if [[ ! -d ${SNIC_TMP} ]]; then
+        mkdir ${SNIC_TMP};
+    fi
+fi
+
 PREFIX="${SNIC_TMP}/${SAMPLEID}";
 
 cputhreads=12;
@@ -41,13 +49,13 @@ ptrim()
     cutadapt \
         -a file:$cutadaptFile3prim \
         -o ${tprefix}_tmp3R1.fq -p ${tprefix}_tmp3R2.fq \
-        ${tprefix}_5ptmpR2.fq ${tprefix}_5ptmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
+        ${tprefix}_5ptmpR1.fq ${tprefix}_5ptmpR2.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
     
     #3’trim
     cutadapt \
         -a file:$cutadaptFile3prim \
         -o ${tprefix}_R2_primertrimd.fq -p ${tprefix}_R1_primertrimd.fq \
-       ${tprefix}_tmp3R1.fq ${tprefix}_tmp3R2.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
+        ${tprefix}_tmp3R2.fq ${tprefix}_tmp3R1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
 
 }
 
