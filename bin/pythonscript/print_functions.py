@@ -17,23 +17,26 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped)
                         for bwaVar in hotspots['hotspot'][chrom][start][end]['bwa']:
 
                             if re.match("yes", pin):  # If there are pindel variants available extract them
-                                for pindelVar in hotspots['hotspot'][chrom][start][end]['pindel']:
-                                    # Check that there is no pindel variant which is identical to the bwa variant
-                                    if not (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
-                                        aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
-                                        found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
-                                        if re.match("-", found):
-                                            found = "yes"
-                                        if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
-                                            exon = hotspots['hotspot'][chrom][start][end]['exon']
+                                pinExist = False;
+                                for pindelVar in hotspots['hotspot'][chrom][start][end]['pindel']:  # Go through all pindel variants
+                                    # Check if there are any pindel variant which is identical to the bwa variant
+                                    if (int(bwaVar[2]) == int(pindelVar[2]) and int(bwaVar[3]) == int(pindelVar[3]) and re.match(bwaVar[4], pindelVar[4]) and re.match(bwaVar[5], pindelVar[5])):
+                                        pinExist = True;  # If so set pinExist to True
+                                if not pinExist:  # If no identical pindel variant exists, print the bwa variant
+                                    aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+                                    found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
+                                    if re.match("-", found):
+                                        found = "yes"
+                                    if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
+                                        exon = hotspots['hotspot'][chrom][start][end]['exon']
 
-                                        refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
-                                        mutType = checkMutationType(bwaVar, "1-hotspot")  # Get the mutation type
+                                    refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
+                                    mutType = checkMutationType(bwaVar, "1-hotspot")  # Get the mutation type
 
-                                        comment = setComment(comm, hotspots['hotspot'][chrom][start][end]['comment'])  # Set the correct comment
-                                        OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + " \t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
+                                    comment = setComment(comm, hotspots['hotspot'][chrom][start][end]['comment'])  # Set the correct comment
+                                    OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + " \t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
 
-                            else:  # If no pindel variants are available OUTPUT.write the variant
+                            else:  # If no pindel variants are available write the variant
                                 aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
                                 found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                 if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
@@ -104,21 +107,24 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                     for bwaVar in hotspots['region_all'][chrom][start][end]['bwa']:
 
                         if re.match("yes", pin):  # If there are pindel variants available extract them
-                            for pindelVar in hotspots['region_all'][chrom][start][end]['pindel']:
-                                # Check that there is no pindel variant which is identical to the bwa variant
-                                if not (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
-                                    aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
-                                    found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
-                                    if re.match("-", found):
-                                        found = "yes"
-                                    if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
-                                        exon = hotspots['region_all'][chrom][start][end]['exon']
+                            pinExist = False;
+                            for pindelVar in hotspots['region_all'][chrom][start][end]['pindel']:  # Go through all pindel variants
+                                    # Check if there are any pindel variant which is identical to the bwa variant
+                                if (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
+                                    pinExist = True;  # If so set pinExist to True
+                            if not pinExist:  # If no identical pindel variant exists, print the bwa variant
+                                aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+                                found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
+                                if re.match("-", found):
+                                    found = "yes"
+                                if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
+                                    exon = hotspots['region_all'][chrom][start][end]['exon']
 
-                                    refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
-                                    mutType = checkMutationType(bwaVar, "3-check")  # Get the mutation type
+                                refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
+                                mutType = "3-check"  # Set the mutation type
 
-                                    comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
-                                    OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
+                                comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
+                                OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
@@ -128,7 +134,7 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                                 exon = hotspots['region_all'][chrom][start][end]['exon']
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
-                            mutType = checkMutationType(bwaVar, "3-check")  # Get the mutation type
+                            mutType = "3-check"  # Set the mutation type
 
                             comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
@@ -149,9 +155,10 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             exon = hotspots['region_all'][chrom][start][end]['exon']
 
                         refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
+                        mutType = "3-check"  # Set the mutation type
 
                         comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
-                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t2-indel\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
+                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
 
                 # Check if neither bwa nor pindel variant exists
                 if re.match("no", str(hotspots['region_all'][chrom][start][end]['bwa'])) and re.match("no", str(hotspots['region_all'][chrom][start][end]['pindel'])):  # If no variant is added OUTPUT.write position
@@ -174,7 +181,8 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             rd = "-"
 
                         if re.match("low", readLevel) or re.match("-", readLevel):  # Only print if the readLevel is low or -
-                            OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\t3-check\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
+                            mutType = "3-check"  # Set the mutation type
+                            OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
 
 # OUTPUT.write variants within region, both bwa and pindel. However it does not OUTPUT.write total read depth for all positions without variant
 def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
@@ -191,21 +199,24 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                     for bwaVar in hotspots['region'][chrom][start][end]['bwa']:
 
                         if re.match("yes", pin):  # If there are pindel variants available extract them
-                            for pindelVar in hotspots['region'][chrom][start][end]['pindel']:
-                                # Check that there is no pindel variant which is identical to the bwa variant
-                                if not (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
-                                    aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
-                                    found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
-                                    if re.match("-", found):
-                                        found = "yes"
-                                    if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
-                                        exon = hotspots['region'][chrom][start][end]['exon']
+                            pinExist = False;
+                            for pindelVar in hotspots['region'][chrom][start][end]['pindel']:  # Go through all pindel variants
+                                    # Check if there are any pindel variant which is identical to the bwa variant
+                                if (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
+                                    pinExist = True;  # If so set pinExist to True
+                            if not pinExist:  # If no identical pindel variant exists, print the bwa variant
+                                aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+                                found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
+                                if re.match("-", found):
+                                    found = "yes"
+                                if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
+                                    exon = hotspots['region'][chrom][start][end]['exon']
 
-                                    refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
-                                    mutType = checkMutationType(bwaVar, "3-check")  # Get the mutation type
+                                refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
+                                mutType = "3-check"  # Set the mutation type
 
-                                    comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
-                                    OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
+                                comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
+                                OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
@@ -215,7 +226,7 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                 exon = hotspots['region'][chrom][start][end]['exon']
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
-                            mutType = checkMutationType(bwaVar, "3-check")  # Get the mutation type
+                            mutType = "3-check"  # Set the mutation type
 
                             comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
@@ -236,9 +247,10 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                             exon = hotspots['region'][chrom][start][end]['exon']
 
                         refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
+                        mutType = "3-check"  # Set the mutation type
 
                         comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
-                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t2-indel\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
+                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
 
 
 # OUTPUT.write indels within indel region, both bwa and pindel. However it does not OUTPUT.write total read depth for all positions without variant
@@ -267,9 +279,10 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                         exon = hotspots['indel'][chrom][start][end]['exon']
 
                                     refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
+                                    mutType = "3-check"  # Set the mutation type
 
                                     comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
-                                    OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t2-indel\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
+                                    OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
@@ -279,9 +292,10 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                 exon = hotspots['indel'][chrom][start][end]['exon']
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
+                            mutType = "3-check"  # Set the mutation type
 
                             comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
-                            OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t2-indel\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
+                            OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
 
 
                 # Check if there are pindel variants available
@@ -299,9 +313,10 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                             exon = hotspots['indel'][chrom][start][end]['exon']
 
                         refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
+                        mutType = "3-check"  # Set the mutation type
 
                         comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
-                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t2-indel\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
+                        OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
 
 
 
