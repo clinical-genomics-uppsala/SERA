@@ -111,19 +111,19 @@ else
 fi
 
 # Copy ExtractedSNPs
-if [[ -d "${ROOT_PATH}/ExtractedSNPs" ]]; then
-    cp -pr  ${ROOT_PATH}/ExtractedSNPs ${OUTBOX_PATH};
-    echo "cp -pr  ${ROOT_PATH}/ExtractedSNPs ${OUTBOX_PATH}";
+if [[ -d "${ROOT_PATH}/Extracted_SNPs" ]]; then
+    cp -pr  ${ROOT_PATH}/Extracted_SNPs ${OUTBOX_PATH};
+    echo "cp -pr  ${ROOT_PATH}/Extracted_SNPs ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/ExtractedSNPs does not exist!";
+    ErrorLog "$SAMPLEID" "${ROOT_PATH}/Extracted_SNPs does not exist!";
 fi
 
 # Copy ExtractedEGFR
-if [[ -d "${ROOT_PATH}/ExtractedEGFR" ]]; then
-    cp -pr  ${ROOT_PATH}/ExtractedEGFR ${OUTBOX_PATH};
-    echo "cp -pr  ${ROOT_PATH}/ExtractedEGFR ${OUTBOX_PATH}";
+if [[ -d "${ROOT_PATH}/Extracted_EGFR" ]]; then
+    cp -pr  ${ROOT_PATH}/Extracted_EGFR ${OUTBOX_PATH};
+    echo "cp -pr  ${ROOT_PATH}/Extracted_EGFR ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/ExtractedEGFR does not exist!";
+    ErrorLog "$SAMPLEID" "${ROOT_PATH}/Extracted_EGFR does not exist!";
 fi
 
 # Copy Amplification
