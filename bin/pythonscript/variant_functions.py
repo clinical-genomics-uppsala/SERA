@@ -150,7 +150,7 @@ def hotspotVariant(lineSplit, hotspots):
 def regionVariant(lineSplit, hotspots):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
-    end = (lineSplit[3])
+    end = int(lineSplit[3])
 
     if "region_all" in hotspots:
         # start with checking if the chromosome exists in the region_all part of the hash
@@ -256,7 +256,7 @@ def regionVariant(lineSplit, hotspots):
 def indelVariant(lineSplit, hotspots):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
-    end = (lineSplit[3])
+    end = int(lineSplit[3])
 
     if "indel" in hotspots:
         # start with checking if the chromosome exists in the indel part of the hash
@@ -311,8 +311,8 @@ def indelVariant(lineSplit, hotspots):
 
 def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, minVaf):
     chrom = lineSplit[1]
-    start = lineSplit[2]
-    end = lineSplit[3]
+    start = int(lineSplit[2])
+    end = int(lineSplit[3])
     ref = lineSplit[4]
     var = lineSplit[5]
     gene = lineSplit[6]
@@ -325,7 +325,7 @@ def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, 
             for c in intronic:
                 for s in intronic[c]:
                     for e in intronic[c][s]:
-                        if start <= e and end >= s:  # Check if the variant overlaps an intronic region to keep
+                        if start <= int(e) and end >= int(s):  # Check if the variant overlaps an intronic region to keep
                             intr = True
 
         # Keep if it's exonic or splicing or intronic to keep
@@ -335,7 +335,7 @@ def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, 
             if (not re.match('^synonymous', lineSplit[8])) or intr:
 
                 # Keep those without a value in 1000G or a value that is lower than the given input
-                if re.match('-', str(lineSplit[13])) or float(lineSplit[13]) <= g1000:
+                if re.match('-', str(lineSplit[13])) or float(lineSplit[13]) <= float(g1000):
 
                     varOK = True
                     # Check if ampliconmapped is set and if so check amplicon status
