@@ -151,7 +151,8 @@ with open(args.outputfile, 'w') as outfile:
                 amplification = 0
                 if backRdBase > 0:
                     amplification = float(ampRdBase) / float(backRdBase)
-
+                else:
+                    amplification = "NA"
                 # Add info about tumour type
                 tumourType = "-"
                 if args.tumour:
