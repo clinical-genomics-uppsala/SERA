@@ -22,7 +22,7 @@ title="SlurmSERA"
 # id brief_explanation default_status associated_script dependency_on_id run_after_samples(0: do not wait, 1: wait and run all samples, 2: wait and run once)
 steps=(
 1 "Create ampregion, ampROI, seqregion and seqROI Files" off "Create_region_files_python.sh" false 0 \
-2 "Remove adapter sequences from reads" off "Run_cutAdapt_all.sh" false 0 \
+2 "Remove adapter sequences from reads" off "Run_cutAdapt_swift_all.sh" false 0 \
 5 "Run FastQC" off "Run_FastQC.sh" "2" 0 \
 6 "Align with BWA against Genome" off "Run_Bwa.sh" "2" 0 \
 7 "Amplicon mapping" off "AmpliconMapping.sh" "6" 0 \
