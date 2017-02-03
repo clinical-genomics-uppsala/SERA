@@ -104,7 +104,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE1_G_T="${PREFIX}_R1_trimd.fq.gz";
                 PE2_G_T="${PREFIX}_R2_trimd.fq.gz";
 
-                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_PATH}/trimmomatic.jar PE \
+                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_JAR} PE \
                     -threads 12 -trimlog $TRIM_LOG \
                     $RAWDATA_PE1 $RAWDATA_PE2 ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
                     ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
@@ -150,6 +150,10 @@ if [[ $PLATFORM = "Illumina" ]]; then
                     rm ${PE2_T}
                     rm ${PE1_T}.tmp1
                     rm ${PE2_T}.tmp1
+                    
+                    if [[ $GLOBALS == "MORIARTY" ]]; then 
+                        rm "$SNIC_TMP/${SAMPLEID}*";
+                    fi
             else
                 ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz already exists and force was NOT used!";
             fi
