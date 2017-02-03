@@ -43,7 +43,7 @@ export MAIN_TRANSCRIPTS="$ROOT_PATH/refFiles/mainTranscripts.txt";
 export ILLUMINA_ADAPTER_TRIMMOMATIC="$ROOT_PATH/refFiles/TruSeq3-PE-2.fa";
 
 # Trimmomatic path
-export TRIMMOMATIC_PATH=$TRIMMOMATIC_HOME;
+export TRIMMOMATIC_JAR="$TRIMMOMATIC_HOME/trimmomatic.jar";
 
 # Log file.
 export LOG_FILE="$ROOT_PATH/seralog.xml";
