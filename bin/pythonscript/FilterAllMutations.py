@@ -7,7 +7,8 @@ import re
 parser = argparse.ArgumentParser(description = "This script takes a region file, a variation file from SNPmania and an filtered annovaroutput file and outputs the coverage per base in the regions")
 parser.add_argument('-i', '--hotspotfile', help = 'Name of the file with hotspot mutations to report in bed-format', type = str, required = True)
 parser.add_argument('-v', '--variationfile', help = 'File name of variation file from SNPmania', type = str, required = True)
-parser.add_argument('-f', '--Annovarfile', help = 'File name of the annovar output file', type = str, required = True)
+parser.add_argument('-f', '--annovarfile', help = 'File name of the annovar output file', type = str, required = True)
+parser.add_argument('-m', '--multipleBpfile', help = 'File name of the file with annotation of multiple bp variants', type = str, required = True)
 parser.add_argument('-o', '--output', help = 'Output file name', type = str, required = True)
 parser.add_argument('-minRD', '--minRD', help = 'Minimum read depth to be counted as covered', type = str, required = True)
 parser.add_argument('-s', '--sample', help = 'Sample ID', type = str, required = True)
@@ -75,7 +76,7 @@ with open(args.blacklistfile, 'r') as blackfile:
     if not blackfile.closed:
         blackfile.close()
 
-# Create a blacklist with the variants (artifacts etc) to remove
+# Create a hash with the main transcripts of interest
 transcripts = {}
 with open(args.transcript, 'r') as transcriptFile:
 
@@ -89,6 +90,19 @@ with open(args.transcript, 'r') as transcriptFile:
 
     if not transcriptFile.closed:
         transcriptFile.close()
+
+# Create a hash with annotation for important multiple bp variants
+multipleBp = {}
+with open(args.multipleBpfile, 'r') as multipleBpFile:
+
+    for line in multipleBpFile:
+        # Check so the line isn't empty or starts with # or Gene
+        if not re.match('^#', line) and not re.match('^$', line) and not line.startswith('Chr'):
+            lineSplit = line.rstrip('\r\n').split("\t")  # Remove new line character and split on tab
+            createMultipleBpHash(multipleBp, lineSplit)
+    if not multipleBpFile.closed:
+        multipleBpFile.close()
+
 with open(args.output, 'w') as outputFile:
     outputFile.write("Sample\tGene\tVariant_type\tExon\tAA_change\tCDS_change\tAccession_number\tComment\tReport\tFound\tMin_read_depth300\tTotal_read_depth\t",)
     outputFile.write("Reference_read_depth\tVariant_read_depth\tVariant_allele_ratio\tdbSNP_id\tRatio_1000G\tRatio_ESP6500\tClinically_flagged_dbSNP\t",)
