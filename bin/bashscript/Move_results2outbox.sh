@@ -13,7 +13,7 @@ SuccessLog $SAMPLEID "Starts copying files to OUTBOX ...";
 
 # Check if the directory exists, if not create it
 if [[ ! -d ${OUTBOX_PATH} ]]; then
-    mkdir ${OUTBOX_PATH};
+    mkdir -p ${OUTBOX_PATH};
 fi
     
 # If OUTBOX_PATH ends with a / remove the /

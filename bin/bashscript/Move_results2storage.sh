@@ -13,7 +13,7 @@ SuccessLog $SAMPLEID "Starts copying files to STORAGE ...";
 
 # Check if the directory exists, if not create it
 if [[ ! -d ${STORAGE_PATH} ]]; then
-    mkdir ${STORAGE_PATH};
+    mkdir -p ${STORAGE_PATH};
 fi
     
 # If STORAGE_PATH ends with a / remove the /
