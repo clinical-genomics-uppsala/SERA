@@ -12,7 +12,7 @@
 #export ROOT_PATH_SEDD="$HOME/program/sedd-0.0.5";
 export ROOT_PATH_JSNPMANIA="/projects/wp1/software/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
 export ROOT_PATH_MOSAIK="/sw/aligners/mosaik/2.1.33";
-export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta.pl";
+export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta_moriarty.pl";
 export ROOT_PATH_ANNOVAR="/sw/annotators/annovar/2015Mar22/bin";
 export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
 export ROOT_PATH_PINDEL="/sw/tools/pindel/0.2.5a8/bin";
@@ -58,7 +58,7 @@ export GENOME_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fas
 export GENOME_FASTA_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"; # Aligner reference genome files
 
 # Blast DB
-export BLAST_DB="/proj/a2013225/private/reference_genomes/SERA_references/hg19/blastdb/human_genomic";  # local hg 19
+export BLAST_DB="/data/ref_genomes/hg19/blastdb/human_genomic";  # local hg 19
 
 #NC to chr conversion
 export NC2chr="$SERA_PATH/config/reference.hg19.Info";
