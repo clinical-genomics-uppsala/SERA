@@ -551,4 +551,53 @@ def checkMutationType(lineSplit, mutType):
     return mutType
 
 
+def createMultipleBpHash(lineSplit, multipleBp):
+
+    chrom = linesplit[0]
+    start = int(lineSplit[1])
+    end = int (lineSplit[2])
+    ref = lineSplit[3]
+    var = lineSplit[4]
+
+    accNumber = lineSplit[8].split(".")[0]
+    if not chrom in multipleBp:
+        multipleBp[chrom] = {}
+        multipleBp[chrom][start] = {}
+        multipleBp[chrom][start][end] = {}
+        multipleBp[chrom][start][end][ref] = {}
+        multipleBp[chrom][start][end][ref][var] = {}
+        multipleBp[chrom][start][end][ref][var]['cds'] = lineSplit[6]
+        multipleBp[chrom][start][end][ref][var]['aa'] = lineSplit[7]
+        multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
+    elif not start in multipleBp[chrom]:
+        multipleBp[chrom][start] = {}
+        multipleBp[chrom][start][end] = {}
+        multipleBp[chrom][start][end][ref] = {}
+        multipleBp[chrom][start][end][ref][var] = {}
+        multipleBp[chrom][start][end][ref][var]['cds'] = lineSplit[6]
+        multipleBp[chrom][start][end][ref][var]['aa'] = lineSplit[7]
+        multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
+    elif not end in multipleBp[chrom][start]:
+        multipleBp[chrom][start][end] = {}
+        multipleBp[chrom][start][end][ref] = {}
+        multipleBp[chrom][start][end][ref][var] = {}
+        multipleBp[chrom][start][end][ref][var]['cds'] = lineSplit[6]
+        multipleBp[chrom][start][end][ref][var]['aa'] = lineSplit[7]
+        multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
+    elif not ref in multipleBp[chrom][start][end]:
+        multipleBp[chrom][start][end][ref] = {}
+        multipleBp[chrom][start][end][ref][var] = {}
+        multipleBp[chrom][start][end][ref][var]['cds'] = lineSplit[6]
+        multipleBp[chrom][start][end][ref][var]['aa'] = lineSplit[7]
+        multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
+    elif not var in multipleBp[chrom][start][end][ref]:
+        multipleBp[chrom][start][end][ref][var] = {}
+        multipleBp[chrom][start][end][ref][var]['cds'] = lineSplit[6]
+        multipleBp[chrom][start][end][ref][var]['aa'] = lineSplit[7]
+        multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
+
+
+
+
+
 
