@@ -134,26 +134,19 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 parallel r1reformat ::: ${PREFIX}_r1split*
                 parallel r2reformat ::: ${PREFIX}_r2split*
 
-                ls ${PREFIX}_r1*.fastq > ${SNIC_TMP}/r1infiles
-                ls ${PREFIX}_r2*.fastq > ${SNIC_TMP}/r2infiles
+                ls ${PREFIX}_r1*.fastq > ${PREFIX}_r1infiles
+                ls ${PREFIX}_r2*.fastq > ${PREFIX}_r2infiles
 
                 # run parallel on paired chunks of fastq files with ptrim() function
-                    parallel --xapply ptrim {1} {2} ::: $(cat ${SNIC_TMP}/r1infiles) ::: $(cat ${SNIC_TMP}/r2infiles)
+                parallel --xapply ptrim {1} {2} ::: $(cat ${PREFIX}_r1infiles) ::: $(cat ${PREFIX}_r2infiles)
 
-                    # concatenate primer-trimmed fastq chunks
-                    cat ${PREFIX}*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
-                    cat ${PREFIX}*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
+                # concatenate primer-trimmed fastq chunks
+                cat ${PREFIX}_*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
+                cat ${PREFIX}_*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
 
-                    # remove all intermediate files
-                    rm ${PREFIX}_r[1,2]split*
-                    rm ${PE1_T}
-                    rm ${PE2_T}
-                    rm ${PE1_T}.tmp1
-                    rm ${PE2_T}.tmp1
-                    
-                    if [[ $GLOBALS == "MORIARTY" ]]; then 
-                        rm "$SNIC_TMP/${SAMPLEID}*";
-                    fi
+                # remove all intermediate files
+                rm ${PREFIX}_*
+
             else
                 ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz already exists and force was NOT used!";
             fi
