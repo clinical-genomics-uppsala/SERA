@@ -99,7 +99,8 @@ with open(args.multipleBpfile, 'r') as multipleBpFile:
         # Check so the line isn't empty or starts with # or Gene
         if not re.match('^#', line) and not re.match('^$', line) and not line.startswith('Chr'):
             lineSplit = line.rstrip('\r\n').split("\t")  # Remove new line character and split on tab
-            createMultipleBpHash(multipleBp, lineSplit)
+
+            createMultipleBpHash(lineSplit, multipleBp,)
     if not multipleBpFile.closed:
         multipleBpFile.close()
 
@@ -111,9 +112,9 @@ with open(args.output, 'w') as outputFile:
     outputFile.write("Var_aligned_amplicons\tChr\tStart\tEnd\tReference_base\tVariant_base\tAll_transcripts_annotation\n")
 
     # Open filteredAnnovar file and add info about the filteredAnnovars to the hash
-    with open(args.Annovarfile, 'r') as AnnovarFile:
+    with open(args.annovarfile, 'r') as annovarFile:
         # Go through the file line by line
-        for line in AnnovarFile:
+        for line in annovarFile:
 
             # Check so the line isn't empty or starts with #
             if not re.match('^#', line) and not re.match('^$', line) and not line.startswith('Sample'):
@@ -144,8 +145,8 @@ with open(args.output, 'w') as outputFile:
 
 
         # Check if the filteredAnnovarfile is closed, if not close it
-        if not AnnovarFile.closed:
-            AnnovarFile.close()
+        if not annovarFile.closed:
+            annovarFile.close()
     intronic = {}  # empty intronic hash
 
     # Open variation file from SNPmania
@@ -196,16 +197,16 @@ with open(args.output, 'w') as outputFile:
 
     # Print hotspot positions
     if "hotspot" in hotspots:
-        printHotspots(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
+        printHotspots(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped, multipleBp)
 
     if "region" in hotspots:
-        printRegion(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
+        printRegion(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped, multipleBp)
 
     if "indel" in hotspots:
-        printIndel(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
+        printIndel(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped, multipleBp)
 
     if "region_all" in hotspots:
-        printRegionAll(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped)
+        printRegionAll(hotspots, minRDs, args.sample, transcripts, outputFile, args.ampliconmapped, multipleBp)
 
     if not outputFile.closed:
         outputFile.close()
