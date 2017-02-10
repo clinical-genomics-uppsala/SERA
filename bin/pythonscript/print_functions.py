@@ -2,7 +2,7 @@ from variant_functions import *
 import re
 
 # Print variants, both bwa and pindel on hotspot positions. If now variant found print base and it's total read depth
-def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
+def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, multipleBp):
     for chrom in hotspots['hotspot']:
             for start in hotspots['hotspot'][chrom]:
                 for end in hotspots['hotspot'][chrom][start]:
@@ -24,6 +24,14 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped)
                                         pinExist = True;  # If so set pinExist to True
                                 if not pinExist:  # If no identical pindel variant exists, print the bwa variant
                                     aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+                                    if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a
+                                        exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                        if exist:  # If the variant exists in hash add info
+                                            aa = aaTmp
+                                            cds = cdsTmp
+                                            if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                                accNum = accNumTmp
+                                                comm = "altTranscript"
                                     found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                     if re.match("-", found):
                                         found = "yes"
@@ -38,6 +46,16 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped)
 
                             else:  # If no pindel variants are available write the variant
                                 aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                                if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a
+                                    exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                    if exist:  # If the variant exists in hash add info
+                                        aa = aaTmp
+                                        cds = cdsTmp
+                                        if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                            accNum = accNumTmp
+                                            comm = "altTranscript"
+
                                 found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                 if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
                                     exon = hotspots['hotspot'][chrom][start][end]['exon']
@@ -57,6 +75,15 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped)
                         for pindelVar in hotspots['hotspot'][chrom][start][end]['pindel']:
 
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(pindelVar, transcripts)
+
+                            if int(pindelVar[3]) - int(pindelVar[2]) > 0 or re.match("-", pindelVar[4]) or (int(pindelVar[3]) - int(pindelVar[2]) > 0 and re.match("-", pindelVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                                exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(pindelVar, multipleBp)
+                                if exist:  # If the variant exists in hash add info
+                                    aa = aaTmp
+                                    cds = cdsTmp
+                                    if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                        accNum = accNumTmp
+                                        comm = "altTranscript"
 
                             # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                             found, readLevel = getReadLevel(minRDs, hotspots['hotspot'][chrom][start][end]['rd'][0])
@@ -93,7 +120,7 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped)
                             OUTPUT.write (sample + "\t" + str(hotspots['hotspot'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['hotspot'][chrom][start][end]['exon']) + "\t" + str(hotspots['hotspot'][chrom][start][end]['aa']) + "\t" + str(hotspots['hotspot'][chrom][start][end]['cds']) + "\t" + str(hotspots['hotspot'][chrom][start][end]['accNum']) + "\t" + str(hotspots['hotspot'][chrom][start][end]['comment']) + "\t1-hotspot\t" + found + "\t" + readLevel + "\t" + str(hotspots['hotspot'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start) + "\t" + str(end) + "\t-\t-\t-\n")
 
 # OUTPUT.write variants within region, both bwa pindel and the total read depth for positions without variant.
-def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
+def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, multipleBp):
     for chrom in hotspots['region_all']:
         for start in hotspots['region_all'][chrom]:
             for end in hotspots['region_all'][chrom][start]:
@@ -114,6 +141,16 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                                     pinExist = True;  # If so set pinExist to True
                             if not pinExist:  # If no identical pindel variant exists, print the bwa variant
                                 aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                                if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a
+                                    exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                    if exist:  # If the variant exists in hash add info
+                                        aa = aaTmp
+                                        cds = cdsTmp
+                                        if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                            accNum = accNumTmp
+                                            comm = "altTranscript"
+
                                 found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                 if re.match("-", found):
                                     found = "yes"
@@ -127,6 +164,16 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                                 OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                            if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a
+                                exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                if exist:  # If the variant exists in hash add info
+                                    aa = aaTmp
+                                    cds = cdsTmp
+                                    if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                        accNum = accNumTmp
+                                        comm = "altTranscript"
+
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                             if re.match("-", found):
                                 found = "yes"
@@ -146,6 +193,15 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                     for pindelVar in hotspots['region_all'][chrom][start][end]['pindel']:
 
                         aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(pindelVar, transcripts)
+
+                        if int(pindelVar[3]) - int(pindelVar[2]) > 0 or re.match("-", pindelVar[4]) or (int(pindelVar[3]) - int(pindelVar[2]) > 0 and re.match("-", pindelVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                            exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(pindelVar, multipleBp)
+                            if exist:  # If the variant exists in hash add info
+                                aa = aaTmp
+                                cds = cdsTmp
+                                if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                    accNum = accNumTmp
+                                    comm = "altTranscript"
 
                         # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                         found, readLevel = getReadLevel(minRDs, hotspots['region_all'][chrom][start][end]['rd'][0])
@@ -185,7 +241,7 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
 
 # OUTPUT.write variants within region, both bwa and pindel. However it does not OUTPUT.write total read depth for all positions without variant
-def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
+def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, multipleBp):
     for chrom in hotspots['region']:
         for start in hotspots['region'][chrom]:
             for end in hotspots['region'][chrom][start]:
@@ -206,6 +262,15 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                     pinExist = True;  # If so set pinExist to True
                             if not pinExist:  # If no identical pindel variant exists, print the bwa variant
                                 aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+                                if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                                    exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                    if exist:  # If the variant exists in hash add info
+                                        aa = aaTmp
+                                        cds = cdsTmp
+                                        if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                            accNum = accNumTmp
+                                            comm = "altTranscript"
+
                                 found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                 if re.match("-", found):
                                     found = "yes"
@@ -219,6 +284,16 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                 OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                            if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                                exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                if exist:  # If the variant exists in hash add info
+                                    aa = aaTmp
+                                    cds = cdsTmp
+                                    if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                        accNum = accNumTmp
+                                        comm = "altTranscript"
+
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                             if re.match("-", found):
                                 found = "yes"
@@ -239,6 +314,15 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
 
                         aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(pindelVar, transcripts)
 
+                        if int(pindelVar[3]) - int(pindelVar[2]) > 0 or re.match("-", pindelVar[4]) or (int(pindelVar[3]) - int(pindelVar[2]) > 0 and re.match("-", pindelVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                            exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(pindelVar, multipleBp)
+                            if exist:  # If the variant exists in hash add info
+                                aa = aaTmp
+                                cds = cdsTmp
+                                if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                    accNum = accNumTmp
+                                    comm = "altTranscript"
+
                         # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                         found, readLevel = getReadLevel(minRDs, hotspots['region'][chrom][start][end]['rd'][0])
                         if re.match("-", found):
@@ -254,7 +338,7 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
 
 
 # OUTPUT.write indels within indel region, both bwa and pindel. However it does not OUTPUT.write total read depth for all positions without variant
-def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
+def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, multipleBp):
     for chrom in hotspots['indel']:
         for start in hotspots['indel'][chrom]:
             for end in hotspots['indel'][chrom][start]:
@@ -272,6 +356,16 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                 # Check that there is no pindel variant which is identical to the bwa variant
                                 if not (bwaVar[2] == pindelVar[2] and bwaVar[3] == pindelVar[3] and bwaVar[4] == pindelVar[4] and bwaVar[5] == pindelVar[5]):
                                     aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                                    if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                                        exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                        if exist:  # If the variant exists in hash add info
+                                            aa = aaTmp
+                                            cds = cdsTmp
+                                            if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                                accNum = accNumTmp
+                                                comm = "altTranscript"
+
                                     found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                     if re.match("-", found):
                                         found = "yes"
@@ -285,6 +379,16 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                                     OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
                             aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(bwaVar, transcripts)  # Get transcript information
+
+                            if int(bwaVar[3]) - int(bwaVar[2]) > 0 or re.match("-", bwaVar[4]) or (int(bwaVar[3]) - int(bwaVar[2]) > 0 and re.match("-", bwaVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                                exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(bwaVar, multipleBp)
+                                if exist:  # If the variant exists in hash add info
+                                    aa = aaTmp
+                                    cds = cdsTmp
+                                    if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                        accNum = accNumTmp
+                                        comm = "altTranscript"
+
                             found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                             if re.match("-", found):
                                 found = "yes"
@@ -304,6 +408,15 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped):
                     for pindelVar in hotspots['indel'][chrom][start][end]['pindel']:
 
                         aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(pindelVar, transcripts)
+
+                        if int(pindelVar[3]) - int(pindelVar[2]) > 0 or re.match("-", pindelVar[4]) or (int(pindelVar[3]) - int(pindelVar[2]) > 0 and re.match("-", pindelVar[4])):  # If it is a multiple bp variant check if there are any match in our multipleBp hash
+                            exist, aaTmp, cdsTmp, accNumTmp = getMultipleBpInfo(pindelVar, multipleBp)
+                            if exist:  # If the variant exists in hash add info
+                                aa = aaTmp
+                                cds = cdsTmp
+                                if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
+                                    accNum = accNumTmp
+                                    comm = "altTranscript"
 
                         # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                         found, readLevel = getReadLevel(minRDs, hotspots['indel'][chrom][start][end]['rd'][0])

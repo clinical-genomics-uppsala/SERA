@@ -550,12 +550,12 @@ def checkMutationType(lineSplit, mutType):
         return "2-indel"
     return mutType
 
-
+# Create hash with info about cds change, aa change and accession number
 def createMultipleBpHash(lineSplit, multipleBp):
 
-    chrom = linesplit[0]
+    chrom = lineSplit[0]
     start = int(lineSplit[1])
-    end = int (lineSplit[2])
+    end = int(lineSplit[2])
     ref = lineSplit[3]
     var = lineSplit[4]
 
@@ -597,7 +597,18 @@ def createMultipleBpHash(lineSplit, multipleBp):
         multipleBp[chrom][start][end][ref][var]['nm'] = accNumber
 
 
+def getMultipleBpInfo(lineSplit, multipleBp):
 
+    chrom = lineSplit[1]
+    start = int(lineSplit[2])
+    end = int(lineSplit[3])
+    ref = lineSplit[4]
+    var = lineSplit[5]
 
+    if chrom in multipleBp:
+        if start in multipleBp[chrom] and end in multipleBp[chrom][start] and ref in multipleBp[chrom][start][end] and var in multipleBp[chrom][start][end][ref]:
+            return True, multipleBp[chrom][start][end][ref][var]['cds'], multipleBp[chrom][start][end][ref][var]['aa'], multipleBp[chrom][start][end][ref][var]['nm']
+
+    return False, "-", "-", "-"
 
 
