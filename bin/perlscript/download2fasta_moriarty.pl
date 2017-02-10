@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 #
 # This script takes a indexfile with format:
 #
@@ -12,19 +12,13 @@
 use strict;
 use warnings;
 
-use threads;
-use threads::shared;
-
-use Data::Dumper;
-
-my($next_arg, $index_file, $outputfile, $blastdb, $tableformat,$numberOfThreads);
+my($next_arg, $index_file, $outputfile, $blastdb, $tableformat, $threads);
 
 # Subroutine prototypes
 sub usage;
 sub save_to_fasta_file;
 sub save_to_table_file;
 sub indexfile2fastacmdOpt;
-sub extractFasta;
 
 if(scalar(@ARGV) == 0){
     &usage();
@@ -36,7 +30,7 @@ while(scalar @ARGV > 0){
     elsif($next_arg eq "-o") { $outputfile = shift(@ARGV); }
     elsif($next_arg eq "-d") { $blastdb = shift(@ARGV); }
     elsif($next_arg eq "-t") { $tableformat = shift(@ARGV); }
-    elsif($next_arg eq "-th") { $numberOfThreads = shift(@ARGV); }
+    elsif($next_arg eq "-th") { $threads = shift(@ARGV); }
     else { print "Invalid argument: $next_arg"; usage(); }
 }
 
@@ -44,94 +38,47 @@ while(scalar @ARGV > 0){
 if ((!$blastdb)||(!$index_file)) { &usage(); }
 # Defaults
 if (!$outputfile) { $outputfile="/dev/stdout"; }
-if(!$numberOfThreads) { $numberOfThreads = 5; }
+
 # Make fastacmd options for all posts in the index file.
-our %fastaCmd:shared;
-our %fastaOpt:shared;
-our %fastaSeq:shared;
+my $fastcmd = indexfile2fastacmdOpt();
 
-# Open output file.
+# Run fastacmd and collect results.
 open(OUTPUT, "> $outputfile" ) or die "Can't save to output $outputfile : $!";
-# Open input file.
-open( FILE, "< $index_file" ) or die "Can't open $index_file : $!";
-while (<FILE>) { 
-        
-    chomp; # Remove all \n in line.
-    if (!(/^#/)) {
-        
-        my @columns = split(/\t/, $_);
-        my $id = $columns[0];
-        my $chr = $columns[1];
-        my $start = $columns[2];
-        my $stop = $columns[3];
-
-        #fastacmd -d human_genomic -s NC_000017.9 -L 7520186,7520668
-        $fastaOpt{$id} = $id."\t".$chr."\t".$start."\t".$stop;
-        $fastaCmd{$id} = "-d ".$blastdb." -s ".$chr." -L ".$start.",".$stop;
-        #my $cmdLine = "-d ".$blastdb." -s ".$chr." -L ".$start.",".$stop;
-        #my %content: shared; = {'table' => $table, 'cmdline' => $cmdLine};
-        
-    }
-}
-close(FILE);
-
-# Create an array contaning all keys
-my @keys;
-foreach my $key ( keys %fastaCmd ) {
-    push(@keys,$key);
-}
-
-# counter used to keep track of the next available key
-our $indexCounter:shared = 0;
-
-# start threads
-for(my $i = 0; $i < $numberOfThreads; $i++){
-    threads->new(\&extractFasta, \@keys);
-}
-
-foreach my $thr (threads->list) { 
-    # Don't join the main thread or ourselves 
-    if ($thr->tid && !threads::equal($thr, threads->self)) { 
-        $thr->join; 
-    } 
-}
-
-# Print all fasta data to a file.
-for( my $i = 0; $i <= $#keys; $i++) {  
+foreach my $key ( keys %$fastcmd ) {
+   
+   my $ans = `blastdbcmd $fastcmd->{$key}->{'cmdline'}`;
+   $ans =~ s/^>.*?\n//;  # Remove fasta header from ans.
+   $ans =~ s/[\n|\s]//g; # Remove all new lines and speces from ans.
+   
    if (defined($tableformat)) {
-        save_to_table_file($keys[$i], $fastaOpt{$keys[$i]}, $fastaSeq{$keys[$i]});
+        save_to_table_file($key, $fastcmd->{$key}->{'table'}, $ans);
    } else {
-        save_to_fasta_file($keys[$i], $fastaSeq{$keys[$i]});
+        save_to_fasta_file($key, $ans);
    }
 }
 close(OUTPUT);
 
-# Function used to iterate through all input values.
-sub extractFasta{
-    my @keys = @{(shift)};
-    my $index = 0;
+# Print the usage help for this script.
+sub usage {
+  print "\nUsage: $0 -s <index_file> -o <fasta_outputfile> -d <blastdb> -t <full/small>\n 
+ You need to have <fastacmd> from the BLAST package in your path for this
+ script to work.
+ 
+ -s Index file in format:
     
-    {
-         
-        lock($indexCounter);
-        $index = $indexCounter;
-        $indexCounter++;
-    }
+    # Id {tab} Chr {tab} Start {tab} Stop
+    Seq1    NC_000017   10001   10010
+    Seq2    NC_000017   10011   10020
 
-    while($index <= $#keys){
-        my $key = $keys[$index];
-        my $ans = `blastdbcmd $fastaCmd{$key}`;
-        #my $ans = `fastacmd $fastaCmd{$key}`;
-        $ans =~ s/^>.*?\n//;  # Remove fasta header from ans.
-        $ans =~ s/[\n|\s]//g; # Remove all new lines and speces from ans.
-        $fastaSeq{$key} = $ans;
-        {
-            lock($indexCounter);
-            $index = $indexCounter;
-            $indexCounter++;
-        }
-    }
-    return 1;
+ -o Outputfile saved in fasta or table format.
+
+ -d Blast database
+  
+ -t Table format output full or small.
+     full  = id {tab} nc-number {tab} start [tab} end {tab} sequence
+     small = id {tab} seq\n\n";
+    
+  exit(1);
 }
 
 # Saves to fasta file append
@@ -168,27 +115,29 @@ sub save_to_table_file {
     }
 }
 
-# Print the usage help for this script.
-sub usage {
-  print "\nUsage: $0 -s <index_file> -o <fasta_outputfile> -d <blastdb> -t <full/small>\n 
- You need to have <fastacmd> from the BLAST package in your path for this
- script to work.
- 
- -s Index file in format:
-    
-    # Id {tab} Chr {tab} Start {tab} Stop
-    Seq1    NC_000017   10001   10010
-    Seq2    NC_000017   10011   10020
+# Produce options to the fastacmd commando
+sub indexfile2fastacmdOpt {
 
- -o Outputfile saved in fasta or table format.
+    my $fastacmdOpt = {};
 
- -d Blast database
-  
- -th number of threads that should be created.
+    open( FILE, "< $index_file" ) or die "Can't open $index_file : $!";
+     while (<FILE>) { 
+        
+        chomp; # Remove all \n in line.
+        if (!(/^#/)) {
+        
+            my @columns = split(/\t/, $_);
+            my $id = $columns[0];
+            my $chr = $columns[1];
+            my $start = $columns[2];
+            my $stop = $columns[3];
+                    
+            #fastacmd -d human_genomic -s NC_000017.9 -L 7520186,7520668
+            $fastacmdOpt->{$id}->{'cmdline'} = "-db ".$blastdb." -entry ".$chr." -range ".$start."-".$stop;
+            $fastacmdOpt->{$id}->{'table'} = $id."\t".$chr."\t".$start."\t".$stop; 
+        }
+     }
+    close(FILE);
 
- -t Table format output full or small.
-     full  = id {tab} nc-number {tab} start [tab} end {tab} sequence
-     small = id {tab} seq\n\n";
-    
-  exit(1);
+    return $fastacmdOpt;
 }
