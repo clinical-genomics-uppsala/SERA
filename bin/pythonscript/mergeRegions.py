@@ -41,7 +41,7 @@ with open(args.infile, 'r') as infile:
     # Go through the file line by line
     for line in infile:
         # Check that line starts with chr
-        if (bedIn and re.match('chr', line)) or (seddIn and not re.match('^#', line)):
+        if (bedIn and not re.match('^#', line)) or (seddIn and not re.match('^#', line)):
             line = line.rstrip('\r\n')  # Remove new line character
             lineSplit = line.split("\t")  # Split line by tab
 
@@ -55,9 +55,14 @@ with open(args.infile, 'r') as infile:
                 chrom = lineSplit[0]
                 if  seddOut:
                     if args.chr2nc:
-                        chrom = ncConverter[lineSplit[0]]
+                        if not lineSplit[0].startswith("chr"):
+                            chrom = ncConverter["chr" + lineSplit[0]]
+                        else:
+                            chrom = ncConverter[lineSplit[0]]
                     else:
                         print ("ERROR chr2nc has to be given when input format is bed and output format is sedd!!!")
+                if not lineSplit[0].startswith("chr"):
+                    chrom = "chr" + lineSplit[0]
                 start = int(lineSplit[1]) + 1
                 end = int(lineSplit[2])
 
