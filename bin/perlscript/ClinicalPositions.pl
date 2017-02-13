@@ -51,11 +51,9 @@ if (   !$variantFile
 if ( !$mRD ) {
     $mRD = 1;
 }
-
 if ( !$ampliconMapped ) {
     $ampliconMapped = 0;
 }
-
 
 my %cosmic = ();
 my %ref    = ();
@@ -165,7 +163,6 @@ sub createCosmicHash {
 }
 
 sub createReferenceHash {
-
     my ($lineKey) = @_;
     my @line = @$lineKey;
 
