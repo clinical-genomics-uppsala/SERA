@@ -21,22 +21,20 @@ title="SlurmSERA v.1.0"
 # array structure:
 # id brief_explanation default_status associated_script dependency_on_id run_after_samples(0: do not wait, 1: wait and run all samples, 2: wait and run once)
 steps=(
-1 "Create ampregion, ampROI, seqregion and seqROI Files" off "Create_region_files_python.sh" false 0 \
+1 "Create ampregion, ampROI, seqregion and seqROI Files" off "Create_region_files_python.sh" false 2 \
 2 "Remove adapter sequences from reads" on "Run_cutAdapt.sh" false 0 \
 3 "Run FastQC" on "Run_FastQC.sh" "2" 0 \
 4 "Align with BWA against Genome" on "Run_Bwa.sh" "2" 0 \
 5 "Amplicon mapping" on "AmpliconMapping.sh" "4" 0 \
-10 "Create SNPseq file" off "Create_SNPseq_file.sh" "1" 0 \
+10 "Create SNPseq file" off "Create_SNPseq_file.sh" "1" 2 \
 11 "Run jSNPmania" on "Run_jSNPmania.sh" "4:5:10" 0 \
 12 "SNPmania output to Annovar input" on "jSNPmania2AnnovarInput.sh" "11" 0 \
 13 "Run Annovar" on "Run_Annovar.sh" "12" 0 \
 14 "Combine Annovar output to one file" off "Combine_annovarOutput_to_one_file.sh" "13" 2 \
-15 "Extract info about clinical positions" on "ExtractInfoClinicalPositions.sh" "11" 0 \
 20 "Run Pindel" on "Run_Pindel.sh" "4" 0 \
 21 "Annotate Pindel with Annovar" on "AnnotatePindel.sh" "20" 0 \
-25 "Filter Annovar and Pindelannovar output" on "FilterAnnovar.sh" "13:21" 0 \
-26 "Merge info about clinical positions, indels from Pindel and regions" on "MergeAllClinicalInfo.sh" "15:21:25" 0 \
-27 "Convert Annovar output to vcf-format" on "ConvertAnnovaroutput2vcf.sh" "25" 0 \
+25 "Output all mutations (hotspots and others)" on "FilterMutations.sh" "13:21" 0 \
+26 "Convert Annovar output to vcf-format" on "ConvertAnnovaroutput2vcf.sh" "25" 0 \
 30 "Extract MSI markers" on "ExtractMSI.sh" "13:21:25" 0 \
 31 "Combine extracted MSI markers to one file" on "Combine_extracted_MSI.sh" "30" 2 \
 32 "Extract EGFR information" on "Extract_T790M.sh" "11" 0 \
@@ -70,7 +68,7 @@ let NUMBOFSTEPS=${#steps[@]}-1;
 ##############
 
 # Start interface
-if [ -z "$INTERFACE" ]; then
+if [[ -z "$INTERFACE" ]]; then
 	. $SERA_PATH/includes/commandLineInterface.sh
 else
 	. $SERA_PATH/includes/dialogInterface.sh
