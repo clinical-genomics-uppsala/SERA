@@ -3,7 +3,7 @@
 # Script creats BlastDB on mate-pair reads.
 #
 #SBATCH -p core  -n 3
-#SBATCH -t 01:00:00
+#SBATCH -t 02:00:00
 ##SBATCH --qos=short
 
 # Include functions

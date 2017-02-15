@@ -3,7 +3,7 @@
 # Script for running MosaikBuild on either SOLiD or Illumina samples.
 #
 #SBATCH -p core  -n 1
-#SBATCH -t 30:00
+#SBATCH -t 1:00:00
 ##SBATCH --qos=short
 
 # Include functions

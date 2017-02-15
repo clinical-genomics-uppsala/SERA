@@ -2,7 +2,7 @@
 #
 # Script to calculate the amplification ratio
 #SBATCH -p core  -n 1
-#SBATCH -t 30:00
+#SBATCH -t 1:00:00
 
 # Include functions
 . $SERA_PATH/includes/logging.sh

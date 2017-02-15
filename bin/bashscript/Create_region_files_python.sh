@@ -3,7 +3,7 @@
 # Script creates amproi and ampregion files using python.
 #
 #SBATCH -p core  -n 1
-#SBATCH -t 15:00
+#SBATCH -t 30:00
 ##SBATCH --qos=short -t 00:15:00
 
 # Include functions

@@ -3,7 +3,7 @@
 # Script creates SNPseq file.
 #
 #SBATCH -p core  -n 2
-#SBATCH -t 01:00:00
+#SBATCH -t 02:00:00
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -19,7 +19,11 @@ fi
 if [[ ! -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq || ! -z $FORCE ]]; then
 	# Check that the ampregion reference file exists
 	if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
-		perl $DOWNLOAD2FASTA -th 2 -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
+	    if [[ $GLOBALS == "MORIARTY" ]]; then
+	        perl $DOWNLOAD2FASTA -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
+	    else
+            perl $DOWNLOAD2FASTA -th 2 -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
+        fi
 	else
 		ErrorLog "$SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.ampregion does NOT exist, run step 0 to create this file first!";
 	fi

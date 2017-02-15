@@ -2,7 +2,7 @@
 #
 # Script to run Pindel
 #SBATCH -p core  -n 5
-#SBATCH -t 01:00:00
+#SBATCH -t 02:00:00
 ##SBATCH --qos=short -t 00:15:00
 
 # Include functions

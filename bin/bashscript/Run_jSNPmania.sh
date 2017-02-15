@@ -2,7 +2,7 @@
 #
 # Script to run jSNPmania
 #SBATCH -p core  -n 4
-#SBATCH -t 01:00:00
+#SBATCH -t 02:00:00
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -24,7 +24,7 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 			if [[ ! -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations || ! -z $FORCE ]]; then
 				# Reheader the ampliconmapped file
 				if [[ -e $SERA_PATH/res/Convert2SNPmaniaHeader.sam ]]; then
-					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -am ${SNPMANIAFLAGS} >> $ROOT_PATH/SNPmania/jSNPmania_output.txt;
+					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -am ${SNPMANIAFLAGS};
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi
@@ -35,7 +35,7 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 		elif [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
 			if [[ ! -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations || ! -z $FORCE ]]; then
 				if [[ -e $SERA_PATH/res/Convert2SNPmaniaHeader.sam ]]; then
-					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS} >> $ROOT_PATH/SNPmania/jSNPmania_output.txt;
+					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS};
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi

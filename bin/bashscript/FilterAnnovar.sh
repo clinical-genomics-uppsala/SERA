@@ -3,7 +3,7 @@
 # Script to run jSNPmania
 ##SBATCH --qos=short 
 #SBATCH -p core  -n 1
-#SBATCH -t 01:00:00
+#SBATCH -t 02:00:00
 
 
 # Include functions

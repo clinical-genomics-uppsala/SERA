@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -p core  -n 6
-#SBATCH -t 03:00:00
+#SBATCH -t 05:00:00
 ##SBATCH --qos=short
 
 module load bioinfo-tools;
