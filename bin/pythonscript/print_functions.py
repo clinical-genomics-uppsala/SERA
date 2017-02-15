@@ -32,9 +32,13 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped,
                                             if not accNum == accNumTmp:  # if there is a different accession number set comment to altTranscript
                                                 accNum = accNumTmp
                                                 comm = "altTranscript"
+
                                     found, readLevel = getReadLevel(minRDs, bwaVar[12])  # Get the level of read depth and if it's not analyzable
                                     if re.match("-", found):
                                         found = "yes"
+                                        if not ampliconCheckHotspot(bwaVar, ampliconMapped):  # if the amplicon mapping criteria is not ful filled found = no
+                                            found = "no"
+
                                     if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
                                         exon = hotspots['hotspot'][chrom][start][end]['exon']
 
@@ -61,6 +65,8 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped,
                                     exon = hotspots['hotspot'][chrom][start][end]['exon']
                                 if re.match("-", found):
                                     found = "yes"
+                                    if not ampliconCheckHotspot(bwaVar, ampliconMapped):  # if the amplicon mapping criteria is not ful filled found = no
+                                        found = "no"
 
                                 refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                                 mutType = checkMutationType(bwaVar, "1-hotspot")  # Get the mutation type
@@ -89,6 +95,8 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped,
                             found, readLevel = getReadLevel(minRDs, hotspots['hotspot'][chrom][start][end]['rd'][0])
                             if re.match("-", found):
                                 found = "yes"
+                                if not ampliconCheckHotspot(pindelVar, ampliconMapped):  # if the amplicon mapping criteria is not ful filled found = no
+                                    found = "no"
                             if re.match("-", exon):  # If no exon info was given for the mutation take it from hotspot input file
                                 exon = hotspots['hotspot'][chrom][start][end]['exon']
 
@@ -430,6 +438,7 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, mu
 
                         comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
                         OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
+
 
 
 
