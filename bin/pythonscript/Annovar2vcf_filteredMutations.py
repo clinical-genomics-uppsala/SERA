@@ -2,7 +2,7 @@ import argparse
 import re
 
 # Parse commandline
-parser = argparse.ArgumentParser(description = "This script takes an annovar output file and a region file with sequences and output the variants in a vcf-file")
+parser = argparse.ArgumentParser(description = "This script takes an filtered mutation output file and a region file with sequences and output the variants in a vcf-file")
 parser.add_argument('-s', '--seqfile', help = 'Name of the input file with region and sequences, tab-delimited', type = str, required = True)
 parser.add_argument('-m', '--mutationfile', help = 'File with all mutations, both hotspots and others', type = str, required = True)
 parser.add_argument('-chr2nc', '--chr2nc', help = 'File with conversion between NC-number and chr', type = str, required = True)
@@ -150,95 +150,6 @@ with open(args.output, 'w') as outputfile:
         if not mutationFile.closed:
             mutationFile.close()
 
-    if args.pindelfile:
-        with open(args.pindelfile, 'r') as pindelfile:
-            # Go through the file line by line
-            for line in pindelfile:
-                # Check so the line isn't empty or starts with #
-                if not re.match('^#', line) and not re.match('$', line) and not re.match('^Sample', line):
 
-                    line = line.rstrip('\r\n')  # Remove new line character
-                    line = line.split("\t")  # Split line by tab
-
-                    chrom = line[1]
-                    start = int(line[2])
-                    end = int(line[3])
-                    ref = line[4]
-                    var = line[5]
-                    refRd = line[10]
-                    varRd = line[11]
-                    rd = line[12]
-                    dbSnp = line[14]
-                    cosmic = line[17]
-                    qual = "."
-                    filter = "."
-                    info = "."
-                    id = "NA"
-
-                    if dbSnp is "-":
-                        if cosmic is "-":
-                            id = "."
-                        else:
-                            cosmic = cosmic.split(";")
-                            cosmic = cosmic[0].split("=")
-                            id = cosmic[1]
-                    else:
-                        id = dbSnp
-                        if not cosmic is "-":
-                            cosmic = cosmic.split(";")
-                            cosmic = cosmic[0].split("=")
-                            id = id + ";" + cosmic[1]
-
-                    if chrom.startswith("NC"):
-                        chrom = nc2chr[chrom]
-                        chrom = chrom[3:]
-                    elif chrom.startswith('chr'):
-                        chrom = chrom[3:]
-
-                    if ref is "-":
-                        # # INSERTION
-                        # print ("Insertion\t"+chrom)
-                        if chrom in regions:
-                            for s in regions[chrom].keys():  # Go through all start positions on the chromosome in the dictionary
-                                if s <= start:  # Check if the region start is lower than the start of the variant
-                                    for e in regions[chrom][s].keys():  # If so go through the end positions of the regions
-                                        if e >= end:  # If the end of the region is greater than the variant end extract seq
-
-                                            rSeq = regions[chrom][s][e]
-                                            rSeq = rSeq[(start - s):(start - s + 1)]
-                                            outputfile.write (chrom + "\t" + str(start) + "\t" + id + "\t" + rSeq + "\t" + rSeq + var + "\t" + qual + "\t" + filter + "\t" + info + "\tGT:DP:AD\t0/1:" + rd + ":" + refRd + "," + varRd + "\n")
-
-
-                    elif var is "-":
-                        # # DELETION
-                        # print("Deletion")
-                        if chrom in regions:
-                            start = start - 1
-                            for s in regions[chrom].keys():  # Go through all start positions on the chromosome in the dictionary
-                                if s <= start:  # Check if the region start is lower than the start of the variant
-                                    for e in regions[chrom][s].keys():  # If so go through the end positions of the regions
-                                        if e >= end:  # If the end of the region is greater than the variant end extract seq
-
-                                            rSeq = regions[chrom][s][e]
-                                            rSeq = rSeq[(start - s):(start - s + 1)]
-                                            outputfile.write (chrom + "\t" + str(start) + "\t" + id + "\t" + rSeq + ref + "\t" + rSeq + "\t" + qual + "\t" + filter + "\t" + info + "\tGT:DP:AD\t0/1:" + rd + ":" + refRd + "," + varRd + "\n")
-
-
-                    else:
-                        if chrom in regions:
-                            start = start - 1
-                            for s in regions[chrom].keys():  # Go through all start positions on the chromosome in the dictionary
-                                if s <= start:  # Check if the region start is lower than the start of the variant
-                                    for e in regions[chrom][s].keys():  # If so go through the end positions of the regions
-                                        if e >= end:  # If the end of the region is greater than the variant end extract seq
-
-                                            rSeq = regions[chrom][s][e]
-                                            rSeq = rSeq[(start - s):(start - s + 1)]
-                                            outputfile.write (chrom + "\t" + str(start) + "\t" + id + "\t" + rSeq + ref + "\t" + rSeq + var + "\t" + qual + "\t" + filter + "\t" + info + "\tGT:DP:AD\t0/1:" + rd + ":" + refRd + "," + varRd + "\n")
-
-                # If the file is not closed, close
-            if not pindelfile.closed:
-                pindelfile.close()
-            # If the file is not closed, close
     if not outputfile.closed:
         outputfile.close()

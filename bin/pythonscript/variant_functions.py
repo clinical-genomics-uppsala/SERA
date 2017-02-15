@@ -1,4 +1,5 @@
 import re
+from pip._vendor.pyparsing import line
 
 def createHotspotHash(lineSplit, hotspots, intronic):
     chrom = lineSplit[0]
@@ -86,13 +87,16 @@ def createHotspotHash(lineSplit, hotspots, intronic):
 
 
 # Check if the variant is a hotspot
-def hotspotVariant(lineSplit, hotspots):
+def hotspotVariant(lineSplit, hotspots, ampliconMapped):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
     end = int(lineSplit[3])
 
+    varOK = False
+    if ampliconCheckHotspot(lineSplit, ampliconMapped):
+        varOK = True
     # This is based on that an hotspot in the hotspot file is only 1bp (the variant can differ between one and more bp)
-    if "hotspot" in hotspots:
+    if varOK and "hotspot" in hotspots:
         # start with checking if the chromosome exists in the hotspot hash
         if chrom in hotspots['hotspot']:
             # If the variant is a one bp variant check if that position exists in the hotspot hash
@@ -147,12 +151,16 @@ def hotspotVariant(lineSplit, hotspots):
 
     return False
 
-def regionVariant(lineSplit, hotspots):
+def regionVariant(lineSplit, hotspots, ampliconMapped):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
     end = int(lineSplit[3])
 
-    if "region_all" in hotspots:
+    varOK = False
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+        varOK = True
+
+    if varOK and "region_all" in hotspots:
         # start with checking if the chromosome exists in the region_all part of the hash
         if chrom in hotspots['region_all']:
             if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # bwa results
@@ -201,7 +209,10 @@ def regionVariant(lineSplit, hotspots):
                                 added = True
                                 return True
 
-    if "region" in hotspots:
+    varOK = False
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+        varOK = True
+    if varOK and "region" in hotspots:
         # start with checking if the chromosome exists in the region part of the hash
         if chrom in hotspots['region']:
             if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # bwa results
@@ -253,12 +264,16 @@ def regionVariant(lineSplit, hotspots):
     return False
 
 
-def indelVariant(lineSplit, hotspots):
+def indelVariant(lineSplit, hotspots, ampliconMapped):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
     end = int(lineSplit[3])
 
-    if "indel" in hotspots:
+    varOK = False
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+        varOK = True
+
+    if varOK and"indel" in hotspots:
         # start with checking if the chromosome exists in the indel part of the hash
         if chrom in hotspots['indel']:
             if not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):  # bwa results
@@ -309,7 +324,7 @@ def indelVariant(lineSplit, hotspots):
 
     return False
 
-def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, minVaf):
+def filterAnnovar(lineSplit, minRD, blacklist, g1000, intronic, minVaf):
     chrom = lineSplit[1]
     start = int(lineSplit[2])
     end = int(lineSplit[3])
@@ -338,30 +353,7 @@ def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, 
                 if re.match('-', str(lineSplit[13])) or float(lineSplit[13]) <= float(g1000):
 
                     varOK = True
-                    # Check if ampliconmapped is set and if so check amplicon status
-                    if ampliconmapped:
-                        varOK = False
-                        # Set amplicon info
 
-                        ref_plus = ref_minus = var_plus = var_minus = 0
-                        if not re.match('-', lineSplit[26]):
-                            var_plus = int(lineSplit[26])
-                        if not re.match('-', lineSplit[27]):
-                            var_minus = int(lineSplit[27])
-                        if not re.match('-', lineSplit[28]):
-                            ref_plus = int(lineSplit[28])
-                        if not re.match('-', lineSplit[29]):
-                            ref_minus = int(lineSplit[29])
-
-                        if (ref_plus + ref_minus) >= 3:
-                            if (var_plus + var_minus) >= 2:
-                                varOK = True
-                        elif (ref_plus + ref_minus) >= 1:
-                            if (var_plus + var_minus) >= 1:
-                                varOK = True
-                        elif (ref_plus + ref_minus) >= 0:
-                            if (var_plus + var_minus) >= 0:
-                                varOK = True
 
                     # Check if the amplicon info is okey
                     if varOK:
@@ -385,6 +377,60 @@ def filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, 
 
     return False
 
+# Check if the variant has the right amplicon configuration for a hotspot position
+def ampliconCheckHotspot(lineSplit, ampliconmapped):
+    # Check if ampliconmapped is set and if so check amplicon status
+    if ampliconmapped:
+        # Set amplicon info
+
+        ref_plus = ref_minus = var_plus = var_minus = 0
+        if not re.match('-', lineSplit[26]):
+            var_plus = int(lineSplit[26])
+        if not re.match('-', lineSplit[27]):
+            var_minus = int(lineSplit[27])
+        if not re.match('-', lineSplit[28]):
+            ref_plus = int(lineSplit[28])
+        if not re.match('-', lineSplit[29]):
+            ref_minus = int(lineSplit[29])
+
+        if (var_plus == 0 and var_minus == 0):
+            return False
+        else:
+            return True
+    else:
+        return True
+
+# Check if the variant has the right amplicon configuration for a none hotspot position
+def ampliconCheckNoneHotspot(lineSplit, ampliconmapped):
+
+    # Check if ampliconmapped is set and if so check amplicon status
+    if ampliconmapped:
+        # Set amplicon info
+
+        ref_plus = ref_minus = var_plus = var_minus = 0
+        if not re.match('-', lineSplit[26]):
+            var_plus = int(lineSplit[26])
+        if not re.match('-', lineSplit[27]):
+            var_minus = int(lineSplit[27])
+        if not re.match('-', lineSplit[28]):
+            ref_plus = int(lineSplit[28])
+        if not re.match('-', lineSplit[29]):
+            ref_minus = int(lineSplit[29])
+
+        if (ref_plus + ref_minus) >= 3:
+            if (var_plus + var_minus) >= 2:
+                return True
+        elif (ref_plus + ref_minus) >= 1:
+            if (var_plus + var_minus) >= 1:
+                return True
+        elif (ref_plus + ref_minus) >= 0:
+            if (var_plus + var_minus) >= 0:
+                return True
+        else:
+            return False
+
+    else:
+        return True
 def createBlacklist(line, blacklist):
     # Remove new line characters and split string on tab
     line = line.rstrip('\r\n').split("\t")
@@ -426,18 +472,18 @@ def addVariantInfo(lineSplit, minRD, blacklist, g1000, ampliconmapped, hotspots,
     var = lineSplit[5]
 
     # If the variant is okey add to hash
-    varOK = filterAnnovar(lineSplit, minRD, blacklist, g1000, ampliconmapped, intronic, minVaf)
+    varOK = filterAnnovar(lineSplit, minRD, blacklist, g1000, intronic, minVaf)
 
     variantAdded = False
     if varOK:
 
-        variantAdded = hotspotVariant(lineSplit, hotspots)
+        variantAdded = hotspotVariant(lineSplit, hotspots, ampliconmapped)
         if not variantAdded:
-            variantAdded = regionVariant(lineSplit, hotspots)
+            variantAdded = regionVariant(lineSplit, hotspots, ampliconmapped)
 
         if not variantAdded:
             if re.match("-", ref) or re.match("-", var):  # Add indel info
-                variantAdded = indelVariant(lineSplit, hotspots)
+                variantAdded = indelVariant(lineSplit, hotspots, ampliconmapped)
 
     else:
         variantAdded = True  # Variant should not be added set to true

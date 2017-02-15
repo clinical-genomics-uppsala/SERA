@@ -28,7 +28,7 @@ if [[ ${READS} == "true" ]]; then
 	        # Check if the output contain amplicon information
     		if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
     			if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
-    				perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_FLAGS} >> $ROOT_PATH/Annovar/createAnnovar_output.txt
+    				perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_FLAGS}
     			else
     				ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
     			fi
@@ -36,7 +36,7 @@ if [[ ${READS} == "true" ]]; then
     			# If there is not a file with amplicon information, check if there is one without
     		elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
     			if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
-    				perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_FLAGS} >> $ROOT_PATH/Annovar/createAnnovar_output.txt
+    				perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_FLAGS}
     			else
     				ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
     			fi
@@ -47,7 +47,7 @@ if [[ ${READS} == "true" ]]; then
             # Check if the output contain amplicon information
             if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions ]]; then
                 if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
-                    perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_PLASMA_FLAGS} >> $ROOT_PATH/Annovar/createAnnovar_output.txt
+                    perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_PLASMA_FLAGS}
                 else
                     ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
                 fi
@@ -55,7 +55,7 @@ if [[ ${READS} == "true" ]]; then
                 # If there is not a file with amplicon information, check if there is one without
             elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
                 if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
-                    perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_PLASMA_FLAGS} >> $ROOT_PATH/Annovar/createAnnovar_output.txt
+                    perl $SERA_PATH/bin/perlscript/createAnnovarInputFromSNPmania_new.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/Annovar/${SAMPLEID}.annovarInput -nc2chr $NC2chr -nc_col 2 -chr_col 1 ${ANNOVAR_PLASMA_FLAGS}
                 else
                     ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
                 fi
