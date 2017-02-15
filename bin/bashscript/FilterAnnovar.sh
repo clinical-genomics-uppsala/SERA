@@ -23,7 +23,7 @@ ANNOVARFILE=""
 PINDELANNOVARFILE=""
 
 if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
-	if [[ ${READS} == "true" ]]; then
+    if [[ ${READS} == "true" ]]; then
         if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
             if [[ ${NORMAL_SAMPLEID} == "annovar" ]]; then
                 if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput && $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput ]]; then
