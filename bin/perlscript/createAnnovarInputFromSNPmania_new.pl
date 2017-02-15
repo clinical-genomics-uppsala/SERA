@@ -758,23 +758,25 @@ sub checkMultipleBpVariant {
 	my %varHash  = %$variants;
 
 	my %multipleBp = ();
-	for my $chrom ( keys %varHash ) {
-		my $lastPos = 0;
+	for my $chrom ( keys %varHash ) {    # Go through all chromosomes in varHash
+		my $lastPos = 0;                 # Set lastPos to 0
 		%multipleBp = ();
-		for my $p ( sort { $a <=> $b } keys %{ $varHash{$chrom} } ) {
-			if ( $lastPos == 0 )
-			{    # If lastPos is unset, set it to this position
-				$multipleBp{$p} = $varHash{$chrom}{$p};
-				$lastPos = $p;
+		for my $p ( sort { $a <=> $b } keys %{ $varHash{$chrom} } )
+		{    # Go through all positions on the chromosome in an numerical order
+			if ( $lastPos == 0 ) # If it is the first position on the chromosome
+			{
+				$multipleBp{$p} =
+				  $varHash{$chrom}{$p};    # Save info to multipleBp hash
+				$lastPos = $p;    # If lastPos is unset, set it to this position
 			}
 			else {
-				if ( $p == ( $lastPos + 1 ) ) { 
+				if ( $p == ( $lastPos + 1 ) )
+				{ # If this position is one greater than the previous one => save info in hash and set lastPos to this position
 					$multipleBp{$p} = $varHash{$chrom}{$p};
 					$lastPos = $p;
 				}
 				else {
 
-					my $ref = my $var = "";
 					printMultipleBpVariant( \%multipleBp, $chrom );
 
 					%multipleBp     = ();
@@ -809,16 +811,22 @@ sub printMultipleBpVariant {
 	my %multiBp = %$multBp;
 	my $chrom   = shift;
 
+	my %bases = ();
+	my $amp_plus = "-";
+	my $amp_minus= "-";
+	my $ref_plus = "-";
+	my $ref_minus="-"; 
+	my $amplInfo="-";
+	my $refAmplInfo = "-";
+
 	if ( keys(%multiBp) > 1 ) {    # the variant consists of more than one bp
 
-		my @keyPos = sort { $a <=> $b } keys %multiBp;
+		if ($ampliconMapped) {
+			# Create hash with base and array position connection
+			%bases = ( "A" => 0, "G" => 1, "C" => 2, "T" => 3 );
+		}
 
-		my ( $mainKey, $mainVaf ) = getMajorVaf( $multiBp{ $keyPos[0] } );
-		my @line = split( /[\s=]/, $multiBp{ $keyPos[0] }{$mainKey} );
-		my ( $ref, $var ) = split( "\#", $mainKey );
-		my $vaf       = $line[9];
-		my $allelFreq = $line[11];
-		my $totRd     = $line[13];
+		my @keyPos = sort { $a <=> $b } keys %multiBp;
 
 		for ( my $i = 0 ; $i < ( scalar(@keyPos) - 1 ) ; $i++ ) {
 			my ( $mainKey, $mainVaf ) = getMajorVaf( $multiBp{ $keyPos[$i] } );
@@ -827,6 +835,15 @@ sub printMultipleBpVariant {
 			my $vaf       = $line[9];
 			my $allelFreq = $line[11];
 			my $totRd     = $line[13];
+    
+			if ($ampliconMapped) {
+                $amp_plus = $line[23];
+                $amp_minus= $line[25];
+                $ref_plus = $line[27];
+                $ref_minus=$line[29];
+                $amplInfo=$line[31];
+                $refAmplInfo = $line[33];
+			}
 
 			for ( my $j = $i + 1 ; $j < scalar(@keyPos) ; $j++ ) {
 				my ( $nextKey, $nextVaf ) =
@@ -840,6 +857,14 @@ sub printMultipleBpVariant {
 					$vaf       = $nextLine[9];
 					$allelFreq = $nextLine[11];
 					$totRd     = $nextLine[13];
+					if ($ampliconMapped) {
+						$amp_plus = $line[23];
+					    $amp_minus= $line[25];
+					    $ref_plus = $line[27];
+					    $ref_minus=$line[29];
+					    $amplInfo=$line[31];
+					    $refAmplInfo = $line[33];
+					}
 				}
 				if ($ampliconMapped) {
 					print OUTPUT $ncToChr{$chrom} . "\t"
@@ -855,8 +880,18 @@ sub printMultipleBpVariant {
 					  . $allelFreq
 					  . " readDepth="
 					  . $totRd
-					  . " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=- Tumor_var_plusAmplicons=-"
-					  . " Tumor_var_minusAmplicons=- Tumor_ref_plusAmplicons=- Tumor_ref_minusAmplicons=- Tumor_var_ampliconInfo=- Tumor_ref_ampliconInfo=-\n";
+					  . " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=- Tumor_var_plusAmplicons="
+					  . $amp_plus
+					  . " Tumor_var_minusAmplicons="
+					  . $amp_minus
+					  . " Tumor_ref_plusAmplicons="
+					  . $ref_plus
+					  . " Tumor_ref_minusAmplicons="
+					  . $ref_minus
+					  . " Tumor_var_ampliconInfo="
+					  . $amplInfo
+					  . " Tumor_ref_ampliconInfo="
+					  . $refAmplInfo . "\n";
 
 				}
 				else {
