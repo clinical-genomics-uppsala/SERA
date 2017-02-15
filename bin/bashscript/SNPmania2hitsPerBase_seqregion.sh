@@ -2,7 +2,7 @@
 #
 # Script runs base mapping on ampregion.
 #
-#SBATCH -p devcore  -n 1
+#SBATCH -p core  -n 1
 #SBATCH -t 30:00
 ##SBATCH --qos=short
 
@@ -10,7 +10,7 @@
 . $SERA_PATH/includes/logging.sh;
 
 # Check if the directory exists, if not create it
-if [ ! -d "$ROOT_PATH/hitsPerBaseFiles" ]; then
+if [[ ! -d "$ROOT_PATH/hitsPerBaseFiles" ]]; then
 	mkdir $ROOT_PATH/hitsPerBaseFiles;
 fi
 
@@ -19,13 +19,13 @@ SuccessLog "${SAMPLEID}" "Running sequenced region base mapping...";
 # BaseMapping against ampregion all
 
 # BaseMapping against seqregion for reads
-if [ ${READS} == "true" ]; then
-	if [ ${CALL_TYPE} == "h.sapiens" ]; then
+if [[ ${READS} == "true" ]]; then
+	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ ! -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map || ! -z $FORCE ]]; then
-			if [ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]; then
-				if [ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]; then
+			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
+				if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
 					perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -i $ROOT_PATH/SNPmania/${SAMPLEID}.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map;
-				elif [ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]; then
+				elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
 					perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map;
 				else
 					ErrorLog "${SAMPLEID}" "None of the possible input files existed ($ROOT_PATH/SNPmania/${SAMPLEID}.variations or $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations)!";
@@ -43,7 +43,7 @@ else
 	ErrorLog "${SAMPLEID}" "READS has to be set true to run the analysis!";
 fi
 
-if [ "$?" != "0" ]; then
+if [[ "$?" != "0" ]]; then
 	ErrorLog "${SAMPLEID}" "Failed in baseMapping against sequenced region (unique aligned reads).";
 else
 	SuccessLog "${SAMPLEID}" "Passed baseMapping against sequenced region (unique aligned reads).";
