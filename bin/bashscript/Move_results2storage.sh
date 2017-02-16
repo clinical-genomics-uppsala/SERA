@@ -47,10 +47,10 @@ do
     fileParts=($(echo $sampleFile | tr "." " "));
     sample=${fileParts[0]}; # Extract sample name
     if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
-            cp -p $bwaFile* ${STORAGE_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
+        cp -p $bwaFile* ${STORAGE_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
         echo "cp -p $bwaFile* ${STORAGE_PATH}/BamFiles/"
-        cp -p ${ROOT_PATH}/Bwa/*alignmentStats.txt ${STORAGE_PATH}/BamFiles; # Copy the alignment statistics
     fi
+    cp -p ${ROOT_PATH}/Bwa/*alignmentStats.txt ${STORAGE_PATH}/BamFiles; # Copy the alignment statistics
 done
 
 # Copy FilteredMutations
@@ -135,6 +135,7 @@ else
 fi
 
 # Copy FastQC
+
 if [[ -d "${ROOT_PATH}/FastQC" ]]; then
     cp -pr  ${ROOT_PATH}/FastQC ${STORAGE_PATH};
     echo "cp -pr  ${ROOT_PATH}/FastQC ${STORAGE_PATH}";
@@ -148,6 +149,9 @@ if [[ -d "${ROOT_PATH}/SNPmania" ]]; then
 else
     ErrorLog "$SAMPLEID" "${ROOT_PATH}/SNPmania does not exist!";
 fi
+
+cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};
+cp -p ${ROOT_PATH}/PipelineLog* ${OUTBOX_PATH};
 
 if [[ "$?" != "0" ]]; then
     ErrorLog "$SAMPLEID" "Failed in copying results to STORAGE";

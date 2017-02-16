@@ -47,10 +47,10 @@ do
     fileParts=($(echo $sampleFile | tr "." " "));
     sample=${fileParts[0]}; # Extract sample name
     if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
-            cp -p $bwaFile* ${OUTBOX_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
+        cp -p $bwaFile* ${OUTBOX_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
         echo "cp -p $bwaFile* ${OUTBOX_PATH}/BamFiles/"
-        cp -p ${ROOT_PATH}/Bwa/*alignmentStats.txt ${OUTBOX_PATH}/BamFiles; # Copy the alignment statistics
     fi
+    cp -p ${ROOT_PATH}/Bwa/*alignmentStats.txt ${OUTBOX_PATH}/BamFiles; # Copy the alignment statistics
 done
 
 # Copy FilteredMutations
@@ -141,6 +141,9 @@ if [[ -d "${ROOT_PATH}/FastQC" ]]; then
 else
     ErrorLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
 fi
+
+cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};
+cp -p ${ROOT_PATH}/PipelineLog* ${OUTBOX_PATH};
 
 echo "DONE" > "${OUTBOX_PATH}/Done.txt";
 
