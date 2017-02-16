@@ -379,10 +379,9 @@ def filterAnnovar(lineSplit, minRD, blacklist, g1000, intronic, minVaf):
 
 # Check if the variant has the right amplicon configuration for a hotspot position
 def ampliconCheckHotspot(lineSplit, ampliconmapped):
-    # Check if ampliconmapped is set and if so check amplicon status
-    if ampliconmapped:
-        # Set amplicon info
 
+    # If ampliconmapped and a bwa variant check amplicon status
+    if ampliconmapped and not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
         ref_plus = ref_minus = var_plus = var_minus = 0
         if not re.match('-', lineSplit[26]):
             var_plus = int(lineSplit[26])
@@ -403,10 +402,8 @@ def ampliconCheckHotspot(lineSplit, ampliconmapped):
 # Check if the variant has the right amplicon configuration for a none hotspot position
 def ampliconCheckNoneHotspot(lineSplit, ampliconmapped):
 
-    # Check if ampliconmapped is set and if so check amplicon status
-    if ampliconmapped:
-        # Set amplicon info
-
+    # If ampliconmapped and a bwa variant check amplicon status
+    if ampliconmapped and not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
         ref_plus = ref_minus = var_plus = var_minus = 0
         if not re.match('-', lineSplit[26]):
             var_plus = int(lineSplit[26])
@@ -653,7 +650,7 @@ def getMultipleBpInfo(lineSplit, multipleBp):
 
     if chrom in multipleBp:
         if start in multipleBp[chrom] and end in multipleBp[chrom][start] and ref in multipleBp[chrom][start][end] and var in multipleBp[chrom][start][end][ref]:
-            return True, multipleBp[chrom][start][end][ref][var]['cds'], multipleBp[chrom][start][end][ref][var]['aa'], multipleBp[chrom][start][end][ref][var]['nm']
+            return True, multipleBp[chrom][start][end][ref][var]['aa'], multipleBp[chrom][start][end][ref][var]['cds'], multipleBp[chrom][start][end][ref][var]['nm']
 
     return False, "-", "-", "-"
 
