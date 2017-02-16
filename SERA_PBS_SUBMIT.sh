@@ -61,7 +61,7 @@ steps=(
 
 let NUMBOFSTEPS=${#steps[@]}-1;
 
-# adjust steps based off input file
+# adjust steps based on input file
 . $SERA_PATH/includes/adjustSteps.sh
 
 
