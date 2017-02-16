@@ -81,6 +81,11 @@ echo -e "Fasta_reference="$GENOME_FASTA_REF >> $PIPELINE_LOG;
 echo -e "Blacklist_file="$BLACKLIST_FILE >> $PIPELINE_LOG;
 echo -e "Convert_NC_to_chr="$NC2chr >> $PIPELINE_LOG;
 echo -e "BlastDB="$BLAST_DB >> $PIPELINE_LOG;
+echo -e "Main_transcripts="$MAIN_TRANSCRIPTS >> $PIPELINE_LOG;
+echo -e "Illumina_adapter_file_for_trimmomatic="$ILLUMINA_ADAPTER_TRIMMOMATIC >> $PIPELINE_LOG;
+echo -e "Trimmomatic_jarfile="$TRIMMOMATIC_JAR >> $PIPELINE_LOG;
+
+echo -e "="$ >> $PIPELINE_LOG;
 
 echo -e "\n#####Modules#####" >> $PIPELINE_LOG;
 moduleList=$( (module list) 2>&1 );
