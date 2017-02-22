@@ -14,8 +14,13 @@ SuccessLog $SAMPLEID "Starts copying files to OUTBOX ...";
 # Check if the directory exists, if not create it
 if [[ ! -d ${OUTBOX_PATH} ]]; then
     mkdir -p ${OUTBOX_PATH};
+else
+    if [[ ! -z $FORCE ]]; then
+        rm -r ${OUTBOX_PATH}
+        mkdir -p ${OUTBOX_PATH};
+    fi
 fi
-    
+
 # If OUTBOX_PATH ends with a / remove the /
 if [[ ${OUTBOX_PATH} == */ ]]; then
     OUTBOX_PATH=${OUTBOX_PATH:0:-1}
@@ -46,7 +51,8 @@ do
     sampleFile=${parts[($partsLen-1)]}; # Extract filename from path
     fileParts=($(echo $sampleFile | tr "." " "));
     sample=${fileParts[0]}; # Extract sample name
-    if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
+    ampFiles=$(ls ${ROOT_PATH}/AmpliconMapped/${sample}.*.bam); # list all files ending with bam in AmpliconMapped for the particular sample
+    if [[ ! $ampFiles ]]; then # Check if the sample is not ampliconmapped
         cp -p $bwaFile* ${OUTBOX_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
         echo "cp -p $bwaFile* ${OUTBOX_PATH}/BamFiles/"
     fi
