@@ -14,6 +14,11 @@ SuccessLog $SAMPLEID "Starts copying files to STORAGE ...";
 # Check if the directory exists, if not create it
 if [[ ! -d ${STORAGE_PATH} ]]; then
     mkdir -p ${STORAGE_PATH};
+else
+    if [[ ! -z $FORCE ]]; then
+        rm -r ${STORAGE_PATH};
+        mkdir -p ${STORAGE_PATH};
+    fi
 fi
     
 # If STORAGE_PATH ends with a / remove the /
@@ -46,7 +51,8 @@ do
     sampleFile=${parts[($partsLen-1)]}; # Extract filename from path
     fileParts=($(echo $sampleFile | tr "." " "));
     sample=${fileParts[0]}; # Extract sample name
-    if [[ ! -e "${ROOT_PATH}/AmpliconMapped/${sample}.*" ]]; then # Check if the sample is not ampliconmapped
+    ampFiles=$(ls ${ROOT_PATH}/AmpliconMapped/${sample}.*.bam); # list all files ending with bam in AmpliconMapped for the particular sample
+    if [[ ! $ampFiles ]]; then # Check if the sample is not ampliconmapped
         cp -p $bwaFile* ${STORAGE_PATH}/BamFiles/ # Copy the bwa file for the non-ampliconmapped sample
         echo "cp -p $bwaFile* ${STORAGE_PATH}/BamFiles/"
     fi
