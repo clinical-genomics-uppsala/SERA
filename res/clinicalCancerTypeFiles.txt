@@ -4,7 +4,7 @@ AMPLIFICATION=Amplification_Colon_20170125.txt
 BACKGROUND=Background_Colon_20160226.txt
 
 TYPE=lung
-HOTSPOT=Mutations_Lung_20170125.csv
+HOTSPOT=Mutations_Lung_20170406.csv
 AMPLIFICATION=Amplification_Lung_20160226.txt
 BACKGROUND=Background_Lung_20160226.txt
 
