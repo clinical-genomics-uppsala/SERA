@@ -244,7 +244,7 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             readLevel = "-"
                             rd = "-"
 
-                        if re.match("low", readLevel) or re.match("-", readLevel):  # Only print if the readLevel is low or -
+                        if re.match("low", readLevel) or re.match("-", readLevel) or re.match("ok", readLevel):  # Print all positions, regardless of readLevel
                             mutType = "3-check"  # Set the mutation type
                             OUTPUT.write (sample + "\t" + str(hotspots['region_all'][chrom][start][end]['gene']) + "\t-\t" + str(hotspots['region_all'][chrom][start][end]['exon']) + "\t" + str(hotspots['region_all'][chrom][start][end]['aa']) + "\t" + str(hotspots['region_all'][chrom][start][end]['cds']) + "\t" + str(hotspots['region_all'][chrom][start][end]['accNum']) + "\t" + str(hotspots['region_all'][chrom][start][end]['comment']) + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(hotspots['region_all'][chrom][start][end]['rd'][c]) + "\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + str(chrom) + "\t" + str(start + c) + "\t" + str(start + c) + "\t-\t-\t-\n")
 
