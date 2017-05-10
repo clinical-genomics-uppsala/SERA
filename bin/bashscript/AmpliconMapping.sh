@@ -22,7 +22,7 @@ if [[ ${METHOD} == "haloplex" ]]; then
     if [[ ${PLATFORM} == "Illumina" ]]; then
     	# Check if the selection file exists in bed-format, if not create
     	if [[ ! -e $ROOT_PATH/refFiles/$REFSEQ.selection.bed || ! -z $FORCE ]]; then
-    		${SERA_PATH}/bin/awkscript/sedd2bed.awk -v name="$REFSEQ" -v desc="Selection file" $NC2chr $ROOT_PATH/refFiles/$REFSEQ.selection > $ROOT_PATH/refFiles/$REFSEQ.selection.bed;
+    		awk -f ${SERA_PATH}/bin/awkscript/sedd2bed.awk -v name="$REFSEQ" -v desc="Selection file" $NC2chr $ROOT_PATH/refFiles/$REFSEQ.selection > $ROOT_PATH/refFiles/$REFSEQ.selection.bed;
     	else
     		SuccessLog "${SAMPLEID}" "$ROOT_PATH/refFiles/$REFSEQ.selection.bed already exists and force was not used!";
     	fi

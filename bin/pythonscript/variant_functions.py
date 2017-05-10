@@ -492,10 +492,10 @@ def getReadLevel(minRDs, rd):
     readLevel = "ok"
     found = "-"
     # If the read depth is lower than minRDs[0] report found as not analyzable
-    if rd < int(minRDs[0]):
+    if int(rd) < int(minRDs[0]):
         found = "not analyzable"
     # If the read depth is lower than the higher rd report rd as low
-    if rd < int(minRDs[1]):
+    if int(rd) < int(minRDs[1]):
         readLevel = "low"
 
     return found, readLevel
