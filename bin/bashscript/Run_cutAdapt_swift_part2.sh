@@ -4,8 +4,6 @@
 #SBATCH -t 01:00:00
 ##SBATCH --qos=short
 
-module load bioinfo-tools 
-
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
