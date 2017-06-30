@@ -267,7 +267,7 @@ for sample in infoSort:
 year = info[sample]['exp'][:4]
 rawPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
 filePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/OUTBOX/" + year + "/" + info[sample]['exp']
+outboxPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
 storagePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
