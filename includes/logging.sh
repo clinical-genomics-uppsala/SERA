@@ -29,6 +29,7 @@ function ErrorLog {
 	if [[ "$SOFTWARE" != "SLURM" ]]; then
 		echo "[${1}] ERROR: $2";
 	fi
+	exit 1;
 }
 
 function WarningLog {
