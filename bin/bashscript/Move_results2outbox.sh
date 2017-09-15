@@ -39,7 +39,7 @@ if [[ -d ${ROOT_PATH}/AmpliconMapped ]]; then
     cp -p ${ROOT_PATH}/AmpliconMapped/* ${OUTBOX_PATH}/BamFiles;
     cp -p ${ROOT_PATH}/Bwa/*alignmentStats.txt ${OUTBOX_PATH}/BamFiles;
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/AmpliconMapped does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/AmpliconMapped does not exist!";
 fi
 
 # Go through all bwa files in the Bwa folder
@@ -65,7 +65,7 @@ if [[ -d "${ROOT_PATH}/FilteredMutations" ]]; then
     cp -pr  ${ROOT_PATH}/FilteredMutations ${OUTBOX_PATH}
     echo "cp -pr  ${ROOT_PATH}/FilteredMutations ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/FilteredMutations does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/FilteredMutations does not exist!";
 fi
 
 # Copy FilteredAnnovarOutput
@@ -73,7 +73,7 @@ if [[ -d "${ROOT_PATH}/FilteredAnnovarOutput" ]]; then
 cp -pr  ${ROOT_PATH}/FilteredAnnovarOutput ${OUTBOX_PATH};
 echo "cp -pr  ${ROOT_PATH}/FilteredAnnovarOutput ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/FilteredAnnovarOutput does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/FilteredAnnovarOutput does not exist!";
 fi
 
 # Copy ClinicalPositions
@@ -81,7 +81,7 @@ if [[ -d "${ROOT_PATH}/ClinicalPositions" ]]; then
     cp -pr  ${ROOT_PATH}/ClinicalPositions ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/ClinicalPositions ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/ClinicalPositions does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/ClinicalPositions does not exist!";
 fi
 
 # Copy AnnovarOutput
@@ -89,7 +89,7 @@ if [[ -d "${ROOT_PATH}/AnnovarOutput" ]]; then
     cp -pr  ${ROOT_PATH}/AnnovarOutput ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/AnnovarOutput ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/AnnovarOutput does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/AnnovarOutput does not exist!";
 fi
 
 # Copy PindelAnnovarOutput
@@ -97,7 +97,7 @@ if [[ -d "${ROOT_PATH}/PindelAnnovarOutput" ]]; then
     cp -pr  ${ROOT_PATH}/PindelAnnovarOutput ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/PindelAnnovarOutput ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/PindelAnnovarOutput does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/PindelAnnovarOutput does not exist!";
 fi
 
 # Copy vcfOutput
@@ -105,7 +105,7 @@ if [[ -d "${ROOT_PATH}/vcfOutput" ]]; then
     cp -pr  ${ROOT_PATH}/vcfOutput ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/vcfOutput ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/vcfOutput does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/vcfOutput does not exist!";
 fi
 
 # Copy MSIanalysis
@@ -113,7 +113,7 @@ if [[ -d "${ROOT_PATH}/MSIanalysis" ]]; then
     cp -pr  ${ROOT_PATH}/MSIanalysis ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/MSIanalysis ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/MSIanalysis does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/MSIanalysis does not exist!";
 fi
 
 # Copy ExtractedSNPs
@@ -121,7 +121,7 @@ if [[ -d "${ROOT_PATH}/Extracted_SNPs" ]]; then
     cp -pr  ${ROOT_PATH}/Extracted_SNPs ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/Extracted_SNPs ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/Extracted_SNPs does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/Extracted_SNPs does not exist!";
 fi
 
 # Copy ExtractedEGFR
@@ -129,7 +129,7 @@ if [[ -d "${ROOT_PATH}/Extracted_EGFR" ]]; then
     cp -pr  ${ROOT_PATH}/Extracted_EGFR ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/Extracted_EGFR ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/Extracted_EGFR does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/Extracted_EGFR does not exist!";
 fi
 
 # Copy Amplification
@@ -137,7 +137,7 @@ if [[ -d "${ROOT_PATH}/Amplification" ]]; then
     cp -pr  ${ROOT_PATH}/Amplification ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/Amplification ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/Amplification does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/Amplification does not exist!";
 fi
 
 # Copy FastQC
@@ -145,7 +145,7 @@ if [[ -d "${ROOT_PATH}/FastQC" ]]; then
     cp -pr  ${ROOT_PATH}/FastQC ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/FastQC ${OUTBOX_PATH}";
 else
-    ErrorLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
 fi
 
 cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};

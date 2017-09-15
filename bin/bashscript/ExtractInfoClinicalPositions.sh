@@ -45,7 +45,7 @@ if [[ ${HOTSPOTFILE}!="false" ]]; then
                     ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
                 fi
             else
-                ErrorLog "$SAMPLEID" "Only implemented for TYPE ffpe and plasma so far!!!"
+                WarningLog "$SAMPLEID" "Only implemented for TYPE ffpe and plasma so far!!!"
             fi
 		else
 			ErrorLog "$SAMPLEID" "The analysis is only supported for CALL_TYPE h.sapiens!";
