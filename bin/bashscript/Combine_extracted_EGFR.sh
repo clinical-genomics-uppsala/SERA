@@ -28,7 +28,7 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tCDS_change\tAA_change\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*EGFR_T790M.ampliconmapped.txt > $ROOT_PATH/Extracted_EGFR/EGFR_T790M.allSamples.ampliconmapped.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending EGFR_T790M.ampliconmapped.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending EGFR_T790M.ampliconmapped.txt were found!";
 		fi
 
 		# EGFR T790M
@@ -42,7 +42,7 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tCDS_change\tAA_change\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*EGFR_T790M.txt > $ROOT_PATH/Extracted_EGFR/EGFR_T790M.allSamples.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending EGFR_T790M.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending EGFR_T790M.txt were found!";
 		fi
 
 		# EGFR G719 - ampliconmapped
@@ -56,7 +56,7 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tCDS_change\tAA_change\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*EGFR_G719.ampliconmapped.txt > $ROOT_PATH/Extracted_EGFR/EGFR_G719.allSamples.ampliconmapped.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending EGFR_G719.ampliconmapped.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending EGFR_G719.ampliconmapped.txt were found!";
 		fi
 
 		# EGFR G719 - ampliconmapped
@@ -70,7 +70,8 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tCDS_change\tAA_change\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*EGFR_G719.txt > $ROOT_PATH/Extracted_EGFR/EGFR_G719.allSamples.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending EGFR_G719.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending EGFR_G719.txt were found!";
+                        exit 0;
 		fi
 	else
 		ErrorLog "$SAMPLEID" "Only supported for h.sapiens so far!";

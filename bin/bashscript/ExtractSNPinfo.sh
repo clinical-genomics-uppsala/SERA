@@ -67,7 +67,7 @@ if [[ ${READS} == "true" ]]; then
 			fi
 			
 		else
-			ErrorLog "$SAMPLEID" "SNP extraction is only run for colon!";
+			WarningLog "$SAMPLEID" "SNP extraction is only run for colon!";
 		fi
 	else
 		ErrorLog "$SAMPLEID" "The analysis is only supported for CALL_TYPE h.sapiens!";

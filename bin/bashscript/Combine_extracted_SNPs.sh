@@ -28,7 +28,7 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.ampliconmapped.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending *_SNPs.ampliconmapped.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending *_SNPs.ampliconmapped.txt were found!";
 		fi
 
 		# Without ampliconmapping
@@ -42,7 +42,7 @@ if [[ ${READS} == "true" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.txt;
 			
 		else
-			ErrorLog "$SAMPLEID" "No files with ending *_SNPs.txt were found!";
+			WarningLog "$SAMPLEID" "No files with ending *_SNPs.txt were found!";
 		fi
 	else
 		ErrorLog "$SAMPLEID" "Only supported for h.sapiens so far!";
