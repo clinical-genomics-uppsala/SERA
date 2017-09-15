@@ -77,10 +77,10 @@ if [[ ${READS} == "true" ]]; then
 				grep -P "\s55241708\s" $ROOT_PATH/SNPmania/${SAMPLEID}.variations | awk -v fpath=$ROOT_PATH/SNPmania/${SAMPLEID}.variations -v tumor=${TISSUE} -v cds="c.2156G>A" -v aa="p.G719" -v r="G" -v v="A" -f $SERA_PATH/bin/awkscript/extract_T790M.awk /dev/stdin >> $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_EGFR_G719.txt;
 			
 			else
-				ErrorLog "$SAMPLEID" "EGFR extraction is only run for lung!";
+				ErrorLog "$SAMPLEID" "Input file $ROOT_PATH/SNPmania/${SAMPLEID}.variations doesn't exist!";
 			fi
 		else
-			ErrorLog "$SAMPLEID" "Input file $ROOT_PATH/SNPmania/${SAMPLEID}.variations doesn't exist!";
+			WarningLog "$SAMPLEID" "EGFR extraction is only run for lung!";
 		fi
 	else
 		ErrorLog "$SAMPLEID" "The analysis is only supported for CALL_TYPE h.sapiens!";

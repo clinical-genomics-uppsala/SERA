@@ -32,7 +32,8 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 					ErrorLog "$SAMPLEID" "Input file $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv does not exist!";
 				fi
 			else
-				ErrorLog "$SAMPLEID" "MSI markers is only extracted for colon cancer!";
+				WarningLog "$SAMPLEID" "MSI markers is only extracted for colon cancer!";
+                                exit 0;
 			fi
 		else
 			ErrorLog "$SAMPLEID" "Only run for NORMAL_SAMPLEID annovar";
