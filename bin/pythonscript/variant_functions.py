@@ -72,7 +72,7 @@ def createHotspotHash(lineSplit, hotspots, intronic):
         print ("Position already exists: " + chrom + " " + str(start) + " " + str(end))
 
     # If report is region_all add list for rdata_address
-    if re.match("hotspot", report) or re.match("region_all", report):
+    if re.match("hotspot", report) or re.match("region_all", report) or re.match("region",report) or re.match("region",report):
         hotspots[report][chrom][start][end]['rd'] = ["-"] * (end - start + 1)
 
     # If this is intronic region add to intronic hash
