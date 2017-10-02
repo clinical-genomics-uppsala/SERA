@@ -1,5 +1,5 @@
 import re
-from pyparsing import line
+from pip._vendor.pyparsing import line
 
 def createHotspotHash(lineSplit, hotspots, intronic):
     chrom = lineSplit[0]
