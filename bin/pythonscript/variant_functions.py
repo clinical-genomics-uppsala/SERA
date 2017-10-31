@@ -428,16 +428,21 @@ def ampliconCheckNoneHotspot(lineSplit, ampliconmapped):
 
     else:
         return True
-def createBlacklist(line, blacklist):
+def createBlacklist(line, blacklist, nc2chr):
     # Remove new line characters and split string on tab
     line = line.rstrip('\r\n').split("\t")
 
     chrom = line[0]
-    start = line[1]
-    end = line[2]
+    start = int(line[1])
+    end = int(line[2])
     ref = line[3]
     var = line[4]
     gene = line[5]
+
+    if chrom.startswith("chr"):
+        chrom = nc2chr[chrom]
+    elif not chrom.startswith("NC") and not chrom.startswith("chr"):
+        chrom = nc2chr["chr" + chrom]
 
     # Create hash with blacklist variants
     if not chrom in blacklist:
