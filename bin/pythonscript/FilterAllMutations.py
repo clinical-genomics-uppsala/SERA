@@ -71,7 +71,7 @@ blacklist = {}
 with open(args.blacklistfile, 'r') as blackfile:
     for line in blackfile:
         if not re.match('^Chr', line):
-            createBlacklist(line, blacklist)
+            createBlacklist(line, blacklist,nc2chr)
 
     if not blackfile.closed:
         blackfile.close()
