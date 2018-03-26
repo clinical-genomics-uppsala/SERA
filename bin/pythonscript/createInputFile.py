@@ -293,6 +293,20 @@ if args.refDir:
              if not re.match((oct(os.stat(destFile).st_mode & 0777)), "0664"):  # Check if the file has permission to read and write for all in the group
                  os.chmod(destFile, 0664)  # If not change the permissions
 
+new_format = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)$")
+new_format_rerun = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)_([0-9]+)")
+
+def extract_date_user_rerun(line):
+    result = new_format_rerun.match(line)
+    if result:
+        return result.group(1),result.group(2),True
+    result = new_format.match(line)
+    if result:
+        return result.group(1),result.group(2),False
+    raise Exception("Unable to parse input file for experiment name, user and rerun")
+
+(date, user, rerun) = extract_date_user_rerun(filePath)
+
 
 output = filePath + "/inputFile"
 with (open(output, mode = 'w'))as outfile:
@@ -357,3 +371,13 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("\n")
     if not outfile.closed:
         outfile.close()
+
+with open(jsonPath + experiment +".json", mode="w") as json_output:
+    for sample in sorted(info):
+        json_output.write(str(
+            {'wp1.experiment.prep': info[sample]['type'].upper(),
+             'wp1.experiment.method': info[sample]['method'],
+             'wp1.experiment.user': user,
+             'wp1.experiment.rerun': rerun,
+             'wp1.experiment.tissue': info[sample]['tissue'],
+             'wp1.experiment.sample': sample}) + "\n")
