@@ -41,7 +41,7 @@ parser.add_argument('-pindelAnnovarPlasmaFlags', '--pindelAnnovarPlasmaFlags', h
 parser.add_argument('-mutationFlags', '--mutationsFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others. Default: -minRD 30,300 -minVaf 0.01', type = str, default = " -minRD 30,300 -minVaf 0.01")
 parser.add_argument('-mutationPlasmaFlags', '--mutationsPlasmaFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others in plasma. Default: -minRD 30,300 -minVaf 0.001', type = str, default = " -minRD 30,300 -minVaf 0.001")
 parser.add_argument('-clinicalInfoFile', '--clinicalInfoFile', help = 'File with clinical hotspot and indel filenames per cancer type. If not wanted set to false! Default: clinicalCancerTypeFiles.txt', type = str, default = "clinicalCancerTypeFiles.txt")
-
+parser.add_argument('-s', '--storage', help = 'Storage location of data, ex backup or nobackup.', required = True, type = str, default="nobackup")
 
 args = parser.parse_args()
 info = {}
@@ -269,11 +269,13 @@ for sample in infoSort:
     else:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
-rawPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
-filePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
-storagePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
-jsonPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/samples_run/"
+
+rawPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
+filePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
+outboxPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
+storagePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
+jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run/"
+
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
 
