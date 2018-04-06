@@ -41,7 +41,7 @@ parser.add_argument('-pindelAnnovarPlasmaFlags', '--pindelAnnovarPlasmaFlags', h
 parser.add_argument('-mutationFlags', '--mutationsFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others. Default: -minRD 30,300 -minVaf 0.01', type = str, default = " -minRD 30,300 -minVaf 0.01")
 parser.add_argument('-mutationPlasmaFlags', '--mutationsPlasmaFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others in plasma. Default: -minRD 30,300 -minVaf 0.001', type = str, default = " -minRD 30,300 -minVaf 0.001")
 parser.add_argument('-clinicalInfoFile', '--clinicalInfoFile', help = 'File with clinical hotspot and indel filenames per cancer type. If not wanted set to false! Default: clinicalCancerTypeFiles.txt', type = str, default = "clinicalCancerTypeFiles.txt")
-
+parser.add_argument('-storage', '--storage', help = 'Storage location of data, ex backup or nobackup.', type = str, default="nobackup")
 
 args = parser.parse_args()
 info = {}
@@ -82,6 +82,8 @@ if not args.clinicalInfoFile.lower() == "false":
         if not cifile.closed:
             cifile.close()
 
+experiment = ""
+
 with open(args.infile, 'r') as infile:
     count = 0
     # Go through the file line by line
@@ -99,6 +101,7 @@ with open(args.infile, 'r') as infile:
             lineSplit = line.split(splitPattern)  # Split line by tab
             sample = lineSplit[1]
 
+            experiment = lineSplit[0]
             info[sample] = {}
             info[sample]['exp'] = lineSplit[0]
             info[sample]['sNummer'] = "S" + str(count)
@@ -110,7 +113,6 @@ with open(args.infile, 'r') as infile:
             info[sample]['method'] = lineSplit[7].lower().strip()
             info[sample]['type'] = lineSplit[8].lower().strip()
             info[sample]['tissue'] = lineSplit[9].lower().strip()
-
 
             if info[sample]['cutadapt'] == "":
                 info[sample]['cutadapt'] = "false"
@@ -267,14 +269,18 @@ for sample in infoSort:
     else:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
-rawPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
-filePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
-storagePath = "/projects/" + args.project + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
+
+rawPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
+filePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
+outboxPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
+storagePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
+jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run/"
+
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
 
 # Create folder if it doesn't exist and set permissions
+
 if not os.path.exists(rawPath):
     os.makedirs(rawPath, 0774)
 
@@ -304,6 +310,22 @@ if args.refDir:
              os.system("rsync -rlptD " + full_file_name + " " + destFile)  # Copy
              if not re.match((oct(os.stat(destFile).st_mode & 0777)), "0664"):  # Check if the file has permission to read and write for all in the group
                  os.chmod(destFile, 0664)  # If not change the permissions
+
+
+new_format = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)$")
+new_format_rerun = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)_([0-9]+)")
+
+def extract_date_user_rerun(line):
+    result = new_format_rerun.match(line)
+    if result:
+        return result.group(1),result.group(2),True
+    result = new_format.match(line)
+    if result:
+        return result.group(1),result.group(2),False
+    raise Exception("Unable to parse input file for experiment name, user and rerun")
+
+(date, user, rerun) = extract_date_user_rerun(filePath)
+
 
 
 output = filePath + "/inputFile"
@@ -371,3 +393,13 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("\n")
     if not outfile.closed:
         outfile.close()
+
+with open(jsonPath + experiment +".json", mode="w") as json_output:
+    for sample in sorted(info):
+        json_output.write(str(
+            {'wp1.experiment.prep': info[sample]['type'].upper(),
+             'wp1.experiment.method': info[sample]['method'],
+             'wp1.experiment.user': user,
+             'wp1.experiment.rerun': rerun,
+             'wp1.experiment.tissue': info[sample]['tissue'],
+             'wp1.experiment.sample': sample}) + "\n")
