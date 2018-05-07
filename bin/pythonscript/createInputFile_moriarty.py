@@ -394,12 +394,18 @@ with (open(output, mode = 'w'))as outfile:
     if not outfile.closed:
         outfile.close()
 
+from datetime import datetime
+dt_obj = datetime.strptime(date,'%Y%m%d')
+timestamp = dt_obj.strftime("%Y-%m-%dT01:01:01.000Z")
+import json
+
 with open(jsonPath + experiment +".json", mode="w") as json_output:
     for sample in sorted(info):
-        json_output.write(str(
-            {'wp1.experiment.prep': info[sample]['type'].upper(),
-             'wp1.experiment.method': info[sample]['method'],
-             'wp1.experiment.user': user,
-             'wp1.experiment.rerun': rerun,
-             'wp1.experiment.tissue': info[sample]['tissue'],
-             'wp1.experiment.sample': sample}) + "\n")
+        json_output.write(json.dumps(
+            {"wp1.experiment.prep": info[sample]['type'].upper(),
+             "wp1.experiment.method": info[sample]['method'],
+             "wp1.experiment.user": user,
+             "wp1.experiment.rerun": rerun,
+             "wp1.experiment.tissue": info[sample]['tissue'],
+             "wp1.experiment.sample": sample,
+             "@timestamp": timestamp}) + "\n")
