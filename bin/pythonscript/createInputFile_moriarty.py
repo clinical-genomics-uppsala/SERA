@@ -394,6 +394,9 @@ with (open(output, mode = 'w'))as outfile:
     if not outfile.closed:
         outfile.close()
 
+from datetime import datetime
+timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
 with open(jsonPath + experiment +".json", mode="w") as json_output:
     for sample in sorted(info):
         json_output.write(str(
@@ -402,4 +405,5 @@ with open(jsonPath + experiment +".json", mode="w") as json_output:
              'wp1.experiment.user': user,
              'wp1.experiment.rerun': rerun,
              'wp1.experiment.tissue': info[sample]['tissue'],
-             'wp1.experiment.sample': sample}) + "\n")
+             'wp1.experiment.sample': sample,
+             '@timestamp': timestamp}) + "\n")
