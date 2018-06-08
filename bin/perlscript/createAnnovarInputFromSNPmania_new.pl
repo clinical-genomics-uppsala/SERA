@@ -796,7 +796,7 @@ sub getMajorVaf {
 	my $mainKey = "";
 	my $mainVaf = 0.0;
 
-	for my $nextVar ( keys %varHash ) {
+	for my $nextVar ( sort keys %varHash ) {
 		my @line = split( /[\s=]/, $varHash{$nextVar} );
 		if ( $line[9] > $mainVaf ) {
 			$mainVaf = $line[9];
