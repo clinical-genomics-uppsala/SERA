@@ -104,6 +104,7 @@ fi
 if [[ -d "${ROOT_PATH}/vcfOutput" ]]; then
     cp -pr  ${ROOT_PATH}/vcfOutput ${OUTBOX_PATH};
     echo "cp -pr  ${ROOT_PATH}/vcfOutput ${OUTBOX_PATH}";
+    rm ${OUTBOX_PATH}/vcfOutput/*.all.vcf;
 else
     WarningLog "$SAMPLEID" "${ROOT_PATH}/vcfOutput does not exist!";
 fi
