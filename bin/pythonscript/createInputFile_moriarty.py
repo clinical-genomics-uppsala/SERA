@@ -402,10 +402,10 @@ import json
 with open(jsonPath + experiment +".json", mode="w") as json_output:
     for sample in sorted(info):
         json_output.write(json.dumps(
-            {"wp1.experiment.prep": info[sample]['type'].upper(),
-             "wp1.experiment.method": info[sample]['method'],
-             "wp1.experiment.user": user,
-             "wp1.experiment.rerun": rerun,
-             "wp1.experiment.tissue": info[sample]['tissue'],
-             "wp1.experiment.sample": sample,
-             "@timestamp": timestamp}) + "\n")
+            {'experiment.wp': "WP1",
+             'experiment.prep': info[sample]['type'].upper(),
+             'experiment.method': info[sample]['method'],
+             'experiment.user': user,
+             'experiment.rerun': rerun,
+             'experiment.tissue': info[sample]['tissue'],
+             'experiment.sample': sample}) + "\n")
