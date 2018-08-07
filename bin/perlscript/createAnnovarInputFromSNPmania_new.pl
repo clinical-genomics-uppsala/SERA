@@ -438,8 +438,7 @@ sub getDeletions {
 
 # Check if the deletion has a variant allele ratio that is above $minVariantAlleleRatio
 			if (   ( $deleteRD / $line->[0] ) >= $minVariantAlleleRatio
-				&& ( $deleteRD + $refRD ) >= $minRD )
-			{
+				&& ( $deleteRD + $refRD ) >= $minRD ){
 
 				# Check if the deletion already is found, if not add it
 				if ( !$positions{$key} ) {
@@ -534,93 +533,87 @@ sub getDeletions {
 					for ( my $i = 1 ; $i < scalar(@comments) ; $i++ ) {
 
 						# and split on =
-						my @commentLine = split( /=/, $comments[$i] );
-
+						my @alleleFreqLine = split( /=|,/, $comments[$i] );
 # If the name of the comment is variantAlleleRatio and the variant allele ratio is higher than the one saved update info
-						if ( $commentLine[0] =~ m/variantAlleleRatio/i
-							&& ( $deleteRD / $line->[0] ) > $commentLine[1] )
-						{
-							my $sample = extractSampleName($variantFile);
+						if ( $alleleFreqLine[0] =~ m/alleleFreq/i) {
+							for (my $j = $i; $j < scalar(@comments) ; $j++ ) {
+								my @readDepthLine =  split( /=/, $comments[$j] );
+								if ($readDepthLine[0] =~ m/readDepth/i) {
+									if (( $deleteRD / $line->[0]) > $alleleFreqLine[2] / $readDepthLine[1]) {
+										my $sample = extractSampleName($variantFile);
 
-						   # Check if there are ampliconmapping info in the file
-							if ($ampliconMapped) {
+										# Check if there are ampliconmapping info in the file
+										if ($ampliconMapped) {
+											my @ampliconOptions = split( /\|/, $line->[7] );
+											my $ampInfo = my $amp_plus = my $amp_minus =
+											my $amp = "-";
+											foreach my $am (@ampliconOptions) {
+												# Create pattern to match ex. ^\\(0,0\\)
+												my $match = "^\\(" . $fromBP . "," . $toBP . "\\):";
+												# Check if the amplicon info matches the deletion
+												if ( $am =~ m/$match/ ) {
+													# Count the number of plus and minus amplicons for the variant
+													( $amp_plus, $amp_minus ) =
+													countAmplicons( $am, "del" );
+													$amp = $am;
+												}
+											}
+											# Retrieve amplicon information for the reference
+											my $ref_amp_plus = $ref{ $line->[1] }{ $line->[2] }{'amp+'};
+											my $ref_amp_minus = $ref{ $line->[1] }{ $line->[2] }{'amp-'};
+											my $ref_amp_info = $ref{ $line->[1] }{ $line->[2] }{'ampInfo'};
 
-								my @ampliconOptions = split( /\|/, $line->[7] );
-								my $ampInfo = my $amp_plus = my $amp_minus =
-								  my $amp = "-";
-								foreach my $am (@ampliconOptions) {
-
-									# Create pattern to match ex. ^\\(0,0\\)
-									my $match =
-									  "^\\(" . $fromBP . "," . $toBP . "\\):";
-
-							   # Check if the amplicon info matches the deletion
-									if ( $am =~ m/$match/ ) {
-
-				  # Count the number of plus and minus amplicons for the variant
-										( $amp_plus, $amp_minus ) =
-										  countAmplicons( $am, "del" );
-										$amp = $am;
+											$positions{$key} =
+												$ncToChr{ $line->[1] } . "\t"
+												. ( $line->[2] + $fromBP ) . "\t"
+												. ( $line->[2] + $toBP ) . "\t"
+												. $deleted
+												. "\t-\tcomments: sample="
+												. $sample
+												. " variantAlleleRatio="
+												. ( $deleteRD / $line->[0] )
+												. " alleleFreq="
+												. $refRD . ","
+												. $deleteRD
+												. " readDepth="
+												. $line->[0]
+												. " Tumor_Del="
+												. $line->[6]
+												. " Tumor_var_plusAmplicons="
+												. $amp_plus
+												. " Tumor_var_minusAmplicons="
+												. $amp_minus
+												. " Tumor_ref_plusAmplicons="
+												. $ref_amp_plus
+												. " Tumor_ref_minusAmplicons="
+												. $ref_amp_minus
+												. " Tumor_var_ampliconInfo="
+												. $amp
+												. " Tumor_ref_ampliconInfo="
+												. $ref_amp_info;
+										}else {
+											$positions{$key} =
+												$ncToChr{ $line->[1] } . "\t"
+												. ( $line->[2] + $fromBP ) . "\t"
+												. ( $line->[2] + $toBP ) . "\t"
+												. $deleted
+												. "\t-\tcomments: sample="
+												. $sample
+												. " variantAlleleRatio="
+												. ( $deleteRD / $line->[0] )
+												. " alleleFreq="
+												. $refRD . ","
+												. $deleteRD
+												. " readDepth="
+												. $line->[0]
+												. " Tumor_Del="
+												. $line->[6];
+										}
 									}
 								}
-
-							   # Retrieve amplicon information for the reference
-								my $ref_amp_plus =
-								  $ref{ $line->[1] }{ $line->[2] }{'amp+'};
-								my $ref_amp_minus =
-								  $ref{ $line->[1] }{ $line->[2] }{'amp-'};
-								my $ref_amp_info =
-								  $ref{ $line->[1] }{ $line->[2] }{'ampInfo'};
-
-								$positions{$key} =
-								    $ncToChr{ $line->[1] } . "\t"
-								  . ( $line->[2] + $fromBP ) . "\t"
-								  . ( $line->[2] + $toBP ) . "\t"
-								  . $deleted
-								  . "\t-\tcomments: sample="
-								  . $sample
-								  . " variantAlleleRatio="
-								  . ( $deleteRD / $line->[0] )
-								  . " alleleFreq="
-								  . $refRD . ","
-								  . $deleteRD
-								  . " readDepth="
-								  . $line->[0]
-								  . " Tumor_Del="
-								  . $line->[6]
-								  . " Tumor_var_plusAmplicons="
-								  . $amp_plus
-								  . " Tumor_var_minusAmplicons="
-								  . $amp_minus
-								  . " Tumor_ref_plusAmplicons="
-								  . $ref_amp_plus
-								  . " Tumor_ref_minusAmplicons="
-								  . $ref_amp_minus
-								  . " Tumor_var_ampliconInfo="
-								  . $amp
-								  . " Tumor_ref_ampliconInfo="
-								  . $ref_amp_info;
 							}
-							else {
-								$positions{$key} =
-								    $ncToChr{ $line->[1] } . "\t"
-								  . ( $line->[2] + $fromBP ) . "\t"
-								  . ( $line->[2] + $toBP ) . "\t"
-								  . $deleted
-								  . "\t-\tcomments: sample="
-								  . $sample
-								  . " variantAlleleRatio="
-								  . ( $deleteRD / $line->[0] )
-								  . " alleleFreq="
-								  . $refRD . ","
-								  . $deleteRD
-								  . " readDepth="
-								  . $line->[0]
-								  . " Tumor_Del="
-								  . $line->[6];
-							}
-						}
-					}
+                        }
+                    }
 				}
 			}
 		}
@@ -796,7 +789,7 @@ sub getMajorVaf {
 	my $mainKey = "";
 	my $mainVaf = 0.0;
 
-	for my $nextVar ( keys %varHash ) {
+	for my $nextVar ( sort keys %varHash ) {
 		my @line = split( /[\s=]/, $varHash{$nextVar} );
 		if ( $line[9] > $mainVaf ) {
 			$mainVaf = $line[9];
