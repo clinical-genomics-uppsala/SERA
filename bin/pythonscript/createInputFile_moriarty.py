@@ -274,7 +274,7 @@ rawPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.anal
 filePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
 outboxPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
 storagePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
-jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run/"
+jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run_new_format/"
 
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
