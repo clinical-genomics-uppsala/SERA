@@ -5,6 +5,7 @@
 #SBATCH -p core -n 2
 #SBATCH -t 1:00:00
 #module load bioinfo-tools blast/2.2.25
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
