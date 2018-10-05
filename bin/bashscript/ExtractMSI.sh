@@ -3,6 +3,7 @@
 ##SBATCH --qos=short 
 #SBATCH -p core  -n 1
 #SBATCH -t 01:00:00
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 
 # Include functions
