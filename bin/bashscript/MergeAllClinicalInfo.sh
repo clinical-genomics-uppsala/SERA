@@ -5,6 +5,7 @@
 #SBATCH -t 1:00:00
 ##SBATCH --mail-user=elin.falk_sorqvist@igp.uu.se
 ##SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 
 ##SBATCH --qos=short -t 00:15:00

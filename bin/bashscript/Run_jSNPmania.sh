@@ -3,6 +3,7 @@
 # Script to run jSNPmania
 #SBATCH -p core  -n 4
 #SBATCH -t 02:00:00
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;

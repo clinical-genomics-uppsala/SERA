@@ -3,6 +3,7 @@
 #SBATCH -p core  -n 1
 #SBATCH -t 00:15:00
 ##SBATCH --qos=short
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 #
 # Creating pdf plots.
 #
