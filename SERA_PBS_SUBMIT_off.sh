@@ -23,9 +23,10 @@ title="SlurmSERA"
 steps=(
 1 "Create ampregion, ampROI, seqregion and seqROI Files" off "Create_region_files_python.sh" false 2 \
 2 "Create SNPseq file" off "Create_SNPseq_file.sh" "1" 2 \
-10 "Remove adapter sequences from reads" off "Run_cutAdapt_swift_all.sh" false 0 \
-11 "Run FastQC" off "Run_FastQC.sh" "10" 0 \
-12 "Align with BWA against Genome" off "Run_Bwa.sh" "10" 0 \
+5 "Pre-process fastq-files" off "Prepare_fastq_files.sh" false 0 \
+10 "Remove adapter sequences from reads" off "Run_cutAdapt_swift_all.sh" "5" 0 \
+11 "Run FastQC" off "Run_FastQC.sh" "5:10" 0 \
+12 "Align with BWA against Genome" off "Run_Bwa.sh" "5:10" 0 \
 13 "Amplicon mapping" off "AmpliconMapping.sh" "12" 0 \
 14 "Run jSNPmania" off "Run_jSNPmania.sh" "2:12:13" 0 \
 15 "SNPmania output to Annovar input" off "jSNPmania2AnnovarInput.sh" "14" 0 \
