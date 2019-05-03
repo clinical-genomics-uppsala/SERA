@@ -14,6 +14,27 @@ if [[ ! -d "$ROOT_PATH/seqdata" ]]; then
 	mkdir $ROOT_PATH/seqdata;
 fi
 
+fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
+
+if [[ ${#fastq_files_r1[@]]} > 1 ]];
+then
+    if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
+    then
+        READ1=$(ls ${ROOT_PATH}/seqdata/${SAMPLEID}_S*_L000_R1_001.fastq.gz);
+    else
+        ErrorLog "${SAMPLEID}" "Multiple lanes for sample ${SAMPLEID}, read1, please pre-process data!...";
+    fi
+    if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R2_001.fastq.gz | head -1)" ];
+    then
+        READ2=$(ls ${ROOT_PATH}/seqdata/${SAMPLEID}_S*_L000_R2_001.fastq.gz);
+    else
+        ErrorLog "${SAMPLEID}" "Multiple lanes for sample ${SAMPLEID}, read2, please pre-process data!...";
+    fi
+else
+    READ1=$RAWDATA_PE1;
+    READ2=$RAWDATA_PE2;
+fi
+
 if [[ $PLATFORM = "Illumina" ]]; then
 
 	# get sequencing tags
@@ -25,9 +46,9 @@ if [[ $PLATFORM = "Illumina" ]]; then
 		if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
 		    
 		    if [[ ${METHOD} == "haloplex" ]]; then
-    			cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+    			cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $READ1 $READ2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
-	       		SuccessLog "${SAMPLEID}" "cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;"
+	       		SuccessLog "${SAMPLEID}" "cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $READ1 $READ2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;"
             elif [[ ${METHOD} == "swift" ]]; then
                 if [[ ${CUTADAPT_PREFIX} != "false" ]]; then
 
