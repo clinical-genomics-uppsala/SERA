@@ -364,6 +364,8 @@ with (open(output, mode = 'w'))as outfile:
 
     outfile.write('\n################################\n### SAMPLE SETTINGS\n################################\n\n')
 
+    import glob, os
+
     infoSort = sorted(info)
     for sample in infoSort:
         outfile.write("let COUNT=COUNT+1;\n")
@@ -371,8 +373,16 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("BARCODE_I7_ARR_[${COUNT}]=\"" + info[sample]['barcodeI7'] + "\";\n")
         outfile.write ("BARCODE_I5_ARR_[${COUNT}]=\"" + info[sample]['barcodeI5'] + "\";\n")
         outfile.write ("CUTADAPT_PREFIX_ARR_[${COUNT}]=\"" + info[sample]['cutadapt'] + "\";\n")
-        outfile.write ("RAWDATA_PE1_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R1_001.fastq.gz" + "\";\n")
-        outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"$RAW_PATH/" + sample + "_" + info[sample]['sNummer'] + "_L001_R2_001.fastq.gz" + "\";\n")
+        read1 = ['$RAW_PATH/' + os.path.basename(fastq_file) for fastq_file in glob.glob(rawPath + "/" + sample + "_S*_R1_001.fastq.gz")]
+        read1.sort()
+        read2 = ['$RAW_PATH/' + os.path.basename(fastq_file) for fastq_file in glob.glob(rawPath + "/" + sample + "_S*_R2_001.fastq.gz")]
+        read2.sort()
+        if len(read1) != len(read2):
+            raise Exception("Different number of reads found: " + ",".join(read1) + " " + ",".join(read2))
+        if len(read1) == 0:
+            raise Exception("No fastq files found!!!")
+        outfile.write ("RAWDATA_PE1_ARR_[${COUNT}]=\"" + " ".join(read1) + "\";\n")
+        outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"" + " ".join(read2) + "\";\n")
         outfile.write ("RAWDATA_INDEX_ARR_[${COUNT}]=\"false\";\n")
         outfile.write ("REFSEQ_ARR_[${COUNT}]=\"" + info[sample]['refseq'] + "\";\n")
         if re.match(info[sample]['method'], "haloplex"):
@@ -383,6 +393,7 @@ with (open(output, mode = 'w'))as outfile:
             outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + "_Amplicons.bed" + "\";\n")
         else:
             outfile.write ("SELECTIONFILE_ARR_[${COUNT}]=\"$FILE_PATH/refFiles/" + info[sample]['design'] + ".bed" + "\";\n")
+
         outfile.write ("NORMAL_SAMPLEID_ARR_[${COUNT}]=\"" + info[sample]['normal'] + "\";\n")
         outfile.write ("HOTSPOTFILE_ARR_[${COUNT}]=\"" + info[sample]['hotspot'] + "\";\n")
         outfile.write ("AMPLIFICATIONFILE_ARR_[${COUNT}]=\"" + info[sample]['amplification'] + "\";\n")
