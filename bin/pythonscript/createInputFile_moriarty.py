@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 """
 
@@ -247,6 +247,28 @@ with open(args.infile, 'r') as infile:
                         info[sample]['background'] = "false"
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
+
+                # ## BREAST
+                elif info[sample]['tissue'] == "breast" or info[sample]['tissue'] == "Breast":
+                    info[sample]['tissue'] = "breast"
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["breast"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["breast"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["breast"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["breast"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["breast"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["breast"]['background']
+
 
                 else:
                     print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")

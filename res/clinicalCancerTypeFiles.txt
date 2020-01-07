@@ -22,3 +22,8 @@ TYPE=ovarial
 HOTSPOT=Mutations_Ovarial_20170125.csv
 AMPLIFICATION=false
 BACKGROUND=false
+
+TYPE=breast
+HOTSPOT=Mutations_Breast_20191112.csv
+AMPLIFICATION=false
+BACKGROUND=false
