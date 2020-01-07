@@ -23,7 +23,7 @@ if [[ ${READS} == "true" ]]; then
 
             awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 
-            if [[ ${METHOD} == "swift" && ${TISSUE} == "ovarial" ]]; then
+            if [[ ${METHOD} == "swift" && ( ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ) ]]; then
                 awk 'BEGIN{FS="\t"}{if($1!~/^Sample/ && $15>=0.05){print $0}}' $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv | python ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}_vaf0.05.vcf
             fi
         else
