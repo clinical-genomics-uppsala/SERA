@@ -2,7 +2,7 @@
 
 #SBATCH -p core -n 4
 #SBATCH --nodes=1
-#SBATCH -t 04:00:00
+#SBATCH -t 06:00:00
 ##SBATCH --qos=short
 ##SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
