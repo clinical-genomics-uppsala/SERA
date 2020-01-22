@@ -27,9 +27,7 @@ steps=(
 9 "Remove adapter and primer (haloplex and swift) or adapter (swift+breast) from reads" on "Run_trimming.sh" "5" 0 \
 10 "Remove adapter sequences from reads" off "Run_cutAdapt_swift_all.sh" "5" 0 \
 11 "Run FastQC" on "Run_FastQC.sh" "5:9" 0 \
-#output in .sam for Swift+breast
 12 "Align with BWA against Genome" on "Run_Bwa_sam.sh" "5:9" 0 \
-#Only runs primerclip on Swift+breast
 13 "Remove adapter sequences in Swift runs" on "Run_primerclip.sh" "12" 0 \
 14 "Amplicon mapping" on "AmpliconMapping.sh" "13" 0 \
 15 "Run jSNPmania" on "Run_jSNPmania.sh" "2:13:14" 0 \
