@@ -1,5 +1,5 @@
 from variant_functions import *
-from print_functions_indel import *
+from print_functions import *
 import argparse
 import re
 
