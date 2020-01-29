@@ -81,8 +81,8 @@ def printHotspots(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped,
                         
                         for pindelVar in hotspots['hotspot'][chrom][start][end]['pindel']:
                              #only write if not called by normal caller
+                             bwaExist = False;
                              if not re.match("no", str(hotspots['hotspot'][chrom][start][end]['bwa'])):
-                                bwaExist = False;
                                 for bwaVar in hotspots['hotspot'][chrom][start][end]['bwa']:  # Go through all bwa variants
                                     # Check if there are any pindel variant which is identical to the bwa variant
                                     if (int(bwaVar[2]) == int(pindelVar[2]) and int(bwaVar[3]) == int(pindelVar[3]) and re.match(bwaVar[4], pindelVar[4]) and re.match(bwaVar[5], pindelVar[5])):
@@ -209,8 +209,8 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
 
                     for pindelVar in hotspots['region_all'][chrom][start][end]['pindel']:
                         #only write if not called by normal caller
+                        bwaExist = False;
                         if not re.match("no", str(hotspots['region_all'][chrom][start][end]['bwa'])):
-                            bwaExist = False;
                             for bwaVar in hotspots['region_all'][chrom][start][end]['bwa']:  # Go through all bwa variants
                                 # Check if there are any pindel variant which is identical to the bwa variant
                                 if (int(bwaVar[2]) == int(pindelVar[2]) and int(bwaVar[3]) == int(pindelVar[3]) and re.match(bwaVar[4], pindelVar[4]) and re.match(bwaVar[5], pindelVar[5])):
@@ -336,10 +336,9 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, m
                 if not re.match("no", str(hotspots['region'][chrom][start][end]['pindel'])):
 
                     for pindelVar in hotspots['region'][chrom][start][end]['pindel']:
-                        
+                        bwaExist = False;
                         #only write if not called by normal caller
                         if not re.match("no", str(hotspots['region'][chrom][start][end]['bwa'])):
-                            bwaExist = False;
                             for bwaVar in hotspots['region'][chrom][start][end]['bwa']:  # Go through all bwa variants
                                 # Check if there are any pindel variant which is identical to the bwa variant
                                 if (int(bwaVar[2]) == int(pindelVar[2]) and int(bwaVar[3]) == int(pindelVar[3]) and re.match(bwaVar[4], pindelVar[4]) and re.match(bwaVar[5], pindelVar[5])):
@@ -440,10 +439,9 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, mu
                 if not re.match("no", str(hotspots['indel'][chrom][start][end]['pindel'])):
 
                     for pindelVar in hotspots['indel'][chrom][start][end]['pindel']:
-                        
+                        bwaExist = False;
                         #only write if not called by normal caller
                         if not re.match("no", str(hotspots['indel'][chrom][start][end]['bwa'])):
-                            bwaExist = False;
                             for bwaVar in hotspots['indel'][chrom][start][end]['bwa']:  # Go through all bwa variants
                                 # Check if there are any pindel variant which is identical to the bwa variant
                                 if (int(bwaVar[2]) == int(pindelVar[2]) and int(bwaVar[3]) == int(pindelVar[3]) and re.match(bwaVar[4], pindelVar[4]) and re.match(bwaVar[5], pindelVar[5])):
