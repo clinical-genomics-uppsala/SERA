@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH -p core -n 4
+#SBATCH -p core -n 6
 #SBATCH --nodes=1
 #SBATCH -t 06:00:00
 ##SBATCH --qos=short
