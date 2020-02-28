@@ -2,9 +2,9 @@
 
 #SBATCH -p core -n 6
 #SBATCH --nodes=1
-#SBATCH -t 06:00:00
+#SBATCH -t 12:00:00
 ##SBATCH --qos=short
-##SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 
 # Include functions
