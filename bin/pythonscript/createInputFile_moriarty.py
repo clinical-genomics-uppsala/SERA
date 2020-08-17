@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description = "This script creates a SERA input
 parser.add_argument('-i', '--infile', help = 'Input file name', type = str, required = True)
 parser.add_argument('-p', '--project', help = 'Name of the project', type = str, required = True)
 parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ', 'MORIARTY'], type = str, required = True)
-parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning].', choices = ['klinik', 'utveckling', 'forskning'], required = True, type = str)
+parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning, projekt].', choices = ['klinik', 'utveckling', 'forskning', 'projekt'], required = True, type = str)
 parser.add_argument('-refDir', '--refDir', help = 'If a directory for reference files is given, they will be copied to the analysis folder', type = str)
 parser.add_argument('-n', '--normal', help = 'Name of normal sample to compare with.', type = str)
 parser.add_argument('-s', '--software', help = 'Queing system for', type = str, default = "SLURM")

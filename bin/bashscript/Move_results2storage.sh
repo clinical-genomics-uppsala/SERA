@@ -142,7 +142,6 @@ else
 fi
 
 # Copy FastQC
-
 if [[ -d "${ROOT_PATH}/FastQC" ]]; then
     cp -pr  ${ROOT_PATH}/FastQC ${STORAGE_PATH};
     echo "cp -pr  ${ROOT_PATH}/FastQC ${STORAGE_PATH}";
@@ -150,12 +149,22 @@ else
     WarningLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
 fi
 
+#Copy SNPmania
 if [[ -d "${ROOT_PATH}/SNPmania" ]]; then
     cp -pr  ${ROOT_PATH}/SNPmania ${STORAGE_PATH};
     echo "cp -pr  ${ROOT_PATH}/SNPmania ${STORAGE_PATH}";
 else
     WarningLog "$SAMPLEID" "${ROOT_PATH}/SNPmania does not exist!";
 fi
+
+# Copy Mutect2
+if [[ -d "${ROOT_PATH}/Mutect2" ]]; then
+    cp -pr  ${ROOT_PATH}/Mutect2 ${STORAGE_PATH};
+    echo "cp -pr  ${ROOT_PATH}/Mutect2 ${STORAGE_PATH}";
+else
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/Mutect2 does not exist!";
+fi
+
 
 cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};
 cp -p ${ROOT_PATH}/PipelineLog* ${OUTBOX_PATH};
