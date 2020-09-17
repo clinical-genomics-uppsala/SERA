@@ -20,8 +20,8 @@ fi
 if [[ $PLATFORM = "Illumina" ]]; then
     # If MATE_PAIR is set to true in the input file
     if [[ "$MATE_PAIR" == "true" ]]; then
-        if [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" ) ]]; then
-           
+        if [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002" ) ]]; then
+
            #CUTADAPT_PREFIX should point to the masterfile
            /projects/wp4/nobackup/workspace/jonas_test/primerclip/primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam;
            SuccessLog "${SAMPLEID}" "/projects/wp4/nobackup/workspace/jonas_test/primerclip/primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam;"
@@ -53,5 +53,3 @@ if [[ "$?" != "0" ]]; then
 else
     SuccessLog "${SAMPLEID}" "Passed primerclip for swift+breast otherwise did nothing";
 fi
-                                                                                                                                                                                                                                    
-

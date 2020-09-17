@@ -64,7 +64,7 @@ ptrim()
         -g file:$cutadaptFile5prim \
         -o ${tprefix}_5ptmpR2.fq -p ${tprefix}_5ptmpR1.fq \
         ${tprefix}_tmpR2.fq ${tprefix}_tmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-        
+
         #3' trim
     cutadapt \
         -a file:$cutadaptFile3prim \
@@ -110,14 +110,14 @@ if [[ $PLATFORM = "Illumina" ]]; then
             # Check that output file doesn't exist then run cutAdapt, if it does print error message
             if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
 
-                # Run cutadapt              
+                # Run cutadapt
                 cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 ${READ1} ${READ2} > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
             else
             ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
             fi
 
-        elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" ) ]]; then
+        elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002") ]]; then
             # Check that output file doesn't exist then run trimmomatic, if it does print error message
             if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz || ! -z $FORCE ]]; then
 
@@ -203,4 +203,3 @@ if [[ "$?" != "0" ]]; then
 else
     SuccessLog "${SAMPLEID}" "Passed cutadapt (haloplex and swift) or trimmomatic (swift+breast)";
 fi
-
