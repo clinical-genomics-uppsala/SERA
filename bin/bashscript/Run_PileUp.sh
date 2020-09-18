@@ -7,6 +7,8 @@
 ##SBATCH -p core -t 00:15:00 --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -28,15 +30,15 @@ if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 			else
 				ErrorLog "${SAMPLEID}" "$ROOT_PATH/SamBamFiles/${SAMPLEID}.aligned.sorted.bam does not exist!";
 			fi
-		else 
+		else
 			ErrorLog "${SAMPLEID}" "Output file $ROOT_PATH/Pileup/${SAMPLEID}.aligned.pileup.gz already exists and force was NOT used!";
 		fi
 	else
-		ErrorLog "${SAMPLEID}" "Reads has to be set to true to run the script!"; 
+		ErrorLog "${SAMPLEID}" "Reads has to be set to true to run the script!";
 	fi
 else
 	ErrorLog "${SAMPLEID}" "Only implemented for CALL_TYPE h.sapiens so far!";
-fi	
+fi
 # Check if it worked
 if [[ "$?" != "0" ]]; then
 	ErrorLog "${SAMPLEID}" "Failed in reads pileup run.";

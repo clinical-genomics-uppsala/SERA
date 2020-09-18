@@ -1,10 +1,12 @@
 #!/bin/bash
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 30:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
+
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -23,12 +25,12 @@ if [[ ${READS} == "true" ]]; then
 		if [[ ${TISSUE} == "colon" ]]; then
 			# Check if the output contain amplicon information
 			if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
-			
+
 				# Remove output files if they already exists
 				if [[ -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt ]]; then
 					rm $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt;
 				fi
-			
+
 				#EGFR T790M
 				if [[ ! -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt ]]; then
 					echo -e '#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tID\tRef_amp\tVar_amp' > $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt
@@ -40,17 +42,17 @@ if [[ ${READS} == "true" ]]; then
 					grep -P "\s128407443\s" $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations | awk -v fpath=$ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -v tumor=${TISSUE} -v r="A" -v v="G" -v name="rs10505477" -f $SERA_PATH/bin/awkscript/extract_SNPs.awk /dev/stdin >> $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt;
 					grep -P "\s46459032\s" $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations | awk -v fpath=$ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -v tumor=${TISSUE} -v r="T" -v v="C" -v name="rs4464148" -f $SERA_PATH/bin/awkscript/extract_SNPs.awk /dev/stdin >> $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.ampliconmapped.txt;
 
-				fi			
-			
-			#EFGR T790M			
+				fi
+
+			#EFGR T790M
 			# Check if the output without amplicon information exists
 			elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
-			
+
 				# Remove output files if they already exists
 				if [[ -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.txt ]]; then
 					rm $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.txt;
 				fi
-				
+
 				#EGFR T790M
 				if [[ ! -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.txt ]]; then
 					echo -e '#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tID\tRef_amp\tVar_amp' > $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}_SNPs.txt
@@ -66,7 +68,7 @@ if [[ ${READS} == "true" ]]; then
 			else
 				ErrorLog "$SAMPLEID" "Neiher input file $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations nor $ROOT_PATH/SNPmania/${SAMPLEID}.variations do exist!";
 			fi
-			
+
 		else
 			WarningLog "$SAMPLEID" "SNP extraction is only run for colon!";
 		fi

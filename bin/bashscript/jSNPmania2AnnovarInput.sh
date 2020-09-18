@@ -1,10 +1,12 @@
 #!/bin/bash
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 30:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
+
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -33,7 +35,7 @@ if [[ ${READS} == "true" ]]; then
     			else
     				ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
     			fi
-    	
+
     			# If there is not a file with amplicon information, check if there is one without
     		elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
     			if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
@@ -52,7 +54,7 @@ if [[ ${READS} == "true" ]]; then
                 else
                     ErrorLog "$SAMPLEID" "$ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput already exists and force was not used!"
                 fi
-        
+
                 # If there is not a file with amplicon information, check if there is one without
             elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
                 if [[ ! -e $ROOT_PATH/Annovar/${SAMPLEID}.ampliconmapped.annovarInput || ! -z $FORCE ]]; then
@@ -66,7 +68,7 @@ if [[ ${READS} == "true" ]]; then
         else
             ErrorLog "$SAMPLEID" "The analysis is only implemented for TYPE ffpe and plasma so far!!!"
         fi
-            
+
 	# Run tumor-normal analysis
 	else
 		ErrorLog "$SAMPLEID" "Only implemented for NORMAL_SAMPLEID annovar and false so far!";

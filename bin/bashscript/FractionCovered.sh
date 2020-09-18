@@ -1,10 +1,12 @@
 #!/bin/bash
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 30:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
+
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -33,9 +35,9 @@ if [[ ${READS} == "true" ]]; then
 			else
 				 ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqroi doesn't exist!";
 			fi
-			
+
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
-                                if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqregion.fractionCovered.txt ]]; then 
+                                if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqregion.fractionCovered.txt ]]; then
                                         perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
                                 else
                                         perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
@@ -43,9 +45,9 @@ if [[ ${READS} == "true" ]]; then
                         else
                                  ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqregion doesn't exist!";
 			fi
-			
+
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
-                                if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.ampregion.fractionCovered.txt ]]; then 
+                                if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.ampregion.fractionCovered.txt ]]; then
                                         perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
                                 else
                                         perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt

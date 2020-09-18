@@ -5,6 +5,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -53,13 +55,13 @@ fi
 
 if [[ $PLATFORM = "Illumina" ]]; then
     # If MATE_PAIR is set to true in the input file
-    if [[ "$MATE_PAIR" == "true" ]]; then    
+    if [[ "$MATE_PAIR" == "true" ]]; then
         if [[ ${METHOD} == "swift" ]]; then
             # Check that input files exist
             if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz ]]; then
                 # Check that output file doesn't exist then run cutAdapt, if it does print error message
                 if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
-        
+
                     # Set parameters for data to continue trimming
                     PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz";
                     PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz";
@@ -103,13 +105,13 @@ if [[ $PLATFORM = "Illumina" ]]; then
                     rm ${PE1_T}.tmp1
                     rm ${PE2_T}.tmp1
 
-                else 
+                else
                     ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
                 fi
             else
                 ErrorLog "${SAMPLEID}" "One or both of the input files (${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp.fastq.gz & ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp.fastq.gz) do not exist!";
             fi
-        else 
+        else
             ErrorLog "This step only has to be run for METHOD swift!";
         fi
      else

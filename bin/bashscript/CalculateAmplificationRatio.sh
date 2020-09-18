@@ -5,6 +5,8 @@
 #SBATCH -t 1:00:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh
 
@@ -20,7 +22,7 @@ if [[ ${TISSUE} == "lung" || ${TISSUE} == "colon" ]]; then
 			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -chr2nc $NC2chr -t ${TISSUE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 			sort -k3,3 -k4,4n $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt > $ROOT_PATH/Amplification/${SAMPLEID}.amplification.sorted.txt
 			rm $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
-		
+
 		elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
 			python2.7 $SERA_PATH/bin/pythonscript/AmplificationCalculation.py -a ${AMPLIFICATIONFILE} -b ${BACKGROUNDFILE} -s $ROOT_PATH/SNPmania/${SAMPLEID}.variations -chr2nc $NC2chr -t ${TISSUE} -sample ${SAMPLEID} -o $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt
 			sort -k3,3 -k4,4n $ROOT_PATH/Amplification/${SAMPLEID}.amplification.txt > $ROOT_PATH/Amplification/${SAMPLEID}.amplification.sorted.txt
@@ -43,4 +45,3 @@ if [[ "$?" != "0" ]]; then
 else
 	SuccessLog "$SAMPLEID" "Passed calculating amplification ratio";
 fi
-

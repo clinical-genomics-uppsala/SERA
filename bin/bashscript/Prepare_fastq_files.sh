@@ -5,6 +5,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -35,4 +37,3 @@ if [[ "$?" != "0" ]]; then
 else
     SuccessLog "${SAMPLEID}" "Passed pre-process fastq.";
 fi
-                                                                                                                                       

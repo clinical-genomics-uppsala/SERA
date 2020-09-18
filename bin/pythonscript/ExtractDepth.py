@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 import argparse
 import re
 
@@ -271,6 +273,3 @@ with open(args.variationfile, 'r') as variationfile:
                                         if genes[chrom][s][e].startswith("KIT") or genes[chrom][s][e].startswith("PDGFRA") or genes[chrom][s][e].startswith("BRCA1") or genes[chrom][s][e].startswith("BRCA2"):
                                             outStr = args.sample + "\t" + genes[chrom][s][e] + "\t-\t" + str(flag) + "\t" + found + "\t" + okDepth + depth + "\t" + chrom + "\t" + str(pos) + "\t" + str(pos) + "\t" + lineSplit[5] + "\tN\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t" + nm + "\t" + np + "\t-\t-\t-"
                                             outputfile.write(outStr + "\n")
-
-
-
