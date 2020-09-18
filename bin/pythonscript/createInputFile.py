@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 """
 
 Script for creating input file for sera pipeline

@@ -1,6 +1,7 @@
 #!/bin/bash -l
 
 # load marvin modules
+module load miniconda2/py27_4.8.3
 module load samtools/1.2
 module load blast/2.2.25
 module load java-openjdk/1.7.0

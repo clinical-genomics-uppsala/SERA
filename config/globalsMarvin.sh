@@ -11,11 +11,11 @@
 # paths to softwares
 #export ROOT_PATH_SEDD="$HOME/program/sedd-0.0.5";
 export ROOT_PATH_JSNPMANIA="/projects/wp1/software/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
-export ROOT_PATH_MOSAIK="/sw/aligners/mosaik/2.1.33";
+export ROOT_PATH_MOSAIK="/opt/ohpc/pub/aligners/mosaik/2.1.33";
 export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta_moriarty.pl";
-export ROOT_PATH_ANNOVAR="/sw/annotators/annovar/2015Mar22/bin";
+export ROOT_PATH_ANNOVAR="/opt/ohpc/pub/annotators/annovar/2015Mar22/bin";
 export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
-export ROOT_PATH_PINDEL="/sw/tools/pindel/0.2.5a8/bin";
+export ROOT_PATH_PINDEL="/opt/ohpc/pub/tools/pindel/0.2.5a8/bin";
 
 # java flags, use quick accessible temp dir for increased performance
 export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"

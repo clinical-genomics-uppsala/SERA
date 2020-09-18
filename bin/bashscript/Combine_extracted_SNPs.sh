@@ -5,15 +5,17 @@
 #SBATCH -t 30:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
 SuccessLog $SAMPLEID "Starts combining extracted info about SNPs ...";
 
 # Check if the directory exists, if not create it
-if [[ ! -d $ROOT_PATH/Extracted_SNPs ]]; then 
+if [[ ! -d $ROOT_PATH/Extracted_SNPs ]]; then
 	mkdir $ROOT_PATH/Extracted_SNPs;
-fi 
+fi
 
 if [[ ${READS} == "true" ]]; then
 	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
@@ -27,7 +29,7 @@ if [[ ${READS} == "true" ]]; then
 		ls -1 $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > /dev/null 2>&1
 		if [[  "$?" = "0" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.ampliconmapped.txt;
-			
+
 		else
 			WarningLog "$SAMPLEID" "No files with ending *_SNPs.ampliconmapped.txt were found!";
 		fi
@@ -41,7 +43,7 @@ if [[ ${READS} == "true" ]]; then
 		ls -1 $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > /dev/null 2>&1
 		if [[  "$?" = "0" ]]; then
 			awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.txt;
-			
+
 		else
 			WarningLog "$SAMPLEID" "No files with ending *_SNPs.txt were found!";
 		fi

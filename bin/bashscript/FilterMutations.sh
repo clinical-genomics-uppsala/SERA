@@ -1,11 +1,12 @@
 #!/bin/bash
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 02:00:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -14,9 +15,9 @@ SuccessLog $SAMPLEID "Starts Annovar ...";
 
 # Check if the directory exists, if not create it
 
-if [[ ! -d $ROOT_PATH/FilteredMutations ]]; then 
+if [[ ! -d $ROOT_PATH/FilteredMutations ]]; then
     mkdir $ROOT_PATH/FilteredMutations;
-fi 
+fi
 
 ANNOVARFILE=""
 PINDELANNOVARFILE=""
@@ -31,17 +32,17 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                     ANNOVARFILE="$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.annovarOutput";
                     PINDELANNOVARFILE="$ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput";
                     SNPMANIAFILE="$ROOT_PATH/SNPmania/${SAMPLEID}.variations";
-                
+
                 elif [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput && -e $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput && -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
                     ANNOVARFILE="$ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput";
                     PINDELANNOVARFILE="$ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput";
                     SNPMANIAFILE="$ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations";
                     ampMapped=" -a ";
-                    
+
                 else
                     ErrorLog "$SAMPLEID" "All inputfiles needed can not be found!";
                 fi
-            
+
                 if [[ -e $ANNOVARFILE && -e $PINDELANNOVARFILE && -e $SNPMANIAFILE ]]; then
                     if [[ (! -e $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv) || ($FORCE == "true") ]]; then
                         if [[ ${TYPE} == "ffpe" ]]; then
@@ -49,16 +50,16 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                                 echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}"
                                 cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}
                             else
-                                echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}"
-                                cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}
+                                echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python2.7 $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}"
+                                cat $ANNOVARFILE $PINDELANNOVARFILE | python2.7 $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_FLAGS}
                             fi
                         elif [[ ${TYPE} == "plasma" ]]; then
                             if [[ ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ]]; then
                                 echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}"
                                 cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.02 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}
                             else
-                                echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}"
-                                cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}
+                                echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python2.7 $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}"
+                                cat $ANNOVARFILE $PINDELANNOVARFILE | python2.7 $SERA_PATH/bin/pythonscript/FilterAllMutations.py -i ${HOTSPOTFILE} -o $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -f /dev/stdin -b $BLACKLIST_FILE -s ${SAMPLEID} -chr2nc $NC2chr -g 0.01 ${ampMapped} -t ${MAIN_TRANSCRIPTS} -v ${SNPMANIAFILE} -m $ROOT_PATH/refFiles/MultipleBp_variations.csv ${MUTATION_PLASMA_FLAGS}
                             fi
                         else
                             ErrorLog "$SAMPLEID" "Only implemented for TYPE ffpe and plasma so far!";

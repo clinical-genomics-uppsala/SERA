@@ -22,7 +22,7 @@ cd $ROOT_PATH_INPUT;
 export ROOT_PATH=$(pwd);
 
 # Include and validate  inputfile data
-. $SERA_PATH/includes/validateInputFile.sh; 
+. $SERA_PATH/includes/validateInputFile.sh;
 COUNT=-1;
 
 # Read input file.
@@ -32,17 +32,7 @@ COUNT=-1;
 count=${#SAMPLEID_ARR_[@]};
 let NUMBEROFSAMPLES=count-1;
 
-# Include home, proj or moriarty specific globals
-if [[ $GLOBALS = "HOME" ]]; then 
-    . $SERA_PATH/config/globalsHome.sh;
 
-elif [[ $GLOBALS = "MORIARTY" ]]; then 
-    . $SERA_PATH/config/globalsMoriarty.sh;
-elif [[ $GLOBALS = "MARVIN" ]]; then
-    . $SERA_PATH/config/globalsMarvin.sh;
-else
-    . $SERA_PATH/config/globalsProj.sh;
-fi
 ## Include server-specific globals
 #if [[ "$SOFTWARE" = "SLURM" ]]; then
 #	. $SERA_PATH/config/globalsUppnex.sh;
@@ -73,7 +63,7 @@ echo -e "Analysis_start_time="`date +%H:%M:%S` >> $PIPELINE_LOG;
 echo -e "Number_of_samples="$count >> $PIPELINE_LOG;
 echo -e "\n#####Programs#####" >> $PIPELINE_LOG;
 echo -e "SERA_version="$SERA_PATH >> $PIPELINE_LOG;
-echo -e "SNPmania_version="$ROOT_PATH_JSNPMANIA >> $PIPELINE_LOG; 
+echo -e "SNPmania_version="$ROOT_PATH_JSNPMANIA >> $PIPELINE_LOG;
 echo -e "Annovar_version="$ROOT_PATH_ANNOVAR >> $PIPELINE_LOG;
 echo -e "Pindel_version="$ROOT_PATH_PINDEL >> $PIPELINE_LOG;
 echo -e "\n#####Files#####" >> $PIPELINE_LOG;
@@ -99,7 +89,7 @@ done
 
 echo -e "\n#####Samples#####" >> $PIPELINE_LOG;
 
-# inputfile information 
+# inputfile information
 let ADJ_SAMPLENUMBER=NUMBEROFSAMPLES+1;
 MP="single end"; if [[ $MATE_PAIR = "true" ]]; then MP="paired end"; fi;
 if [[ $SOFTWARE = "SLURM" ]]; then INFO="Running on $SOFTWARE with project $UPPNEX_PROJECT_ID. ";
