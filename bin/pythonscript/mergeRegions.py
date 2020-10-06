@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 import argparse
 import re
 
@@ -138,4 +140,3 @@ with (open(args.output, mode = 'w'))as outfile:
     # Check if outfile is closed, if not close it
     if not outfile.closed:
         outfile.close()
-

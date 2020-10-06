@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 from variant_functions import *
 from print_functions import *
 import argparse
@@ -238,25 +240,3 @@ with open(args.output, 'w') as outputFile:
 
     if not outputFile.closed:
         outputFile.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

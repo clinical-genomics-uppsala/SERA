@@ -1,11 +1,12 @@
 #!/bin/bash -l
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 02:00:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
 
 #Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -21,7 +22,7 @@ else
         mkdir -p ${STORAGE_PATH};
     fi
 fi
-    
+
 # If STORAGE_PATH ends with a / remove the /
 if [[ ${STORAGE_PATH} == */ ]]; then
     STORAGE_PATH=${STORAGE_PATH:0:-1}

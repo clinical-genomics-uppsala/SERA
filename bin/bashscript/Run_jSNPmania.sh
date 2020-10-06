@@ -5,6 +5,8 @@
 #SBATCH -t 02:00:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -29,7 +31,7 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi
-			else 
+			else
 				ErrorLog "$SAMPLEID" "$ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations already exists and force was not used!";
 			fi
 		# If not use the "normal" bam-file
@@ -40,12 +42,12 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi
-			else 
+			else
 				ErrorLog "$SAMPLEID" "$ROOT_PATH/SNPmania/${SAMPLEID}.variations already exists and force was not used!";
 			fi
 
 		else
-			ErrorLog "$SAMPLEID" "None of the possible input files could be found ($ROOT_PATH/ampliconMapped/${SAMPLEID}.withAmplicon.bam or $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam)!"; 
+			ErrorLog "$SAMPLEID" "None of the possible input files could be found ($ROOT_PATH/ampliconMapped/${SAMPLEID}.withAmplicon.bam or $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam)!";
 		fi
 	else
 		ErrorLog "$SAMPLEID" "READS has to be set true to run the analysis!";
