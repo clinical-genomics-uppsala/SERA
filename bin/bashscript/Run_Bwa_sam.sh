@@ -39,7 +39,7 @@ fi
 if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz ]]; then
 	PE2=${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz;
 else
-    if [[ ${#fastq_files_r1[@]]} > 1 ]];
+    if [[ ${#fastq_files_r1[@]} > 1 ]];
     then
         if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R2_001.fastq.gz | head -1)" ];
         then
