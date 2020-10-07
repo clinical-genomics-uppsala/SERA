@@ -24,7 +24,7 @@ fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
 if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]]; then
 	PE1=${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
 else
-    if [[ ${#fastq_files_r1[@]]} > 1 ]];
+    if [[ ${#fastq_files_r1[@]} > 1 ]];
     then
         if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
         then
