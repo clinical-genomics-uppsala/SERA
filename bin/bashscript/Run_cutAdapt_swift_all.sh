@@ -5,13 +5,14 @@
 ##SBATCH --qos=short
 ##SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
 export TRIM_LOG="${ROOT_PATH}/seqdata/${SAMPLEID}.trim.log"
 
-if [[ $GLOBALS == "MORIARTY" ]]; then 
+if [[ $GLOBALS == "MORIARTY" ]]; then
     SNIC_TMP="${ROOT_PATH}/tmp";
     if [[ ! -d ${SNIC_TMP} ]]; then
         mkdir ${SNIC_TMP};
@@ -24,7 +25,7 @@ cputhreads=12;
 
 fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
 
-if [[ ${#fastq_files_r1[@]]} > 1 ]];
+if [[ ${#fastq_files_r1[@]} > 1 ]];
 then
     if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
     then
@@ -51,7 +52,7 @@ ptrim()
 
     cutadaptFile5prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_5ptrim.fa";
     cutadaptFile3prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_3ptrim.fa";
-    
+
     #5’trim
     cutadapt \
         -g file:$cutadaptFile5prim \
@@ -63,13 +64,13 @@ ptrim()
         -g file:$cutadaptFile5prim \
         -o ${tprefix}_5ptmpR2.fq -p ${tprefix}_5ptmpR1.fq \
         ${tprefix}_tmpR2.fq ${tprefix}_tmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-        
+
         #3' trim
     cutadapt \
         -a file:$cutadaptFile3prim \
         -o ${tprefix}_tmp3R1.fq -p ${tprefix}_tmp3R2.fq \
         ${tprefix}_5ptmpR1.fq ${tprefix}_5ptmpR2.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
-    
+
     #3’trim
     cutadapt \
         -a file:$cutadaptFile3prim \
@@ -99,16 +100,16 @@ fi
 
 if [[ $PLATFORM = "Illumina" ]]; then
     # If MATE_PAIR is set to true in the input file
-    if [[ "$MATE_PAIR" == "true" ]]; then    
-        
-        
+    if [[ "$MATE_PAIR" == "true" ]]; then
+
+
         if [[ ${METHOD} == "haloplex" ]]; then
                 # Get sequencing tags
                 . $SERA_PATH/config/sequencingTags.sh;
             # Check that output file doesn't exist then run cutAdapt, if it does print error message
             if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
 
-            # Run cutadapt              
+            # Run cutadapt
             cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 ${READ1} ${READ2} > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
         else
@@ -183,4 +184,3 @@ if [[ "$?" != "0" ]]; then
 else
     SuccessLog "${SAMPLEID}" "Passed cutadapt";
 fi
-                                                                                                                                       

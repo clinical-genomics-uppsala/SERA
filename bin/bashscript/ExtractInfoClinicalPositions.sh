@@ -1,11 +1,12 @@
 #!/bin/bash
 #
 # Script to run jSNPmania
-##SBATCH --qos=short 
+##SBATCH --qos=short
 #SBATCH -p core  -n 1
 #SBATCH -t 30:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
 
 # Include functions
 . $SERA_PATH/includes/logging.sh;
@@ -29,7 +30,7 @@ if [[ ${HOTSPOTFILE}!="false" ]]; then
 
     			elif  [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
     				perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
-    				
+
     			else
     				ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
     			fi
@@ -41,7 +42,7 @@ if [[ ${HOTSPOTFILE}!="false" ]]; then
                 elif  [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations && -e $ROOT_PATH/SNPmania/${SAMPLEID}.insertions && -e $ROOT_PATH/SNPmania/${SAMPLEID}.deletions ]]; then
                     echo "perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt"
                     perl $SERA_PATH/bin/perlscript/ClinicalPositions.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -i $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -d $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -o $ROOT_PATH/ClinicalVariants/${SAMPLEID}.clinicalVariants.txt  -s ${SAMPLEID} -c ${HOTSPOTFILE} ${CLINICAL_PLASMA_FLAGS} >> $ROOT_PATH/ClinicalVariants/extractClinicalVariants_output.txt
-                    
+
                 else
                     ErrorLog "$SAMPLEID" "All files needed to run the analysis is not available!";
                 fi

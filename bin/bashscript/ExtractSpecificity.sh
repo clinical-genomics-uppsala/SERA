@@ -7,6 +7,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -18,10 +20,10 @@ fi
 SuccessLog "${SAMPLEID}" "Starting counting on- and offtarget bases...";
 if [[ ${READS} == "true" ]]; then
 	# Check if the ampregion input files exists
-	if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget.gz && $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget.gz ]]; then 
+	if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget.gz && $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget.gz ]]; then
 		gunzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget.gz;
 		gunzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget.gz;
-		
+
 		# Check if the gunzip worked, if so extract the specificities
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget ]]; then
 			awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.o* >> $ROOT_PATH/Specificity/allSamples.ampregion.specificity;
@@ -39,7 +41,7 @@ if [[ ${READS} == "true" ]]; then
 	if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget.gz && $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget.gz ]]; then
 		gunzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget.gz;
 		gunzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget.gz;
-		
+
 		# Check if the gunzip worked, if so extract the specificities
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget ]]; then
 			awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.o* >> $ROOT_PATH/Specificity/allSamples.seqregion.specificity;
@@ -60,4 +62,3 @@ if [[ "$?" != "0" ]]; then
 else
         SuccessLog "${SAMPLEID}" "passed calculating specificity...";
 fi
-

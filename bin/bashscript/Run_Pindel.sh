@@ -6,6 +6,8 @@
 ##SBATCH --qos=short -t 00:15:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh
 
@@ -31,7 +33,7 @@ if [[ ! -e $ROOT_PATH/PindelOut/${SAMPLEID}.indels_TD || ! -z $FORCE ]]; then
 			ErrorLog "${SAMPLEID}" "Inputfile $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam doesn't exist!";
 		fi
 
-	elif [[ ${NORMAL_SAMPLEID} != "false" ]]; then	
+	elif [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 
 		SuccessLog "${SAMPLEID}" "will be analysed in Pindel with normal sample:" "${NORMAL_SAMPLEID}";
 		# Check that input file exists
@@ -48,13 +50,13 @@ if [[ ! -e $ROOT_PATH/PindelOut/${SAMPLEID}.indels_TD || ! -z $FORCE ]]; then
 		else
 			ErrorLog "${SAMPLEID}" "Inputfile $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam and/or $ROOT_PATH/Bwa/${NORMAL_SAMPLEID}.sorted.bam doesn't exist!";
 		fi
-	
+
 	else
 			SuccessLog "${SAMPLEID}" "Normal set to false, Pindel will not be started.";
 	fi
 
 else
 
-	ErrorLog "${SAMPLEID}" "Pindel output already exists and Force was not used."; 	
+	ErrorLog "${SAMPLEID}" "Pindel output already exists and Force was not used.";
 
 fi

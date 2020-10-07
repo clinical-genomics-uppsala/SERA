@@ -6,7 +6,7 @@
 #SBATCH -t 02:00:00
 #SBATCH --nodes=1
 ##SBATCH --qos=short
-##SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
+#SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
 # Include functions
 . $SERA_PATH/includes/logging.sh

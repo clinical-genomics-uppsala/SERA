@@ -7,6 +7,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh
 
@@ -23,7 +25,7 @@ fi
 
 fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
 
-if [[ ${#fastq_files_r1[@]]} > 1 ]];
+if [[ ${#fastq_files_r1[@]} > 1 ]];
 then
     if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
     then
@@ -70,7 +72,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 ErrorLog "${SAMPLEID}" "No cutadapted files exists!"
             fi
         else
-            ErrorLog "${SAMPLEID}" "FastQC files already existed for cutadapted output and force was NOT used!"; 
+            ErrorLog "${SAMPLEID}" "FastQC files already existed for cutadapted output and force was NOT used!";
         fi
 
     # If single reads are used only care about the first read
@@ -78,10 +80,10 @@ if [[ $PLATFORM = "Illumina" ]]; then
         # Check that input file exists, if not print error message
         if [[ -e ${READ2} ]]; then
             fastqc -o FastQC ${READ2} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
-        else 
+        else
             ErrorLog "${SAMPLEID}" "${READ2} does NOT exist!";
         fi
-        
+
         # Check if cutadapted files exist - if so run cutadapt on them
         if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]]; then
             fastqc -o FastQC ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_outputCutadapt.txt;
@@ -93,7 +95,7 @@ else
     ErrorLog "${SAMPLEID}" "Platform $PLATFORM not recognized (should be Illumina).";
     exit 1;
 fi
-    
+
 # Check if MosaikBuild worked
 if [[ "$?" != "0" ]]; then
     ErrorLog "${SAMPLEID}" "Failed in FastQC...";

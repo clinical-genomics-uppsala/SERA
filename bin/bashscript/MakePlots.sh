@@ -8,6 +8,8 @@
 # Creating pdf plots.
 #
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -15,7 +17,7 @@ SuccessLog ${REFSEQ} "Starts generating plot files...";
 
 # Check if data exist.
 if [[ ! -d "$ROOT_PATH/plotValues" ]]; then
-	ErrorLog ${REFSEQ} "Failed to locate a plotValues folder.";	
+	ErrorLog ${REFSEQ} "Failed to locate a plotValues folder.";
 	exit 1;
 fi
 
@@ -43,6 +45,3 @@ if [[ -d $ROOT_PATH/plotPdfs || ! -z $FORCE ]]; then
 else
 	ErrorLog $REFSEQ "Found previous plots, skipping step.";
 fi
-
-
-

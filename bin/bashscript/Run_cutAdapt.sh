@@ -4,6 +4,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -16,7 +18,7 @@ fi
 
 fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
 
-if [[ ${#fastq_files_r1[@]]} > 1 ]];
+if [[ ${#fastq_files_r1[@]} > 1 ]];
 then
     if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
     then
@@ -40,11 +42,11 @@ if [[ $PLATFORM = "Illumina" ]]; then
 	# get sequencing tags
 	. $SERA_PATH/config/sequencingTags.sh;
 
-	# If MATE_PAIR is set to true in the input file 
+	# If MATE_PAIR is set to true in the input file
 	if [[ "$MATE_PAIR" == "true" ]]; then
 		# Check that output file doesn't exist then run cutAdapt, if it does print error message
 		if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
-		    
+
 		    if [[ ${METHOD} == "haloplex" ]]; then
     			cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 $READ1 $READ2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
@@ -73,7 +75,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
 
                     cutadapt -g file:${cutadaptAdapterSeq} -e 0.12 -o $TMP1_PE1 -p $TMP1_PE2 --minimum-length 1  $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:${cutadaptAdapterSeq} -e 0.12 -o $TMP1_PE1 -p $TMP1_PE2 --minimum-length 1  $RAWDATA_PE1 $RAWDATA_PE2 > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
-                    
+
                     cutadapt -g file:${cutadaptAdapterSeq} -e 0.12 -o $TMP2_PE2 -p $TMP2_PE1 --minimum-length 1  $TMP1_PE2 $TMP1_PE1 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:${cutadaptAdapterSeq} -e 0.12 -o $TMP2_PE2 -p $TMP2_PE1 --minimum-length 1  $TMP1_PE2 $TMP1_PE1 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
 
@@ -82,10 +84,10 @@ if [[ $PLATFORM = "Illumina" ]]; then
 
                     cutadapt -g file:$cutadaptFile5prim -o $TEMP2_PE2 -p $TEMP2_PE1 $TEMP1_PE2 $TEMP1_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile5prim -o $TEMP2_PE2 -p $TEMP2_PE2 $TEMP1_PE2 $TEMP1_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
-                    
+
                     cutadapt -a file:$cutadaptFile3prim -o $TEMP3_PE1 -p $TEMP3_PE2 $TEMP2_PE1 $TEMP2_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile3prim -o $TEMP3_PE1 -p $TEMP3_PE2 $TEMP2_PE1 $TEMP2_PE2 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
-                    
+
                     cutadapt -a file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
                     SuccessLog "${SAMPLEID}" "cutadapt -g file:$cutadaptFile3prim -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz $TEMP3_PE2 $TEMP3_PE1 --minimum-length 40 -e 0.12 >> ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log";
                 else
@@ -95,7 +97,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 ErrorLog "${SAMPLEID}" "Only implemented for METHOD haloplex and swift so far!";
             fi
 
-		else 
+		else
 			ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
 		fi
 	else

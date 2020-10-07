@@ -5,6 +5,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -15,7 +17,7 @@ if [[ ! -d "$ROOT_PATH/seqdata" ]]; then
     mkdir $ROOT_PATH/seqdata;
 fi
 
-if [[ ${#fastq_files_r1[@]]} > 1 ]];
+if [[ ${#fastq_files_r1[@]} > 1 ]];
 then
     pre_filename=$(basename ${fastq_files_r1[0]} | sed -e 's/_L[0-9]\+_R1_001\.fastq\.gz//')
     echo "zcat $RAWDATA_PE2 | pigz -p 4 > ${ROOT_PATH}/seqdata/${pre_filename}_L000_R1_001.fastq.gz";
@@ -35,4 +37,3 @@ if [[ "$?" != "0" ]]; then
 else
     SuccessLog "${SAMPLEID}" "Passed pre-process fastq.";
 fi
-                                                                                                                                       

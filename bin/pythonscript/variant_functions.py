@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 import re
 from pip._vendor.pyparsing import line
 
@@ -662,5 +664,3 @@ def getMultipleBpInfo(lineSplit, multipleBp):
             return True, multipleBp[chrom][start][end][ref][var]['aa'], multipleBp[chrom][start][end][ref][var]['cds'], multipleBp[chrom][start][end][ref][var]['nm']
 
     return False, "-", "-", "-"
-
-
