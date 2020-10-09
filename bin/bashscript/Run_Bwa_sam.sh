@@ -8,6 +8,8 @@
 ##SBATCH --qos=short
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
+. $SERA_PATH/includes/load_modules.sh
+
 # Include functions
 . $SERA_PATH/includes/logging.sh
 
@@ -24,7 +26,7 @@ fastq_files_r1=($(echo "$RAWDATA_PE1" | tr " " "\n"));
 if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]]; then
 	PE1=${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
 else
-    if [[ ${#fastq_files_r1[@]]} > 1 ]];
+    if [[ ${#fastq_files_r1[@]} > 1 ]];
     then
         if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R1_001.fastq.gz | head -1)" ];
         then
@@ -39,7 +41,7 @@ fi
 if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz ]]; then
 	PE2=${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz;
 else
-    if [[ ${#fastq_files_r1[@]]} > 1 ]];
+    if [[ ${#fastq_files_r1[@]} > 1 ]];
     then
         if [ -n "$(find ${ROOT_PATH}/seqdata -name ${SAMPLEID}_S*_L000_R2_001.fastq.gz | head -1)" ];
         then
