@@ -19,6 +19,9 @@ fi
 
 if [[ ${READS} == "true" ]]; then
 	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
+	
+	        echo -e "Sample\tTissue\tBRAF p.600\tMET c.2942\tMET c.3082\tALK p.1174\tALK p.G120" > $ROOT_PATH/Bwa/All_contamination.txt
+                cat $ROOT_PATH/Bwa/*.tr.contamination.txt >> $ROOT_PATH/FilteredMutations/SampleCrosstalk_check.tsv
 
 		# Ampliconmapped
 		# Check if a combined file exist, then remove it
