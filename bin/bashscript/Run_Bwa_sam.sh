@@ -72,6 +72,16 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
                             SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now_"${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
                             SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;"
+			    
+			    echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -r chr2:29443695-29443695 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -r chr2:29443613-29443613 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            tr -s '\n' '\t' < $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt > $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
+                            echo -e "" >> $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
+			    
 			elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" ) ]]; then  
                             bwa mem -M -t 3 -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} > $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam;
                             samtools sort -n -@ 3 $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted;
