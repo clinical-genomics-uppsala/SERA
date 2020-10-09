@@ -13,7 +13,7 @@
 
 export TRIM_LOG="${ROOT_PATH}/seqdata/${SAMPLEID}.trim.log"
 
-if [[ $GLOBALS == "MORIARTY" ]]; then
+if [[ $GLOBALS == "MORIARTY" ]] || [[ $GLOBALS == "MARVIN" ]] ; then
     SNIC_TMP="${ROOT_PATH}/tmp";
     if [[ ! -d ${SNIC_TMP} ]]; then
         mkdir ${SNIC_TMP};
