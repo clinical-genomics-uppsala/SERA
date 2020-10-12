@@ -82,7 +82,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             tr -s '\n' '\t' < $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt > $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
                             echo -e "" >> $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
 			    
-			elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" ) ]]; then  
+			elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002") ]]; then  
                             bwa mem -M -t 3 -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} > $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam;
                             samtools sort -n -@ 3 $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted;
                             samtools view -h $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam;
