@@ -58,7 +58,7 @@ with open(args.hotspotfile, 'r') as hotspotFile:
             if lineSplit[0].startswith("chrom"):
                 lineSplit[0] = nc2chr[lineSplit[0]]
             elif not lineSplit[0].startswith("NC") and not lineSplit[0].startswith("chr"):
-                print line
+                print(line)
                 lineSplit[0] = nc2chr["chr" + lineSplit[1]]
 
             # Create a hash with the mutations that are ok
