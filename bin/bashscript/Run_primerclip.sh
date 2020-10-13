@@ -27,7 +27,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
            /projects/wp4/nobackup/workspace/jonas_test/primerclip/primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam;
            SuccessLog "${SAMPLEID}" "/projects/wp4/nobackup/workspace/jonas_test/primerclip/primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam;"
 
-           samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -o $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;
+           samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -f $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;
            samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;
            module unload oracle-jdk/1.7.0_79
            module load oracle-jdk/1.8.0_05
