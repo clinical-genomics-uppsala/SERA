@@ -74,11 +74,11 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;"
 			    
                             echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            samtools depth -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            samtools depth -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            samtools depth -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            samtools depth -r chr2:29443695-29443695 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            samtools depth -r chr2:29443613-29443613 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -a -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -a -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -a -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -a -r chr2:29443695-29443695 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            samtools depth -a -r chr2:29443613-29443613 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
                             tr -s '\n' '\t' < $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt > $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
                             echo -e "" >> $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
 			    
