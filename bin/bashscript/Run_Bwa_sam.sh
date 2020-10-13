@@ -73,7 +73,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now_"${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
                             SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;"
 			    
-			    echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                            echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
                             samtools depth -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
                             samtools depth -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
                             samtools depth -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
