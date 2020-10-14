@@ -29,12 +29,12 @@ if [[ $PLATFORM = "Illumina" ]]; then
 
            samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -f $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;
            samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;
-           module unload oracle-jdk/1.7.0_79
-           module load oracle-jdk/1.8.0_05
+           module unload java-openjdk/1.7.0
+           module load java-openjdk/1.8.0
            java -jar ${SERA_PATH}/bin/java/biostar84452.jar $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam --samoutputformat BAM > $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
            samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-           module unload oracle-jdk/1.8.0_05
-           module load oracle-jdk/1.7.0_79
+           module unload java-openjdk/1.8.0
+           module load java-openjdk/1.7.0
            samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
            SuccessLog "${SAMPLEID}" "samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -o $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;"
            SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;"
