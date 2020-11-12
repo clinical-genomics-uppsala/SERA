@@ -768,7 +768,11 @@ sub checkMultipleBpVariant {
 					$multipleBp{$p} = $varHash{$chrom}{$p};
 					$lastPos = $p;
 				}
-				else {
+				elsif ( $p == ( $lastPos + 2 ) )
+				{ # If this position is two greater than the previous one => save info in hash and set lastPos to this position
+					$multipleBp{$p} = $varHash{$chrom}{$p};
+					$lastPos = $p;
+				} else {
 
 					printMultipleBpVariant( \%multipleBp, $chrom );
 
