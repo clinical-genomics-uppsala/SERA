@@ -763,7 +763,7 @@ sub checkMultipleBpVariant {
 				$lastPos = $p;    # If lastPos is unset, set it to this position
 			}
 			else {
-				if ( $p == ( $lastPos + 1 ) )
+				if ( $p == ( $lastPos + 1 ) ||  $p == ( $lastPos + 2 ))
 				{ # If this position is one greater than the previous one => save info in hash and set lastPos to this position
 					$multipleBp{$p} = $varHash{$chrom}{$p};
 					$lastPos = $p;
