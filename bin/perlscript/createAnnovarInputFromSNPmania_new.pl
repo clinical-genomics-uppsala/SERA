@@ -842,7 +842,7 @@ sub printMultipleBpVariant {
                 $amplInfo=$line[31];
                 $refAmplInfo = $line[33];
 			}
-
+			my $ref_counter=0;
 			for ( my $j = $i + 1 ; $j < scalar(@keyPos) ; $j++ ) {
 				my ( $nextKey, $nextVaf ) =
 				  getMajorVaf( $multiBp{ $keyPos[$j] } );
@@ -852,6 +852,7 @@ sub printMultipleBpVariant {
 				if ($keyPos[$j] - $keyPos[$j-1] == 2) {
 						$ref .= get_reference_bas($chrom, $keyPos[$j]-1);
 						$var .= get_reference_bas($chrom, $keyPos[$j]-1);
+						$ref_counter = $ref_counter + 1;
 				}
 
 				$ref .= $nextRef;
@@ -912,6 +913,9 @@ sub printMultipleBpVariant {
 					  . " readDepth="
 					  . $totRd
 					  . " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=-\n";
+				}
+				if ($ref_counter > 0 && $keyPos[$j] - $keyPos[$i] >= 3) {
+					last;
 				}
 			}
 		}
