@@ -870,6 +870,9 @@ sub printMultipleBpVariant {
 					    $refAmplInfo = $line[33];
 					}
 				}
+				if ($ref_counter > 0 && $keyPos[$j] - $keyPos[$i] >= 3) {
+					last;
+				}
 				if ($ampliconMapped) {
 					print OUTPUT $ncToChr{$chrom} . "\t"
 					  . $keyPos[$i] . "\t"
@@ -913,9 +916,6 @@ sub printMultipleBpVariant {
 					  . " readDepth="
 					  . $totRd
 					  . " Tumor_A=- Tumor_G=- Tumor_C=- Tumor_T=-\n";
-				}
-				if ($ref_counter > 0 && $keyPos[$j] - $keyPos[$i] >= 3) {
-					last;
 				}
 			}
 		}
