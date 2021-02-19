@@ -131,8 +131,10 @@ with open(args.output, 'w') as outputFile:
                     lineSplit[1] = nc2chr["chr" + lineSplit[1]]
 
                 # Filter annovar output filesCreate a hash with the mutations that are ok
+
                 if not addVariantInfo(lineSplit, minRDs, blacklist, args.genome1000, args.ampliconmapped, hotspots, intronic, args.minVaf):
                     aa, cds, accNum, exon, exonicType, comm = getTranscriptInfo(lineSplit, transcripts)  # Get transcript information
+
                     # Check the level of reads. Below the lowest => -, between first and second => low, above highest => ok
                     found, readLevel = getReadLevel(minRDs, int(lineSplit[12]))  # Get the level of read depth and if it's not analyzable
 
@@ -142,7 +144,10 @@ with open(args.output, 'w') as outputFile:
                         comm = "-"
 
                     refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(lineSplit, args.ampliconmapped)  # add amplicon information
-                    if ampliconCheckNoneHotspot(lineSplit, args.ampliconmapped):
+                    artifact = flagPossibleArtifact(lineSplit, args.ampliconmapped)
+                    if ampliconCheckNoneHotspot(lineSplit, args.ampliconmapped) or artifact:
+                        if artifact:
+                            found = "Possible_Artifact"
                         outputFile.write (str(lineSplit[0]) + "\t" + str(lineSplit[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comm + "\t4-other\t" + found + "\t" + readLevel + "\t" + str(lineSplit[12]) + "\t" + str(lineSplit[10]) + "\t" + str(lineSplit[11]) + "\t" + str(lineSplit[9]) + "\t" + str(lineSplit[14]) + "\t" + str(lineSplit[13]) + "\t" + str(lineSplit[16]) + "\t" + str(lineSplit[15]) + "\t" + str(lineSplit[17]) + "\t" + str(lineSplit[18]) + "\t" + str(lineSplit[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(lineSplit[20]) + "\t" + str(lineSplit[21]) + "\t" + str(lineSplit[22]) + "\t" + str(lineSplit[23]) + "\t" + str(lineSplit[24]) + "\t" + str(lineSplit[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(lineSplit[1]) + "\t" + str(lineSplit[2]) + "\t" + str(lineSplit[3]) + "\t" + str(lineSplit[4]) + "\t" + str(lineSplit[5]) + "\t" + str(lineSplit[32]) + "\n")
 
 

@@ -179,6 +179,9 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                                 refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                                 mutType = "3-check"  # Set the mutation type
 
+                                if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                    found = "Possible_Artifact"
+
                                 comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
                                 OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
@@ -201,6 +204,9 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
+
+                            if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                found = "Possible_Artifact"
 
                             comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
@@ -239,6 +245,9 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
 
+                            if flagPossibleArtifact(pindelVar, ampliconMapped):
+                                found = "Possible_Artifact"
+
                             comment = setComment(comm, hotspots['region_all'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
 
@@ -261,6 +270,7 @@ def printRegionAll(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped
                             found = "not in design"
                             readLevel = "-"
                             rd = "-"
+
 
                         if re.match("low", readLevel) or re.match("-", readLevel) or re.match("ok", readLevel):  # Print all positions, regardless of readLevel
                             mutType = "3-check"  # Set the mutation type
@@ -307,6 +317,9 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, m
                                 refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                                 mutType = "3-check"  # Set the mutation type
 
+                                if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                    found = "Possible_Artifact"
+
                                 comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
                                 OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
@@ -329,6 +342,9 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, m
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
+
+                            if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                found = "Possible_Artifact"
 
                             comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
@@ -366,6 +382,9 @@ def printRegion(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, m
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
+
+                            if flagPossibleArtifact(pindelVar, ampliconMapped):
+                                found = "Possible_Artifact"
 
                             comment = setComment(comm, hotspots['region'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")
@@ -410,6 +429,9 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, mu
                                     refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                                     mutType = "3-check"  # Set the mutation type
 
+                                    if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                        found = "Possible_Artifact"
+
                                     comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
                                     OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
                         else:  # If no pindel variants are available OUTPUT.write the variant
@@ -432,6 +454,9 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, mu
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(bwaVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
+
+                            if flagPossibleArtifact(bwaVar, ampliconMapped):
+                                found = "Possible_Artifact"
 
                             comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(bwaVar[0]) + "\t" + str(bwaVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(bwaVar[12]) + "\t" + str(bwaVar[10]) + "\t" + str(bwaVar[11]) + "\t" + str(bwaVar[9]) + "\t" + str(bwaVar[14]) + "\t" + str(bwaVar[13]) + "\t" + str(bwaVar[16]) + "\t" + str(bwaVar[15]) + "\t" + str(bwaVar[17]) + "\t" + str(bwaVar[18]) + "\t" + str(bwaVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(bwaVar[20]) + "\t" + str(bwaVar[21]) + "\t" + str(bwaVar[22]) + "\t" + str(bwaVar[23]) + "\t" + str(bwaVar[24]) + "\t" + str(bwaVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(bwaVar[1]) + "\t" + str(bwaVar[2]) + "\t" + str(bwaVar[3]) + "\t" + str(bwaVar[4]) + "\t" + str(bwaVar[5]) + "\t" + str(bwaVar[32]) + "\n")
@@ -469,6 +494,8 @@ def printIndel(hotspots, minRDs, sample, transcripts, OUTPUT, ampliconMapped, mu
 
                             refPlus, refMinus, varPlus, varMinus, refAll, varAll = getAmpliconInfo(pindelVar, ampliconMapped)  # add amplicon information
                             mutType = "3-check"  # Set the mutation type
+
+
 
                             comment = setComment(comm, hotspots['indel'][chrom][start][end]['comment'])  # Set the correct comment
                             OUTPUT.write (str(pindelVar[0]) + "\t" + str(pindelVar[6]) + "\t" + exonicType + "\t" + exon + "\t" + aa + "\t" + cds + "\t" + accNum + "\t" + comment + "\t" + mutType + "\t" + found + "\t" + readLevel + "\t" + str(pindelVar[12]) + "\t" + str(pindelVar[10]) + "\t" + str(pindelVar[11]) + "\t" + str(pindelVar[9]) + "\t" + str(pindelVar[14]) + "\t" + str(pindelVar[13]) + "\t" + str(pindelVar[16]) + "\t" + str(pindelVar[15]) + "\t" + str(pindelVar[17]) + "\t" + str(pindelVar[18]) + "\t" + str(pindelVar[19]) + "\t" + str(refPlus) + "\t" + str(refMinus) + "\t" + str(varPlus) + "\t" + str(varMinus) + "\t" + str(pindelVar[20]) + "\t" + str(pindelVar[21]) + "\t" + str(pindelVar[22]) + "\t" + str(pindelVar[23]) + "\t" + str(pindelVar[24]) + "\t" + str(pindelVar[25]) + "\t" + str(refAll) + "\t" + str(varAll) + "\t" + str(pindelVar[1]) + "\t" + str(pindelVar[2]) + "\t" + str(pindelVar[3]) + "\t" + str(pindelVar[4]) + "\t" + str(pindelVar[5]) + "\t" + str(pindelVar[32]) + "\n")

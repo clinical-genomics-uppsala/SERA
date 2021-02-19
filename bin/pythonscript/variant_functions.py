@@ -159,7 +159,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
     end = int(lineSplit[3])
 
     varOK = False
-    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped) or flagPossibleArtifact(lineSplit, ampliconMapped):
         varOK = True
 
     if varOK and "region_all" in hotspots:
@@ -212,7 +212,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
                                 return True
 
     varOK = False
-    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped) or flagPossibleArtifact(lineSplit, ampliconMapped):
         varOK = True
     if varOK and "region" in hotspots:
         # start with checking if the chromosome exists in the region part of the hash
@@ -272,7 +272,7 @@ def indelVariant(lineSplit, hotspots, ampliconMapped):
     end = int(lineSplit[3])
 
     varOK = False
-    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped):
+    if ampliconCheckNoneHotspot(lineSplit, ampliconMapped)  or flagPossibleArtifact(lineSplit, ampliconMapped):
         varOK = True
 
     if varOK and"indel" in hotspots:
@@ -406,6 +406,7 @@ def ampliconCheckNoneHotspot(lineSplit, ampliconmapped):
 
     # If ampliconmapped and a bwa variant check amplicon status
     if ampliconmapped and not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
+
         ref_plus = ref_minus = var_plus = var_minus = 0
         if not re.match('-', lineSplit[26]):
             var_plus = int(lineSplit[26])
@@ -430,6 +431,24 @@ def ampliconCheckNoneHotspot(lineSplit, ampliconmapped):
 
     else:
         return True
+
+def flagPossibleArtifact(lineSplit, ampliconmapped):
+
+    if ampliconmapped and not ("+" in lineSplit[24]) and not ("+" in lineSplit[25]):
+        ref_plus = ref_minus = var_plus = var_minus = 0
+        if not re.match('-', lineSplit[26]):
+            var_plus = int(lineSplit[26])
+        if not re.match('-', lineSplit[27]):
+            var_minus = int(lineSplit[27])
+        if not re.match('-', lineSplit[28]):
+            ref_plus = int(lineSplit[28])
+        if not re.match('-', lineSplit[29]):
+            ref_minus = int(lineSplit[29])
+        if (ref_plus + ref_minus) > 2:
+            if (var_plus + var_minus) == 1:
+                return True
+    return False
+
 def createBlacklist(line, blacklist, nc2chr):
     # Remove new line characters and split string on tab
     line = line.rstrip('\r\n').split("\t")
