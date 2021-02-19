@@ -45,7 +45,7 @@ function runStep {
 		fi
 		
 		# submit scripts to SLURM
-		SUBMIT_TEXT=$(sbatch -J ${SAMPLEID}-S${1} -e $ROOT_PATH/slurmOutput/${SAMPLEID}-S${1}.error -o $ROOT_PATH/slurmOutput/${SAMPLEID}-S${1}.output $SLURM_MISC_SETTINGS $DEP $SERA_PATH/bin/bashscript/${2});
+		SUBMIT_TEXT=$(sbatch -p core -J ${SAMPLEID}-S${1} -e $ROOT_PATH/slurmOutput/${SAMPLEID}-S${1}.error -o $ROOT_PATH/slurmOutput/${SAMPLEID}-S${1}.output $SLURM_MISC_SETTINGS $DEP $SERA_PATH/bin/bashscript/${2});
 		SUBMIT_TEXT_ARR=($SUBMIT_TEXT);
 		
 		RUN_STEP[${1}]=$SUBMIT_TEXT

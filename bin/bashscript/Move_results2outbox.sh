@@ -151,6 +151,15 @@ else
     WarningLog "$SAMPLEID" "${ROOT_PATH}/FastQC does not exist!";
 fi
 
+# Copy Mutect2
+if [[ -d "${ROOT_PATH}/Mutect2" ]]; then
+    cp -pr  ${ROOT_PATH}/Mutect2 ${OUTBOX_PATH};
+    echo "cp -pr  ${ROOT_PATH}/Mutect2 ${OUTBOX_PATH}";
+else
+    WarningLog "$SAMPLEID" "${ROOT_PATH}/Mutect2 does not exist!";
+fi
+
+
 cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};
 cp -p ${ROOT_PATH}/PipelineLog* ${OUTBOX_PATH};
 
