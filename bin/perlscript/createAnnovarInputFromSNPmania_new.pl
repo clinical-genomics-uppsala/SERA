@@ -60,6 +60,11 @@ my %ref       = ();
 # Extract sample name from file name
 my $sample = extractSampleName($variantFile);
 
+sub get_reference_bas {
+	my ($chr, $pos) = @_;
+	return $ref{$chr}{$pos}{'ref'};
+}
+
 print "Hashing reference\n";
 if ($nc2chr) {
 	open( NC, "<", $nc2chr )
@@ -628,10 +633,10 @@ sub usage {
  This script takes the variation file (and optionally insertion and deletion file) from SNPmania
  and outputs the result as an annovar input file. It can also filter on read depth and min
  variant allele ratio.
- 
+
 ************************************************************************************************
-\nUsage: $0\n 
- 
+\nUsage: $0\n
+
  -v            Variation file from SNPmania
  -i            Insertion file from SNPmania (optional)
  -d            Deletion file from SNPmania (optional)
@@ -641,7 +646,7 @@ sub usage {
  -chr_col      Column with chr number
  -minRD        Minimum read depth for a position to be considered
  -minVarRatio  Minimum variant allele ratio for a position to be considered
- -am           The minimum number of reads for an amplicon to be counted as covered 
+ -am           The minimum number of reads for an amplicon to be counted as covered
                      [optional, use only when amplicon mapping info is available]
  \n";
 	exit 1;
@@ -763,7 +768,7 @@ sub checkMultipleBpVariant {
 				$lastPos = $p;    # If lastPos is unset, set it to this position
 			}
 			else {
-				if ( $p == ( $lastPos + 1 ) )
+				if ( $p == ( $lastPos + 1 ) ||  $p == ( $lastPos + 2 ))
 				{ # If this position is one greater than the previous one => save info in hash and set lastPos to this position
 					$multipleBp{$p} = $varHash{$chrom}{$p};
 					$lastPos = $p;
@@ -808,7 +813,7 @@ sub printMultipleBpVariant {
 	my $amp_plus = "-";
 	my $amp_minus= "-";
 	my $ref_plus = "-";
-	my $ref_minus="-"; 
+	my $ref_minus="-";
 	my $amplInfo="-";
 	my $refAmplInfo = "-";
 
@@ -828,7 +833,7 @@ sub printMultipleBpVariant {
 			my $vaf       = $line[9];
 			my $allelFreq = $line[11];
 			my $totRd     = $line[13];
-    
+
 			if ($ampliconMapped) {
                 $amp_plus = $line[23];
                 $amp_minus= $line[25];
@@ -837,13 +842,19 @@ sub printMultipleBpVariant {
                 $amplInfo=$line[31];
                 $refAmplInfo = $line[33];
 			}
-
+			my $ref_counter=0;
 			for ( my $j = $i + 1 ; $j < scalar(@keyPos) ; $j++ ) {
 				my ( $nextKey, $nextVaf ) =
 				  getMajorVaf( $multiBp{ $keyPos[$j] } );
 				my @nextLine =
 				  split( /[\s=]/, $multiBp{ $keyPos[$j] }{$nextKey} );
 				my ( $nextRef, $nextVar ) = split( "\#", $nextKey );
+				if ($keyPos[$j] - $keyPos[$j-1] == 2) {
+						$ref .= get_reference_bas($chrom, $keyPos[$j]-1);
+						$var .= get_reference_bas($chrom, $keyPos[$j]-1);
+						$ref_counter = $ref_counter + 1;
+				}
+
 				$ref .= $nextRef;
 				$var .= $nextVar;
 				if ( $nextVaf < $vaf ) {
@@ -858,6 +869,9 @@ sub printMultipleBpVariant {
 					    $amplInfo=$line[31];
 					    $refAmplInfo = $line[33];
 					}
+				}
+				if ($ref_counter > 0 && $keyPos[$j] - $keyPos[$i] >= 3) {
+					last;
 				}
 				if ($ampliconMapped) {
 					print OUTPUT $ncToChr{$chrom} . "\t"
