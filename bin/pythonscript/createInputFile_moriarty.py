@@ -84,13 +84,13 @@ if not args.clinicalInfoFile.lower() == "false":
 
 experiment = ""
 
-with open(args.infile, 'r') as infile:
+with open(args.infile, 'r', encoding="latin-1") as infile:
     count = 0
     # Go through the file line by line
     for line in infile:
         # Check so the line isn't empty or starts with ##
 
-        if not re.match('^##', line) and not re.match('$', line) and not re.match('^Experiment', line):
+        if not re.match('^##', line) and not re.match('$', line) and not re.match('^[Ee]xperiment', line):
             count += 1
             line = line.rstrip('\r\n')  # Remove new line character
             splitPattern = '\t'
