@@ -2,7 +2,7 @@
 #
 # Script creats BlastDB on mate-pair reads.
 #
-#SBATCH -p core  -n 8
+#SBATCH -p core  -n 8 -N 1-1
 #SBATCH -t 02:00:00
 #SBATCH --mail-type=FAIL --mail-user=bioinfo-clinical-genomics-uu@googlegroups.com
 
