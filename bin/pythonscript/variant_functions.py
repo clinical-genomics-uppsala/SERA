@@ -130,7 +130,7 @@ def hotspotVariant(lineSplit, hotspots, ampliconMapped):
                     else:
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
-                                if start <= e and end > s:
+                                if start <= e and end >= s:
                                     if not isinstance(hotspots['hotspot'][chrom][s][e]['bwa'], list):  # If no bwa variant is added before
                                         hotspots['hotspot'][chrom][s][e]['bwa'] = []
                                     hotspots['hotspot'][chrom][s][e]['bwa'].append(lineSplit)
@@ -145,7 +145,7 @@ def hotspotVariant(lineSplit, hotspots, ampliconMapped):
                     else:
                         for s in hotspots['hotspot'][chrom]:
                             for e in hotspots['hotspot'][chrom][s]:
-                                if start <= e and end > s:
+                                if start <= e and end >= s:
                                     if not isinstance(hotspots['hotspot'][chrom][s][e]['pindel'], list):  # If no pindel variant was added before
                                         hotspots['hotspot'][chrom][s][e]['pindel'] = []
                                     hotspots['hotspot'][chrom][s][e]['pindel'].append(lineSplit)
@@ -181,7 +181,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['region_all'][chrom]:
                         for e in hotspots['region_all'][chrom][s]:
-                            if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['region_all'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['region_all'][chrom][s][e]['bwa'] = []
                                 hotspots['region_all'][chrom][s][e]['bwa'].append(lineSplit)
@@ -204,7 +204,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['region_all'][chrom]:
                         for e in hotspots['region_all'][chrom][s]:
-                            if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['region_all'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['region_all'][chrom][s][e]['pindel'] = []
                                 hotspots['region_all'][chrom][s][e]['pindel'].append(lineSplit)
@@ -233,7 +233,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['region'][chrom]:
                         for e in hotspots['region'][chrom][s]:
-                            if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['region'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['region'][chrom][s][e]['bwa'] = []
                                 hotspots['region'][chrom][s][e]['bwa'].append(lineSplit)
@@ -256,7 +256,7 @@ def regionVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['region'][chrom]:
                         for e in hotspots['region'][chrom][s]:
-                            if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['region'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['region'][chrom][s][e]['pindel'] = []
                                 hotspots['region'][chrom][s][e]['pindel'].append(lineSplit)
@@ -294,7 +294,7 @@ def indelVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
-                            if start <= e and end > s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['indel'][chrom][s][e]['bwa'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['bwa'] = []
                                 hotspots['indel'][chrom][s][e]['bwa'].append(lineSplit)
@@ -317,7 +317,7 @@ def indelVariant(lineSplit, hotspots, ampliconMapped):
                     added = False
                     for s in hotspots['indel'][chrom]:
                         for e in hotspots['indel'][chrom][s]:
-                            if start <= e and end > s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
+                            if start <= e and end >= s and not added:  # if the variant overlaps at least 1 bp (start position excluded since that is handled above)
                                 if not isinstance(hotspots['indel'][chrom][s][e]['pindel'], list):  # If no variant was added before
                                     hotspots['indel'][chrom][s][e]['pindel'] = []
                                 hotspots['indel'][chrom][s][e]['pindel'].append(lineSplit)
