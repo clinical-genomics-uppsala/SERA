@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 """
 
@@ -248,6 +248,27 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
 
+                # ## MTC
+                elif info[sample]['tissue'] == "mtc":
+                    info[sample]['tissue'] = "mtc"
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['background']
+
                 # ## BREAST
                 elif info[sample]['tissue'] == "breast" or info[sample]['tissue'] == "Breast":
                     info[sample]['tissue'] = "breast"
@@ -271,7 +292,7 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
 
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma, MTC and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[sample]['hotspot'] = "false"
@@ -304,17 +325,17 @@ jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.ana
 # Create folder if it doesn't exist and set permissions
 
 if not os.path.exists(rawPath):
-    os.makedirs(rawPath, 0774)
+    os.makedirs(rawPath, 0o774)
 
 # Create folder if it doesn't exist and set permissions
 if not os.path.exists(filePath):
-    os.makedirs(filePath, 0774)
+    os.makedirs(filePath, 0o774)
 
 if not os.path.exists(outboxPath):
-    os.makedirs(outboxPath, 0774)
+    os.makedirs(outboxPath, 0o774)
 
 if not os.path.exists(storagePath):
-    os.makedirs(storagePath, 0774)
+    os.makedirs(storagePath, 0o774)
 # Check if a reference file dir is given, if so copy the files to refFiles in the analysis folder
 if args.refDir:
     # List files in the reference file directory
@@ -322,7 +343,7 @@ if args.refDir:
     refFilePath = filePath + "/refFiles"  # Setting output folder path
     # Check if the output folder exists, if not create and set permissions
     if not os.path.exists(refFilePath):
-        os.makedirs(refFilePath, 0774)
+        os.makedirs(refFilePath, 0o774)
     # Go through all files in the reference file dir
     for file_name in refDir_files:
         full_file_name = os.path.join(args.refDir, file_name)
@@ -330,8 +351,8 @@ if args.refDir:
         if (os.path.isfile(full_file_name)):
              destFile = refFilePath + "/" + file_name  # Set the destination file name
              os.system("rsync -rlptD " + full_file_name + " " + destFile)  # Copy
-             if not re.match((oct(os.stat(destFile).st_mode & 0777)), "0664"):  # Check if the file has permission to read and write for all in the group
-                 os.chmod(destFile, 0664)  # If not change the permissions
+             if not re.match((oct(os.stat(destFile).st_mode & 0o777)), "0o664"):  # Check if the file has permission to read and write for all in the group
+                 os.chmod(destFile, 0o664)  # If not change the permissions
 
 
 new_format = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)$")
@@ -395,6 +416,7 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("BARCODE_I7_ARR_[${COUNT}]=\"" + info[sample]['barcodeI7'] + "\";\n")
         outfile.write ("BARCODE_I5_ARR_[${COUNT}]=\"" + info[sample]['barcodeI5'] + "\";\n")
         outfile.write ("CUTADAPT_PREFIX_ARR_[${COUNT}]=\"" + info[sample]['cutadapt'] + "\";\n")
+        
         read1 = ['$RAW_PATH/' + os.path.basename(fastq_file) for fastq_file in glob.glob(rawPath + "/" + sample + "_S*_R1_001.fastq.gz")]
         read1.sort()
         read2 = ['$RAW_PATH/' + os.path.basename(fastq_file) for fastq_file in glob.glob(rawPath + "/" + sample + "_S*_R2_001.fastq.gz")]
