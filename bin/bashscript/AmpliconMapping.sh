@@ -67,7 +67,7 @@ if [[ ${METHOD} == "haloplex" ]]; then
 		    fi
                     samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt;
 		    if [[ "$?" != "0" ]]; then
-                        ErrorLog "$SAMPLEID" "Failed in running Annovar";
+                        ErrorLog "$SAMPLEID" "Failed in running flagstat";
 		    else
                         SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt";
 		    fi
