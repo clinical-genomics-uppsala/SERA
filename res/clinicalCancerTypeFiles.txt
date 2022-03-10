@@ -27,3 +27,8 @@ TYPE=breast
 HOTSPOT=Mutations_Breast_20191112.csv
 AMPLIFICATION=false
 BACKGROUND=false
+
+TYPE=mtc
+HOTSPOT=Mutations_MTC_220221.csv
+AMPLIFICATION=false
+BACKGROUND=false

@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
 import sys
 import os
@@ -10,5 +10,6 @@ def we_are_frozen():
 def module_path():
     encoding = sys.getfilesystemencoding()
     if we_are_frozen():
-        return os.path.dirname(unicode(sys.executable, encoding))
-    return os.path.dirname(unicode(__file__, encoding))
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(__file__)
+
