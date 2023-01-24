@@ -14,7 +14,7 @@ AMPLIFICATION=false
 BACKGROUND=false
 
 TYPE=melanom
-HOTSPOT=Mutations_Melanom_20190211.csv
+HOTSPOT=Mutations_Melanom_20230123.csv
 AMPLIFICATION=false
 BACKGROUND=false
 
