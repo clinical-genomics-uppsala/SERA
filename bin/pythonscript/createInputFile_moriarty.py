@@ -269,6 +269,27 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['background']
 
+                # ## MTC
+                elif info[sample]['tissue'] == "mtc":
+                    info[sample]['tissue'] = "mtc"
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['background']
+
                 # ## BREAST
                 elif info[sample]['tissue'] == "breast" or info[sample]['tissue'] == "Breast":
                     info[sample]['tissue'] = "breast"

@@ -13,6 +13,7 @@ RUN conda config --set channel_priority strict && \
     gawk=5.1.0 \
     gzip=1.12 \
     openjdk=8.0.332 \
+    parallel=20230122 \
     perl-bioperl=1.6.924-0 \
     pigz=2.6 \
     primerclip=0.3.8 \
@@ -47,6 +48,7 @@ LABEL gatk4=4.1.0
 LABEL gawk=5.1.0
 LABEL gzip=1.12 
 LABEL openjdk=8.0.332
+LABEL parallel=20230122
 LABEL perl-bioperl=1.6.924-0
 LABEL pigz=2.6
 LABEL pindel=0.2.5a8
@@ -76,7 +78,9 @@ COPY local_files/0.2.5a8 /pindel
 COPY local_files/annovar /annovar
 COPY bin/java/biostar84452.jar /jar/biostar84452.jar
 COPY bin/java/SortSam.jar /jar/SortSam.jar
+COPY local_files/trimmomatic-0.35.jar /jar/trimmomatic-0.35.jar
 COPY local_files/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4 /jSNPmania-0.0.7-SNAPSHOT-amplicons_v4
+
 
 ENV PATH=$PATH:/pindel/bin
 

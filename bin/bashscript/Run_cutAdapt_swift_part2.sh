@@ -96,8 +96,8 @@ if [[ $PLATFORM = "Illumina" ]]; then
                     parallel --xapply ptrim {1} {2} ::: $(cat ${SNIC_TMP}/r1infiles) ::: $(cat ${SNIC_TMP}/r2infiles)
 
                     # concatenate primer-trimmed fastq chunks
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY cat ${PREFIX}*_tmp3R1.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz;
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY cat ${PREFIX}*_tmp3R2.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat ${PREFIX}*_tmp3R1.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.tmp2.fastq.gz";
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat ${PREFIX}*_tmp3R2.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.tmp2.fastq.gz";
 
                     # remove all intermediate files
                     rm ${PREFIX}_r[1,2]split*

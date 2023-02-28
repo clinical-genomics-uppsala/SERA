@@ -10,6 +10,7 @@
 
 . $SERA_PATH/includes/load_modules.sh
 
+
 # Include functions
 . $SERA_PATH/includes/logging.sh;
 
@@ -38,25 +39,43 @@ if [[ ${METHOD} == "haloplex" ]]; then
                 if [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
                     # Querysort bam-file
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam
+                    if [[ "$?" != "0" ]]; then
+			                  ErrorLog "$SAMPLEID" "Failed samtools sort";
+		                else
+  		                  SuccessLog "${SAMPLEID}" "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted";
+		                fi
                     # Run ampliconmapping
-                    # java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
-
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $AMPLICONMAPPING_SINGULARITY java -Xmx8g -jar /jar/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
+                    if [[ "$?" != "0" ]]; then
+                        ErrorLog "$SAMPLEID" "Amplicon mapping failed";
+                    else
+   		                  SuccessLog "${SAMPLEID}" "java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0";
+		                fi
+        
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
+                    if [[ "$?" != "0" ]]; then
+                        ErrorLog "$SAMPLEID" "Failed samtools sort";
+                    else
+                        SuccessLog "${SAMPLEID}" "samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
+		                fi
+                    
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
-
+                    if [[ "$?" != "0" ]]; then
+                        ErrorLog "$SAMPLEID" "Failed samtools index";
+                    else
+                        SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
+		                fi
+                    
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt;
+            		    if [[ "$?" != "0" ]]; then
+                        ErrorLog "$SAMPLEID" "Failed in running flagstat";
+                    else
+                        SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt";
+                    fi
+
                     # Remove the querysorted file
                     rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam;
                     rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam;
-
-                    SuccessLog "${SAMPLEID}" "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam";
-                    SuccessLog "${SAMPLEID}" "java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0";
-                    SuccessLog "${SAMPLEID}" "samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
-                    SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
-
-                    # To create reference file dictionary
-                    #java -Xmx2g -jar /sw/apps/bioinfo/picard/1.141/nestor/picard.jar CreateSequenceDictionary R=/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7.10_hg19_refseqs/hg19.with.mt.fasta O=/proj/a2013225/private/reference_genomes/BWA.ref.seqs/BWA_0.7.10_hg19_refseqs/hg19.with.mt.fasta.dict
 
                 else
                     ErrorLog "${SAMPLEID}" "$ROOT_PATH/AmpliconMapped/${SAMPLEID}.sorted.bam does not exist!";
