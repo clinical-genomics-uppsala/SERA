@@ -27,7 +27,7 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 			if [[ ! -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations || ! -z $FORCE ]]; then
 				# Reheader the ampliconmapped file
 				if [[ -e $SERA_PATH/res/Convert2SNPmaniaHeader.sam ]]; then
-					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -am ${SNPMANIAFLAGS};
+					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c  "samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam | samtools view /dev/stdin | $PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -am ${SNPMANIAFLAGS}";
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi
@@ -38,7 +38,7 @@ if [[ $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ]]; then
 		elif [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
 			if [[ ! -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations || ! -z $FORCE ]]; then
 				if [[ -e $SERA_PATH/res/Convert2SNPmaniaHeader.sam ]]; then
-					samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools view /dev/stdin | $ROOT_PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS};
+					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools reheader $SERA_PATH/res/Convert2SNPmaniaHeader.sam $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools view /dev/stdin | $PATH_JSNPMANIA/JSNPmania.sh -i /dev/stdin -o $ROOT_PATH/SNPmania/${SAMPLEID}.variations -oi $ROOT_PATH/SNPmania/${SAMPLEID}.insertions -od $ROOT_PATH/SNPmania/${SAMPLEID}.deletions -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq ${SNPMANIAFLAGS}";
 				else
 					ErrorLog "$SAMPLEID" "The SNPmania header file doesn't exists!";
 				fi

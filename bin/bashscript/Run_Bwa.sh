@@ -65,9 +65,9 @@ if [[ $PLATFORM = "Illumina" ]]; then
     		if [[ -e ${PE1} && ${PE2} ]]; then
     			# Get the date when the analysis is run
     			now=$('date' +"%Y%m%d")
-    			bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;
-    			samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-    			samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
+    			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin -T $ROOT_PATH/Bwa/${SAMPLEID}.sorted";
+    			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
+    			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt";
 
 
     			SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
@@ -80,9 +80,9 @@ if [[ $PLATFORM = "Illumina" ]]; then
             if [[ -e ${PE1} ]]; then
                 # Get the date when the analysis is run
                 now=$('date' +"%Y%m%d")
-                bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;
-                samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
-                samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "bwa mem -M -R "@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina" ${GENOME_REF} ${PE1} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt";
 
 
                 SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"

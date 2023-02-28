@@ -26,7 +26,7 @@ if [[ ${METHOD} == "haloplex" ]]; then
     if [[ ${PLATFORM} == "Illumina" ]]; then
     	# Check if the selection file exists in bed-format, if not create
     	if [[ ! -e $ROOT_PATH/refFiles/$REFSEQ.selection.bed || ! -z $FORCE ]]; then
-    		awk -f ${SERA_PATH}/bin/awkscript/sedd2bed.awk -v name="$REFSEQ" -v desc="Selection file" $NC2chr $ROOT_PATH/refFiles/$REFSEQ.selection > $ROOT_PATH/refFiles/$REFSEQ.selection.bed;
+    		singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk -f ${SERA_PATH}/bin/awkscript/sedd2bed.awk -v name="$REFSEQ" -v desc="Selection file" $NC2chr $ROOT_PATH/refFiles/$REFSEQ.selection > $ROOT_PATH/refFiles/$REFSEQ.selection.bed;
     	else
     		SuccessLog "${SAMPLEID}" "$ROOT_PATH/refFiles/$REFSEQ.selection.bed already exists and force was not used!";
     	fi
@@ -37,21 +37,22 @@ if [[ ${METHOD} == "haloplex" ]]; then
                 # Check if the aligned file from bwa exists
                 if [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
                     # Querysort bam-file
-                    samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam
                     # Run ampliconmapping
                     # java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
-                    java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
-                    samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon;
-                    samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
 
-                    samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt;
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $AMPLICONMAPPING_SINGULARITY java -Xmx8g -jar /jar/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;
+
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools flagstat $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats_noDuplicateReads.txt;
                     # Remove the querysorted file
                     rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam;
                     rm $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam;
 
-                    SuccessLog "${SAMPLEID}" "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted";
+                    SuccessLog "${SAMPLEID}" "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam";
                     SuccessLog "${SAMPLEID}" "java -Xmx8g -jar ${SERA_PATH}/bin/java/GenomeAnalysisTKLite_molecules.jar -T MapReadToAmpliconsIlluminaReadPair -R $GENOME_FASTA_REF -I $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam -o $ROOT_PATH/AmpliconCoverage/${SAMPLEID}.amplicon.bed -fragments $ROOT_PATH/refFiles/$REFSEQ.selection.bed -ampAnReads $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -U ALL -nonunique -allowPotentiallyMisencodedQuals --downsample_to_coverage 90000 -molBarCode 0";
-                    SuccessLog "${SAMPLEID}" "samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon;";
+                    SuccessLog "${SAMPLEID}" "samtools sort -@ 8 $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.unsorted.bam -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
                     SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/AmpliconMapped/${SAMPLEID}.withAmplicon.bam;";
 
                     # To create reference file dictionary

@@ -9,15 +9,15 @@
 . $SERA_PATH/config/modules_marvin.sh
 
 # paths to softwares
-#export ROOT_PATH_SEDD="$HOME/program/sedd-0.0.5";
 export ROOT_PATH_JSNPMANIA="/projects/wp1/software/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
-export ROOT_PATH_MOSAIK="/opt/ohpc/pub/aligners/mosaik/2.1.33";
 export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta_moriarty.pl";
-export ROOT_PATH_ANNOVAR="/opt/ohpc/pub/annotators/annovar/2015Mar22/bin";
+export ROOT_PATH_ANNOVAR="/annovar/2015Mar22/bin";
 export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
-export ROOT_PATH_PINDEL="/opt/ohpc/pub/tools/pindel/0.2.5a8/bin";
 
+export SERA_SINGULARITY="/projects/wp4/nobackup/singularity_cache/gmsuppsala_sera_1.0.0.simg"
+export AMPLICONMAPPING_SINGULARITY="/projects/wp4/nobackup/singularity_cache/gmsuppsala_ampliconmapping_0.0.1.simg"
 # java flags, use quick accessible temp dir for increased performance
+export PATH_JSNPMANIA="/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4"
 export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"
 
 #Since you have allocated a whole node you have the whole scratch area on the node to yourself.
