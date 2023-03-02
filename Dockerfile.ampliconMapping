@@ -1,0 +1,41 @@
+# The build-stage image:
+FROM continuumio/miniconda3:4.10.3 AS build
+
+# Install conda-pack:
+RUN conda config --set channel_priority strict && \
+    conda install -c conda-forge conda-pack && \
+    conda create --name hydra -c conda-forge -c bioconda -c defaults \
+    openjdk=7.0.161 \
+    samtools=1.9  && \
+    conda-pack -n hydra -o /tmp/env.tar
+
+
+# Use conda-pack to create a standalone enviornment
+# in /venv:
+
+WORKDIR /venv 
+RUN tar xf /tmp/env.tar
+
+# We've put venv in same path it'll be in final image,
+# so now fix up paths:
+RUN /venv/bin/conda-unpack
+
+# The runtime-stage image; we can use Debian as the
+# base image since the Conda env also includes Python
+# for us.
+FROM ubuntu:20.04 AS runtime
+
+LABEL maintainer="patrik.smeds@scilifelab.uu.se"
+LABEL version=0.0.1
+LABEL openjdk=7.0.161
+LABEL samtools=1.9
+LABEL ampliconmapper=0.0.1
+LABEL trimmomatic=0.32 
+
+RUN rm /usr/local/man
+COPY --from=build /venv/ /usr/local/
+
+RUN mkdir /jar
+
+COPY bin/java/GenomeAnalysisTKLite_molecules.jar /jar/GenomeAnalysisTKLite_molecules.jar
+

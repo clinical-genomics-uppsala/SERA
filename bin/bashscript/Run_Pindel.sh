@@ -28,7 +28,7 @@ if [[ ! -e $ROOT_PATH/PindelOut/${SAMPLEID}.indels_TD || ! -z $FORCE ]]; then
 			# Cretae config file
 			echo -e "$ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam\t300\t${SAMPLEID}" >> $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt
 			echo "$ROOT_PATH_PINDEL/pindel -f ${GENOME_FASTA_REF} -i $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt -J $SERA_PATH/res/excludeChrM.txt -o $ROOT_PATH/PindelOut/${SAMPLEID}.indels ${PINDEL_FLAGS}"
-			$ROOT_PATH_PINDEL/pindel -f ${GENOME_FASTA_REF} -i $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt -J $SERA_PATH/res/excludeChrM.txt -o $ROOT_PATH/PindelOut/${SAMPLEID}.indels ${PINDEL_FLAGS}
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY pindel -f ${GENOME_FASTA_REF} -i $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt -J $SERA_PATH/res/excludeChrM.txt -o $ROOT_PATH/PindelOut/${SAMPLEID}.indels ${PINDEL_FLAGS}
 		else
 			ErrorLog "${SAMPLEID}" "Inputfile $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam doesn't exist!";
 		fi
@@ -46,7 +46,7 @@ if [[ ! -e $ROOT_PATH/PindelOut/${SAMPLEID}.indels_TD || ! -z $FORCE ]]; then
 			echo -e "$ROOT_PATH/Bwa/${NORMAL_SAMPLEID}.sorted.bam\t300\t${NORMAL_SAMPLEID}" >> $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt
 			echo -e "$ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam\t300\t${SAMPLEID}" >> $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt
 
-			$ROOT_PATH_PINDEL/pindel -f ${GENOME_FASTA_REF} -i $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt -c ALL  -o $ROOT_PATH/PindelOut/${SAMPLEID}.indels ${PINDEL_FLAGS}
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY pindel -f ${GENOME_FASTA_REF} -i $ROOT_PATH/PindelOut/${SAMPLEID}.config.txt -c ALL  -o $ROOT_PATH/PindelOut/${SAMPLEID}.indels ${PINDEL_FLAGS}
 		else
 			ErrorLog "${SAMPLEID}" "Inputfile $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam and/or $ROOT_PATH/Bwa/${NORMAL_SAMPLEID}.sorted.bam doesn't exist!";
 		fi

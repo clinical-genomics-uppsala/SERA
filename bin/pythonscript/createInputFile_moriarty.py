@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/bin/python3
 
 """
 
@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description = "This script creates a SERA input
 parser.add_argument('-i', '--infile', help = 'Input file name', type = str, required = True)
 parser.add_argument('-p', '--project', help = 'Name of the project', type = str, required = True)
 parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ', 'MORIARTY', 'MARVIN'], type = str, required = True)
-parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning].', choices = ['klinik', 'utveckling', 'forskning'], required = True, type = str)
+parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning, projekt]', choices = ['klinik', 'utveckling', 'forskning', 'projekt'], required = True, type = str)
 parser.add_argument('-refDir', '--refDir', help = 'If a directory for reference files is given, they will be copied to the analysis folder', type = str)
 parser.add_argument('-n', '--normal', help = 'Name of normal sample to compare with.', type = str)
 parser.add_argument('-s', '--software', help = 'Queing system for', type = str, default = "SLURM")
@@ -247,6 +247,27 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
                         info[sample]['background'] = "false"
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
+ 
+                # ## MTC                                                                                                                                      
+                elif info[sample]['tissue'] == "mtc":
+                    info[sample]['tissue'] = "mtc"
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['background']
 
                 # ## MTC
                 elif info[sample]['tissue'] == "mtc":
@@ -292,7 +313,7 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
 
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma, MTC and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, MTC, melanoma and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[sample]['hotspot'] = "false"

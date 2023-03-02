@@ -42,24 +42,24 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                     if [[ ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ]]; then
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a"
                             echo "cat  $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a"
 
                             if [[ ${METHOD} == "swift" ]]; then
-                                cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a
+                                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a"
                                 echo "cat  $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -a"
 
                         else
-                            cat  $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE -a
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat  $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE -a"
                             echo "cat  $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE -a"
                         fi
                     else
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -a
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -a"
                             echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -a"
                         else
-                            cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE -a
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE -a"
                             echo "cat $ANNOVARFILE $PINDELANNOVARFILE | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}.singleSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE -a"
                         fi
                     fi
@@ -73,16 +73,16 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                     if [[ ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ]]; then
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02"
                         else
-                            cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE"
                         fi
                     else
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01"
                         else
-                            cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/AnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE"
                         fi
                     fi
 
@@ -91,16 +91,16 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
                     if [[ ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ]]; then
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02"
                         else
-                            cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.02 -k $KEEPFILE"
                         fi
                     else
                         # Check if there are particular regions we want to keep
                         if [[ $KEEPFILE == "false" ]]; then
-                            cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01"
                         else
-                            cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE
+                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput $ROOT_PATH/PindelAnnovarOutput/${SAMPLEID}.pindel.singleSample.annovarOutput | python $SERA_PATH/bin/pythonscript/FilterAnnovarOutput.py -i /dev/stdin -o $ROOT_PATH/FilteredAnnovarOutput/${SAMPLEID}_${NORMAL_SAMPLEID}.tumorNormalSample.ampliconmapped.filtered.annovarOutput -b $BLACKLIST_FILE -g 0.01 -k $KEEPFILE"
                         fi
                     fi
                 else

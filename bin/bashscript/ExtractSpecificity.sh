@@ -26,7 +26,7 @@ if [[ ${READS} == "true" ]]; then
 
 		# Check if the gunzip worked, if so extract the specificities
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget ]]; then
-			awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.o* >> $ROOT_PATH/Specificity/allSamples.ampregion.specificity;
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.o* >> $ROOT_PATH/Specificity/allSamples.ampregion.specificity;
 			# gzip the files again to save space
 			gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget;
 			gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget;
@@ -44,7 +44,7 @@ if [[ ${READS} == "true" ]]; then
 
 		# Check if the gunzip worked, if so extract the specificities
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget ]]; then
-			awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.o* >> $ROOT_PATH/Specificity/allSamples.seqregion.specificity;
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.o* >> $ROOT_PATH/Specificity/allSamples.seqregion.specificity;
 	        # gzip the files to save space
 	        gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
 	        gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget;
