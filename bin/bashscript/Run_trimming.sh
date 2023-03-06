@@ -157,8 +157,8 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE2_T="${PREFIX}_R2_trimd.fq";
 
                 # convert fastq format to one line per record for splitting
-                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
-                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1";
 
                 # get number of fastq records in sample before converting back to fastq format
                 l=$(wc -l ${PE1_T}.tmp1 | awk '{print $1}')
