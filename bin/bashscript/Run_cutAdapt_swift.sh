@@ -26,13 +26,13 @@ ptrim()
     cutadaptFile5prim="${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}_5ptrim.fa";
 
     #5’trim
-    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY cutadapt \
+    cutadapt \
         -g file:$cutadaptFile5prim \
         -o ${tprefix}_tmpR1.fq -p ${tprefix}_tmpR2.fq \
     $fqt1 $fqt2 --minimum-length 40 -e 0.12 >> $TRIM_LOG;
 
     #5’trim
-    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY cutadapt \
+    cutadapt \
         -g file:$cutadaptFile5prim \
         -o ${tprefix}_5ptmpR2.fq -p ${tprefix}_5ptmpR1.fq \
         ${tprefix}_tmpR2.fq ${tprefix}_tmpR1.fq --minimum-length 40 -e 0.12 >> $TRIM_LOG;
@@ -119,8 +119,8 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE2_T="${PREFIX}_R2_trimd.fq";
 
                 # convert fastq format to one line per record for splitting
-                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
-                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1";
 
                 # get number of fastq records in sample before converting back to fastq format
                 l=$(wc -l ${PE1_T}.tmp1 | awk '{print $1}')

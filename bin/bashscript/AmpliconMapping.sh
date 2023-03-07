@@ -38,7 +38,7 @@ if [[ ${METHOD} == "haloplex" ]]; then
                 # Check if the aligned file from bwa exists
                 if [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
                     # Querysort bam-file
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam
+                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects $SERA_SINGULARITY sh -c "samtools view -h -b -F 0x100 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | samtools sort -n -@ 8 /dev/stdin -o $ROOT_PATH/AmpliconMapped/${SAMPLEID}.querysorted.bam"
                     if [[ "$?" != "0" ]]; then
 			                  ErrorLog "$SAMPLEID" "Failed samtools sort";
 		                else

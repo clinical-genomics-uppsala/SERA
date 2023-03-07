@@ -28,8 +28,8 @@ if [[ ${READS} == "true" ]]; then
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget ]]; then
 			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.o* >> $ROOT_PATH/Specificity/allSamples.ampregion.specificity;
 			# gzip the files again to save space
-			gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget;
-			gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget;
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget;
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget;
 		else
 			ErrorLog "${SAMPLEID}" "The gunzip of the ampregion inputfiles failed!";
 		fi
@@ -46,8 +46,8 @@ if [[ ${READS} == "true" ]]; then
 		if [[ -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget && -e $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget ]]; then
 			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk -v name=${SAMPLEID} '{if(FILENAME~/offtarget/){offT+=$3} else if(FILENAME~/ontarget/){onT+=$3}} END{print name"\t"onT/(onT+offT)}' $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.o* >> $ROOT_PATH/Specificity/allSamples.seqregion.specificity;
 	        # gzip the files to save space
-	        gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
-	        gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget;
+	        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
+	        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget;
 	    else
 	    	ErrorLog "${SAMPLEID}" "The gunzip of the seqregion inputfiles failed!";
 	    fi
