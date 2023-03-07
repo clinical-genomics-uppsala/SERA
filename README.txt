@@ -29,7 +29,7 @@ singularity build gmsuppsala_ampliconmapping_0.0.1.simg  docker-archive://gmsupp
 
 ## Create input data
 ```
-singularity run -B /beegfs-storage -B /projects -B -B /data -B /opt -B /beegfs-storage/projects/wp4/nobackup/singularity_cache/gmsuppsala_sera_1.0.0.simg python3 /home/patsm159/SERA/bin/pythonscript/createInputFile_moriarty.py -a klinik -g MARVIN -i /projects/wp1/nobackup/ngs/klinik/sample_files/2031/20310310_PS_index.csv -n annovar -p wp1 -refDir /data/ref_data/wp1/refFiles_20230123/refFiles
+singularity run -B /beegfs-storage -B /projects -B /data -B /opt /beegfs-storage/projects/wp4/nobackup/singularity_cache/gmsuppsala_sera_1.0.0.simg python3 /home/patsm159/SERA/bin/pythonscript/createInputFile_moriarty.py -a klinik -g MARVIN -i /projects/wp1/nobackup/ngs/klinik/sample_files/2031/20310310_PS_index.csv -n annovar -p wp1 -refDir /data/ref_data/wp1/refFiles_20230123/refFiles
 ```
 
 ## Run SERA

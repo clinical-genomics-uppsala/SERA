@@ -47,7 +47,7 @@ if [[ ${READS} == "true" ]]; then
 
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 
-                if [[ ${METHOD} == "swift" && (${TISSUE} == "ovarial" or ${TISSUE} == "prostata") ]]; then
+                if [[ ${METHOD} == "swift" && (${TISSUE} == "ovarial" || ${TISSUE} == "prostata") ]]; then
                     singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "awk 'BEGIN{FS="\t"}{if($1!~/^Sample/ && $10>=0.05){print $0}}' ${ANNOVARFILE} | python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}._vaf0.05.vcf"
                 fi
             else
