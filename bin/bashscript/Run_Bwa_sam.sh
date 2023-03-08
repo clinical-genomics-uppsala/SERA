@@ -70,19 +70,10 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "bwa mem -M -R \"@RG\tID:{$now}_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin -o $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt;
+
                             SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now_"${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
                             SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;"
-			    
-                            echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
-                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
-                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
-                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
-                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr2:29443695-29443695 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
-                            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr2:29443613-29443613 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
-                            tr -s '\n' '\t' < $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt > $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
-                            echo -e "" >> $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
-			    
-			elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002") ]]; then  
+			            elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002") ]]; then  
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "bwa mem -M -t 3 -R \"@RG\tID:${now}_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} > $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam";
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools sort -n -@ 3 $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.sam  -o $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.bam";
                             singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools view -h $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam";
@@ -98,6 +89,15 @@ if [[ $PLATFORM = "Illumina" ]]; then
                             SuccessLog "${SAMPLEID}" "bwa mem -M -R \"@RG\tID:"$now"_${SAMPLEID}\tSM:${SAMPLEID}\tPL:illumina\" ${GENOME_REF} ${PE1} ${PE2} -t 3 | samtools view -bS /dev/stdin | samtools sort -@ 3 /dev/stdin $ROOT_PATH/Bwa/${SAMPLEID}.sorted;"
                             SuccessLog "${SAMPLEID}" "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam;"
                         fi
+
+                        echo -e "${SAMPLEID}\n${TISSUE}" > $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt
+                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:140453136-140453136 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
+                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:116411903-116411903 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
+                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr7:116412043-116412043 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
+                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr2:29443695-29443695 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
+                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools depth -a -r chr2:29443613-29443613 $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | awk '{ print $3 }' >> $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt"
+                        tr -s '\n' '\t' < $ROOT_PATH/Bwa/${SAMPLEID}.contamination.txt > $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
+                        echo -e "" >> $ROOT_PATH/Bwa/${SAMPLEID}.tr.contamination.txt
     			
     						
     		else

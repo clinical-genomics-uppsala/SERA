@@ -32,3 +32,8 @@ TYPE=mtc
 HOTSPOT=Mutations_MTC_220221.csv
 AMPLIFICATION=false
 BACKGROUND=false
+
+TYPE=prostata
+HOTSPOT=Mutations_Prostata_20230228.csv
+AMPLIFICATION=false
+BACKGROUND=false
