@@ -112,10 +112,10 @@ if [[ $PLATFORM = "Illumina" ]]; then
             if [[ ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && ! -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz || ! -z $FORCE ]]; then
 
                 # Run cutadapt
-                cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 ${READ1} ${READ2} > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY cutadapt -a $tTag -A `perl $SERA_PATH/bin/perlscript/reverseComplement.pl $fTag` -o ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz -p ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz --minimum-length 1 ${READ1} ${READ2} > ${ROOT_PATH}/seqdata/${SAMPLEID}.cutadapt.log;
 
             else
-            ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
+                ErrorLog "${SAMPLEID}" "${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz and ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz already exists and force was NOT used!";
             fi
 
         elif [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002") ]]; then
@@ -126,7 +126,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE1_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz";
                 PE2_G_T="${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz";
 
-                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_JAR} PE \
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_JAR} PE \
                     -threads 8 -trimlog $TRIM_LOG \
                     ${READ1} ${READ2} ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
                     ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
@@ -144,45 +144,45 @@ if [[ $PLATFORM = "Illumina" ]]; then
                 PE1_G_T="${PREFIX}_R1_trimd.fq.gz";
                 PE2_G_T="${PREFIX}_R2_trimd.fq.gz";
 
-                java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_JAR} PE \
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY java -Xmx32g -Xms16g -jar ${TRIMMOMATIC_JAR} PE \
                     -threads 8 -trimlog $TRIM_LOG \
                     ${READ1} ${READ2} ${PE1_G_T} ${PREFIX}_unpaired_R1.fq.gz \
                     ${PE2_G_T} ${PREFIX}_unpaired_R2.fq.gz \
                     ILLUMINACLIP:${ILLUMINA_ADAPTER_TRIMMOMATIC}:2:30:10 \
                     MINLEN:30
 
-                gunzip -f ${PE1_G_T};
-                gunzip -f ${PE2_G_T};
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gunzip -f ${PE1_G_T};
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gunzip -f ${PE2_G_T};
                 PE1_T="${PREFIX}_R1_trimd.fq";
                 PE2_T="${PREFIX}_R2_trimd.fq";
 
                 # convert fastq format to one line per record for splitting
-                paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1;
-                paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE1_T | tr '\t' '~' > ${PE1_T}.tmp1";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "paste - - - - < $PE2_T | tr '\t' '~' > ${PE2_T}.tmp1";
 
                 # get number of fastq records in sample before converting back to fastq format
                 l=$(wc -l ${PE1_T}.tmp1 | awk '{print $1}')
                 chunklinecnt=$(( $l / $cputhreads ))
 
                 # split re-formatted fastq files into chunks
-                split -d -l $chunklinecnt ${PE1_T}.tmp1 ${PREFIX}_r1split
-                split -d -l $chunklinecnt ${PE2_T}.tmp1 ${PREFIX}_r2split
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY split -d -l $chunklinecnt ${PE1_T}.tmp1 ${PREFIX}_r1split
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY split -d -l $chunklinecnt ${PE2_T}.tmp1 ${PREFIX}_r2split
 
                 # 20160722 NOTE: adding the sample-specific prefix to the temporary fastq
                 #                files should fix the sample concatenation bug
                 # convert each chunk back to fastq format
-                parallel r1reformat ::: ${PREFIX}_r1split*
-                parallel r2reformat ::: ${PREFIX}_r2split*
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY parallel r1reformat ::: ${PREFIX}_r1split*
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY parallel r2reformat ::: ${PREFIX}_r2split*
 
                 ls ${PREFIX}_r1*.fastq > ${PREFIX}_r1infiles
                 ls ${PREFIX}_r2*.fastq > ${PREFIX}_r2infiles
 
                 # run parallel on paired chunks of fastq files with ptrim() function
-                parallel --xapply ptrim {1} {2} ::: $(cat ${PREFIX}_r1infiles) ::: $(cat ${PREFIX}_r2infiles)
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY parallel --xapply ptrim {1} {2} ::: $(cat ${PREFIX}_r1infiles) ::: $(cat ${PREFIX}_r2infiles)
 
                 # concatenate primer-trimmed fastq chunks
-                cat ${PREFIX}_*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz;
-                cat ${PREFIX}_*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat ${PREFIX}_*_R1_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz";
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "cat ${PREFIX}_*_R2_primertrimd.fq | gzip -f > ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz";
 
                 # remove all intermediate files
                 rm ${PREFIX}_*

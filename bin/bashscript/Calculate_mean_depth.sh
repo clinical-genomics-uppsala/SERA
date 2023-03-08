@@ -18,14 +18,16 @@ SuccessLog "${SAMPLEID}" "Running mean depth calculation...";
 if [[ ${READS} == "true" ]]; then
 	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map ]]; then
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "
 			depthSeqRegionUniq=`awk 'BEGIN{s=0;}{s+=\$3}END{print FILENAME"\tDEPTH_SEQREGION_UNIQ="(s/NR);}' $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map`;
-			echo -e "${depthSeqRegionUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;
+			echo -e "${depthSeqRegionUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;"
 		else
 			ErrorLog "${SAMPLEID}" "Input file $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqregion.uniq.map does NOT exist!";
 		fi
 		if [[ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map ]]; then
+			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "
 			depthSeqRoiUniq=`awk 'BEGIN{s=0;}{s+=\$3}END{print FILENAME"\tDEPTH_SEQROI_UNIQ="(s/NR);}' $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map`;
-			echo -e "${depthSeqRoiUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;
+			echo -e "${depthSeqRoiUniq}" >> $ROOT_PATH/TextResults_meanReadDepth.txt;"
 		else
 			ErrorLog "${SAMPLEID}" "Input file $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map does NOT exist!";
 		fi

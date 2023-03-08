@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/bin/python3
 
 """
 
@@ -227,6 +227,26 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['background']
 
+                # ## PROSTATA
+                elif info[sample]['tissue'] == "prostata":
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["prostata"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["prostata"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["prostata"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['background']
+
                 # ## MELANOM
                 elif info[sample]['tissue'] == "melanom" or info[sample]['tissue'] == "melanoma":
                     info[sample]['tissue'] = "melanom"
@@ -247,6 +267,27 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
                         info[sample]['background'] = "false"
                     else:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
+ 
+                # ## MTC                                                                                                                                      
+                elif info[sample]['tissue'] == "mtc":
+                    info[sample]['tissue'] = "mtc"
+                    # If the given hotspot file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['hotspot']):
+                        info[sample]['hotspot'] = "false"
+                    else:
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['hotspot']
+
+                    # If the given amplification file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['amplification']):
+                        info[sample]['amplification'] = "false"
+                    else:
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['amplification']
+
+                    # If the given background file name is false keep it otherwise add file path
+                    if re.match("false", clinicalInfo["mtc"]['background']):
+                        info[sample]['background'] = "false"
+                    else:
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["mtc"]['background']
 
                 # ## MTC
                 elif info[sample]['tissue'] == "mtc":
@@ -292,7 +333,7 @@ with open(args.infile, 'r', encoding="latin-1") as infile:
 
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma, MTC and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, MTC, melanoma, prostata and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[sample]['hotspot'] = "false"

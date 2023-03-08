@@ -25,8 +25,8 @@ if [[ ${NORMAL_SAMPLEID} != "false" ]]; then
 			if [[ ${TISSUE} == "colon" ]]; then
 				if [[ -e $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv ]]; then
 					if [[ ! -e $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt  || ! -z $FORCE ]]; then
-						python $SERA_PATH/bin/pythonscript/ExtractMSImarkers_allMutations.py -i $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -o $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt --tgfbr2Ratio_1bp 0.1 --tgfbr2Ratio_2bp 0.05 --acvr2aRatio_1bp 0.1 --acvr2aRatio_2bp 0.05;
-						echo "python $SERA_PATH/bin/pythonscript/ExtractMSImarkers_allMutations.py -i $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -o $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt --tgfbr2Ratio_1bp 0.1 --tgfbr2Ratio_2bp 0.05 --acvr2aRatio_1bp 0.1 --acvr2aRatio_2bp 0.05";
+						singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY python2.7 $SERA_PATH/bin/pythonscript/ExtractMSImarkers_allMutations.py -i $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -o $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt --tgfbr2Ratio_1bp 0.1 --tgfbr2Ratio_2bp 0.05 --acvr2aRatio_1bp 0.1 --acvr2aRatio_2bp 0.05;
+						echo "python2.7 $SERA_PATH/bin/pythonscript/ExtractMSImarkers_allMutations.py -i $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -o $ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt --tgfbr2Ratio_1bp 0.1 --tgfbr2Ratio_2bp 0.05 --acvr2aRatio_1bp 0.1 --acvr2aRatio_2bp 0.05";
 					else
 						ErrorLog "$SAMPLEID" "$ROOT_PATH/Extracted_sampleInfo/${SAMPLEID}.msiMarkers.txt already exists and force was not used";
 					fi

@@ -59,7 +59,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
     if [[ "$MATE_PAIR" == "true" ]]; then
         # Check that input files exist, if not print error message
         if [[ -e ${READ1} && ${READ1} ]]; then
-            fastqc -o FastQC ${READ1} ${READ1} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
+            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY fastqc -o FastQC ${READ1} ${READ1} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
         else
             ErrorLog "${SAMPLEID}" "${READ1} and/or ${READ1} do NOT exist!";
         fi
@@ -67,7 +67,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
         if [[ ! -e $ROOT_PATH/FastQC/${SAMPLEID}.read1_fastqc.html || ! -e $ROOT_PATH/FastQC/${SAMPLEID}.read2_fastqc.html || ! -z $FORCE ]]; then
             # Check if cutadapted files exist - if so run cutadapt on them
             if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz && -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz ]]; then
-                fastqc -o FastQC ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_outputCutadapt.txt;
+                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY fastqc -o FastQC ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ${ROOT_PATH}/seqdata/${SAMPLEID}.read2.fastq.gz > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_outputCutadapt.txt;
             else
                 ErrorLog "${SAMPLEID}" "No cutadapted files exists!"
             fi
@@ -79,14 +79,14 @@ if [[ $PLATFORM = "Illumina" ]]; then
     else
         # Check that input file exists, if not print error message
         if [[ -e ${READ2} ]]; then
-            fastqc -o FastQC ${READ2} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
+            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY fastqc -o FastQC ${READ2} > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_output.txt;
         else
             ErrorLog "${SAMPLEID}" "${READ2} does NOT exist!";
         fi
 
         # Check if cutadapted files exist - if so run cutadapt on them
         if [[ -e ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz ]]; then
-            fastqc -o FastQC ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_outputCutadapt.txt;
+            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY fastqc -o FastQC ${ROOT_PATH}/seqdata/${SAMPLEID}.read1.fastq.gz > $ROOT_PATH/FastQC/fastqc_${SAMPLEID}_outputCutadapt.txt;
         else
             ErrorLog "${SAMPLEID}" "No cutadapted file exists!"
         fi

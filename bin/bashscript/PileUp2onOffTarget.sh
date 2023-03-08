@@ -26,21 +26,21 @@ if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ -e $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz ]]; then
 			# Check if the reference file with ampregion exists
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
-				zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion";
 
 				# gzip the output files
-				gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget;
-				gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.ontarget;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.ampregion.offtarget;
 			else
 				ErrorLog "${SAMPLEID}" "The reference file $ROOT_PATH/refFiles/${REFSEQ}.ampregion doesn't exists!";
 			fi
 
 			# Check if the reference file seqregion exists
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
-				zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz | perl $SERA_PATH/bin/perlscript/pileup2hitsPerBase.pl -i /dev/stdin -o $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget -off $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget -chr2nc $NC2chr -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion";
 				# gzip output files
-				gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
-				gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.ontarget;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY gzip -f $ROOT_PATH/Specificity/${SAMPLEID}.seqregion.offtarget;
 			else
 				ErrorLog "${SAMPLEID}" "The reference file $ROOT_PATH/refFiles/${REFSEQ}.seqregion doesn't exists!";
 			fi

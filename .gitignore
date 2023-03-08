@@ -1,2 +1,6 @@
 .idea
 pmip
+local_files
+*.simg
+*.tar
+

@@ -26,7 +26,7 @@ if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ ! -e "$ROOT_PATH/Pileup/${SAMPLEID}.aligned.pileup.gz" || ! -z $FORCE ]]; then
 			# Check that the input file exists and run pileup
 			if [[ -e $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam ]]; then
-				samtools mpileup -d 10000000 -f $GENOME_FASTA_REF $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | gzip > $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz;
+				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools mpileup -d 10000000 -f $GENOME_FASTA_REF $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam | gzip > $ROOT_PATH/Pileup/${SAMPLEID}.pileup.gz";
 			else
 				ErrorLog "${SAMPLEID}" "$ROOT_PATH/SamBamFiles/${SAMPLEID}.aligned.sorted.bam does not exist!";
 			fi

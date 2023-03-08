@@ -204,25 +204,24 @@ with open(args.infile, 'r') as infile:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["gist"]['background']
 
                 # ## OVARIAL
-                elif info[sample]['tissue'] == "ovarial" or info[sample]['tissue'] == "ovarian" or info[sample]['tissue'] == "ovary" :
-                    info[sample]['tissue'] = "ovarial"
+                elif info[sample]['tissue'] == "prostata":
                     # If the given hotspot file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['hotspot']):
+                    if re.match("false", clinicalInfo["prostata"]['hotspot']):
                         info[sample]['hotspot'] = "false"
                     else:
-                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['hotspot']
+                        info[sample]['hotspot'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['hotspot']
 
                     # If the given amplification file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['amplification']):
+                    if re.match("false", clinicalInfo["prostata"]['amplification']):
                         info[sample]['amplification'] = "false"
                     else:
-                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['amplification']
+                        info[sample]['amplification'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['amplification']
 
                     # If the given background file name is false keep it otherwise add file path
-                    if re.match("false", clinicalInfo["ovarial"]['background']):
+                    if re.match("false", clinicalInfo["prostata"]['background']):
                         info[sample]['background'] = "false"
                     else:
-                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["ovarial"]['background']
+                        info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["prostata"]['background']
 
                 # ## MELANOM
                 elif info[sample]['tissue'] == "melanom" or info[sample]['tissue'] == "melanoma":
@@ -246,7 +245,7 @@ with open(args.infile, 'r') as infile:
                         info[sample]['background'] = "$FILE_PATH/refFiles/" + clinicalInfo["melanom"]['background']
 
                 else:
-                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma and ovarial are supported!\n\n")
+                    print ("\nERROR: Unknown cancer type given in input file " + info[sample]['tissue'] + ", so far only lung, colon, GIST, melanoma, prostata and ovarial are supported!\n\n")
                     sys.exit()
             else:
                 info[sample]['hotspot'] = "false"
