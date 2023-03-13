@@ -19,6 +19,7 @@ RUN conda config --set channel_priority strict && \
     pigz=2.6 \
     primerclip=0.3.8 \
     samtools=1.9 \
+    tabix=0.2.6 \
     trimmomatic=0.32 && \
     conda-pack -n hydra -o /tmp/env.tar
 
@@ -58,6 +59,7 @@ LABEL primerclip=0.3.8
 LABEL python2-minimal=apt-version
 LABEL rsync=apt-version
 LABEL samtools=1.9
+LABEL tabix=0.2.6
 LABEL trimmomatic=0.32 
 
 RUN rm /usr/local/man
