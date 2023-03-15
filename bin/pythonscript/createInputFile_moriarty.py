@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/bin/python3
 
 """
 
@@ -389,11 +389,11 @@ if args.refDir:
     for file_name in refDir_files:
         full_file_name = os.path.join(args.refDir, file_name)
         # Check that it is a file
-        if (os.path.isfile(full_file_name)):
-             destFile = refFilePath + "/" + file_name  # Set the destination file name
-             os.system("rsync -rlptD " + full_file_name + " " + destFile)  # Copy
-             if not re.match((oct(os.stat(destFile).st_mode & 0o777)), "0o664"):  # Check if the file has permission to read and write for all in the group
-                 os.chmod(destFile, 0o664)  # If not change the permissions
+        if (os.path.isdir(full_file_name)):
+             destFile = refFilePath # Set the destination file name
+             os.system("rsync -rlpt " + full_file_name + "/ " + destFile + "/")  # Copy
+             #if not re.match((oct(os.stat(destFile).st_mode & 0o777)), "0o664"):  # Check if the file has permission to read and write for all in the group
+             #    os.chmod(destFile, 0o664)  # If not change the permissions
 
 
 new_format = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)$")
