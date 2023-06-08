@@ -45,8 +45,7 @@ if [[ $PLATFORM = "Illumina" ]]; then
         wait        
 
         singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools merge $ROOT_PATH/Mutect2/${SAMPLEID}.mutect2.sorted.bam $BAMOUT && samtools index $ROOT_PATH/Mutect2/${SAMPLEID}.mutect2.sorted.bam"
-        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY bcftools concat --allow-overlaps --remove-duplicates $ROOT_PATH/Mutect2/${SAMPLEID}.sorted.*.vcf.gz > $ROOT_PATH/Mutect2/${SAMPLEID}.mutect2.sorted.vcf.gz
-        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY bgzip -d $ROOT_PATH/Mutect2/${SAMPLEID}.mutect2.sorted.vcf.gz
+        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY bcftools concat --allow-overlaps --remove-duplicates $ROOT_PATH/Mutect2/${SAMPLEID}.sorted.*.vcf.gz > $ROOT_PATH/Mutect2/${SAMPLEID}.mutect2.sorted.vcf
         rm $ROOT_PATH/Mutect2/${SAMPLEID}.sorted.*.vcf.*
         rm $ROOT_PATH/Mutect2/${SAMPLEID}.sorted.*.ba*
         rm $ROOT_PATH/Mutect2/${SAMPLEID}.sorted.*.raw.vcf
