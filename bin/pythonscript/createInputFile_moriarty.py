@@ -354,11 +354,9 @@ for sample in infoSort:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
 
-rawPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
-filePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
-storagePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
-jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run_new_format/"
+rawPath = "/projects/INBOX/w1p_sera/" + args.analysis + "/fastq/"
+filePath = "/scratch/wp1_sera/" + args.analysis
+outboxPath = "/scratch/wp1_sera/" + args.analysis + "/OUTBOX/"
 
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
@@ -375,8 +373,6 @@ if not os.path.exists(filePath):
 if not os.path.exists(outboxPath):
     os.makedirs(outboxPath, 0o774)
 
-if not os.path.exists(storagePath):
-    os.makedirs(storagePath, 0o774)
 # Check if a reference file dir is given, if so copy the files to refFiles in the analysis folder
 if args.refDir:
     # List files in the reference file directory
@@ -489,20 +485,3 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("\n")
     if not outfile.closed:
         outfile.close()
-
-from datetime import datetime
-dt_obj = datetime.strptime(date,'%Y%m%d')
-timestamp = dt_obj.strftime("%Y-%m-%dT01:01:01.000Z")
-import json
-
-with open(jsonPath + experiment +".json", mode="w") as json_output:
-    for sample in sorted(info):
-        json_output.write(json.dumps(
-            {'@timestamp':timestamp,
-             'experiment.wp': "WP1",
-             'experiment.prep': info[sample]['type'].upper(),
-             'experiment.method': info[sample]['method'],
-             'experiment.user': user,
-             'experiment.rerun': rerun,
-             'experiment.tissue': info[sample]['tissue'],
-             'experiment.sample': sample}) + "\n")
