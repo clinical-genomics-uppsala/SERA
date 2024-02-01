@@ -61,7 +61,7 @@ steps=(
 72 "Extract specificities" off "ExtractSpecificity.sh" "71" 0 \
 73 "Calculate variant allele ratio per strand" off "StrandVarAlleleRatio.sh" "11" 0 \
 100 "Copy results to OUTBOX" on "Move_results2outbox.sh" "17:21:22:25:26:31:33:35:40" 2 \
-101 "Copy results to storage" on "Move_results2storage.sh" "17:21:22:25:26:31:33:35:40" 2);
+101 "Copy results to storage" off "Move_results2storage.sh" "17:21:22:25:26:31:33:35:40" 2);
 
 let NUMBOFSTEPS=${#steps[@]}-1;
 
