@@ -28,9 +28,9 @@ if [[ ${READS} == "true" ]]; then
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqroi ]]; then
 				# Check if the output file exist, if not include header
 				if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqroi.fractionCovered.txt ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
 				else
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
 				fi
 			else
 				 ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqroi doesn't exist!";
@@ -38,9 +38,9 @@ if [[ ${READS} == "true" ]]; then
 
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
                                 if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqregion.fractionCovered.txt ]]; then
-                                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
+                                        singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
                                 else
-                                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
+                                        singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
 				fi
                         else
                                  ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqregion doesn't exist!";
@@ -48,9 +48,9 @@ if [[ ${READS} == "true" ]]; then
 
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
                                 if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.ampregion.fractionCovered.txt ]]; then
-                                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
+                                        singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
                                 else
-                                        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
+                                        singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.ampliconmapped.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
 				fi
                         else
                                  ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.ampregion doesn't exist!";
@@ -60,9 +60,9 @@ if [[ ${READS} == "true" ]]; then
 		elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqroi ]]; then
 				if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqroi.fractionCovered.txt ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
 				else
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqroi.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqroi_output.txt
 				fi
 			else
 				ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqroi doesn't exist!";
@@ -70,9 +70,9 @@ if [[ ${READS} == "true" ]]; then
 
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqregion ]]; then
 				if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.seqregion.fractionCovered.txt ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
 				else
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.seqregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.seqregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_seqregion_output.txt
 				fi
 			else
 				ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.seqregion doesn't exist!";
@@ -80,9 +80,9 @@ if [[ ${READS} == "true" ]]; then
 
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
 				if [[ -e $ROOT_PATH/FractionCovered/${REFSEQ}.ampregion.fractionCovered.txt ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
 				else
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/FractionCovered.pl -v $ROOT_PATH/SNPmania/${SAMPLEID}.variations -o $ROOT_PATH/FractionCovered/${SAMPLEID}.ampregion.fractionCovered.txt -r $ROOT_PATH/refFiles/${REFSEQ}.ampregion -s ${SAMPLEID} -m 30,100,300,500 -h >> $ROOT_PATH/FractionCovered/calculateFractionCovered_ampregion_output.txt
 				fi
 			else
 				ErrorLog "SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.ampregion doesn't exist!";
