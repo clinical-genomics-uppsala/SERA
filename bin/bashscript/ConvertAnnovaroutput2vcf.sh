@@ -21,12 +21,12 @@ if [[ ${READS} == "true" ]]; then
     if [[ (! -e $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf) || ($FORCE == "true") ]]; then
         # Check which output file from Annovar that exists
     	if [[ -e $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv ]]; then
-            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf
+            singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf
 
-            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+            singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 
             if [[ ${METHOD} == "swift" && ( ${TISSUE} == "prostata" || ${TISSUE} == "ovarial" || ${TISSUE} == "breast" ) ]]; then
-                singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c 'grep -v "^Sample" $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv | awk "BEGIN{FS=\"\t\"}{if(\$15>=0.05){print \$0}}" | python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}_vaf0.05.vcf'
+                singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c 'grep -v "^Sample" $ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv | awk "BEGIN{FS=\"\t\"}{if(\$15>=0.05){print \$0}}" | python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf_filteredMutations.py -m /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}_vaf0.05.vcf'
             fi
         else
             if [[ -e $ROOT_PATH/AnnovarOutput/${SAMPLEID}.singleSample.ampliconmapped.annovarOutput ]]; then
@@ -43,12 +43,12 @@ if [[ ${READS} == "true" ]]; then
     	    fi
 
             if [[ -e $ANNOVARFILE ]]; then
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v ${ANNOVARFILE} -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf
+                    singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v ${ANNOVARFILE} -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf
 
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
+                    singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk '{if(/^#/){print($0)}else{if(!/-,-$/){print($0)}}}' $ROOT_PATH/vcfOutput/${SAMPLEID}.all.vcf > $ROOT_PATH/vcfOutput/${SAMPLEID}.vcf
 
                 if [[ ${METHOD} == "swift" && (${TISSUE} == "ovarial" || ${TISSUE} == "prostata") ]]; then
-                    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c 'grep -v "^Sample" ${ANNOVARFILE} | awk "BEGIN{FS=\"\t\"}{if(\$10>=0.05){print \$0}}" | python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}._vaf0.05.vcf'
+                    singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c 'grep -v "^Sample" ${ANNOVARFILE} | awk "BEGIN{FS=\"\t\"}{if(\$10>=0.05){print \$0}}" | python2.7 ${SERA_PATH}/bin/pythonscript/Annovar2vcf.py -v /dev/stdin -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -chr2nc $NC2chr -o $ROOT_PATH/vcfOutput/${SAMPLEID}._vaf0.05.vcf'
                 fi
             else
                 ErrorLog "$SAMPLEID" "Neither filtered mutations output ($ROOT_PATH/FilteredMutations/${SAMPLEID}.filteredMutations.tsv) nor the output file from Annovar ($ANNOVARFILE) was not found!";

@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description = "This script creates a SERA input
 parser.add_argument('-i', '--infile', help = 'Input file name', type = str, required = True)
 parser.add_argument('-p', '--project', help = 'Name of the project', type = str, required = True)
 parser.add_argument('-g', '--globals', help = 'Should the HOME or PROJ option be used', choices = ['HOME', 'PROJ', 'MORIARTY', 'MARVIN'], type = str, required = True)
-parser.add_argument('-a', '--analysis', help = 'Analysis type, [klinik, utveckling, forskning, projekt].', choices = ['klinik', 'utveckling', 'forskning', 'projekt'], required = True, type = str)
+parser.add_argument('-a', '--analysis', help = 'Analysis name.', required = True, type = str)
 parser.add_argument('-refDir', '--refDir', help = 'If a directory for reference files is given, they will be copied to the analysis folder', type = str)
 parser.add_argument('-n', '--normal', help = 'Name of normal sample to compare with.', type = str)
 parser.add_argument('-s', '--software', help = 'Queing system for', type = str, default = "SLURM")
@@ -41,7 +41,6 @@ parser.add_argument('-pindelAnnovarPlasmaFlags', '--pindelAnnovarPlasmaFlags', h
 parser.add_argument('-mutationFlags', '--mutationsFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others. Default: -minRD 30,300 -minVaf 0.01', type = str, default = " -minRD 30,300 -minVaf 0.01")
 parser.add_argument('-mutationPlasmaFlags', '--mutationsPlasmaFlags', help = 'Set parameters for the filtering of all mutations both hotspots and others in plasma. Default: -minRD 30,300 -minVaf 0.001', type = str, default = " -minRD 30,300 -minVaf 0.001")
 parser.add_argument('-clinicalInfoFile', '--clinicalInfoFile', help = 'File with clinical hotspot and indel filenames per cancer type. If not wanted set to false! Default: clinicalCancerTypeFiles.txt', type = str, default = "clinicalCancerTypeFiles.txt")
-parser.add_argument('-storage', '--storage', help = 'Storage location of data, ex backup or nobackup.', type = str, default="nobackup")
 
 args = parser.parse_args()
 info = {}
@@ -354,11 +353,9 @@ for sample in infoSort:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
 
-rawPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/fastq_filer/" + year + "/" + info[sample]['exp'] + "_rawdata"
-filePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/analys/" + year + "/" + info[sample]['exp']
-outboxPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/OUTBOX/" + info[sample]['exp']
-storagePath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/lagring/" + year + "/" + info[sample]['exp']
-jsonPath = "/projects/" + args.project + "/" + args.storage + "/ngs/" + args.analysis + "/samples_run_new_format/"
+rawPath = "/projects/inbox/wp1_sera/" + args.analysis + "/fastq/"
+filePath = "/scratch/analysis/wp1_sera/" + args.analysis
+outboxPath = "/scratch/analysis/wp1_sera/" + args.analysis + "/OUTBOX/"
 
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
@@ -375,8 +372,6 @@ if not os.path.exists(filePath):
 if not os.path.exists(outboxPath):
     os.makedirs(outboxPath, 0o774)
 
-if not os.path.exists(storagePath):
-    os.makedirs(storagePath, 0o774)
 # Check if a reference file dir is given, if so copy the files to refFiles in the analysis folder
 if args.refDir:
     # List files in the reference file directory
@@ -399,18 +394,6 @@ if args.refDir:
 new_format = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)$")
 new_format_rerun = re.compile(".+/([0-9]{8})_([A-Za-z0-9-]+)_([0-9]+)")
 
-def extract_date_user_rerun(line):
-    result = new_format_rerun.match(line)
-    if result:
-        return result.group(1),result.group(2),True
-    result = new_format.match(line)
-    if result:
-        return result.group(1),result.group(2),False
-    raise Exception("Unable to parse input file for experiment name, user and rerun")
-
-(date, user, rerun) = extract_date_user_rerun(filePath)
-
-
 
 output = filePath + "/inputFile"
 with (open(output, mode = 'w'))as outfile:
@@ -421,7 +404,6 @@ with (open(output, mode = 'w'))as outfile:
     outfile.write("FILE_PATH=\"" + filePath + "\";\n\n")
     outfile.write("export GLOBALS=\"" + args.globals + "\";\n")
     outfile.write("export OUTBOX_PATH=\"" + outboxPath + "\";\n")
-    outfile.write("export STORAGE_PATH=\"" + storagePath + "\";\n")
     outfile.write("\nexport FILE_FORMAT=\"" + args.fileFormat + "\";\n")
     outfile.write("export READS=\"true\";\n")
     outfile.write("export MOLECULES=\"false\";\n")
@@ -489,20 +471,3 @@ with (open(output, mode = 'w'))as outfile:
         outfile.write ("\n")
     if not outfile.closed:
         outfile.close()
-
-from datetime import datetime
-dt_obj = datetime.strptime(date,'%Y%m%d')
-timestamp = dt_obj.strftime("%Y-%m-%dT01:01:01.000Z")
-import json
-
-with open(jsonPath + experiment +".json", mode="w") as json_output:
-    for sample in sorted(info):
-        json_output.write(json.dumps(
-            {'@timestamp':timestamp,
-             'experiment.wp': "WP1",
-             'experiment.prep': info[sample]['type'].upper(),
-             'experiment.method': info[sample]['method'],
-             'experiment.user': user,
-             'experiment.rerun': rerun,
-             'experiment.tissue': info[sample]['tissue'],
-             'experiment.sample': sample}) + "\n")

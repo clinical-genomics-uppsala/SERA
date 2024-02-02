@@ -23,9 +23,9 @@ if [[ ! -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq || ! -z $FORCE ]]; the
 	# Check that the ampregion reference file exists
 	if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.ampregion ]]; then
 	    if [[ $GLOBALS == "MORIARTY" ]]; then
-	        singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $DOWNLOAD2FASTA -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
+	        singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $DOWNLOAD2FASTA -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
 	    else
-            singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $DOWNLOAD2FASTA -th 2 -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
+            singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $DOWNLOAD2FASTA -th 2 -s $ROOT_PATH/refFiles/${REFSEQ}.ampregion -o $ROOT_PATH/refFiles/${REFSEQ}.ampregion.SNPseq -d $BLAST_DB -t full;
         fi
 	else
 		ErrorLog "$SAMPLEID" "$ROOT_PATH/refFiles/${REFSEQ}.ampregion does NOT exist, run step 0 to create this file first!";

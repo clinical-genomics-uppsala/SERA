@@ -43,10 +43,10 @@ SuccessLog "${SAMPLEID}" "${0##*/}" "Starting Blast analysis.";
 cd $ROOT_PATH/BLAST/Runs;
 
 if [[ ${READS} == "true" ]]; then
-	singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/BLAST/Databases/${SAMPLEID}.fragments.fasta.gz | blastall -p blastn -a ${NUMPROC} -b 1000000 -d $ROOT_PATH/BLAST/Databases/${SAMPLEID}.ReadsDB -i /dev/stdin -m 8 | gzip - > $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.gz";
+	singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/BLAST/Databases/${SAMPLEID}.fragments.fasta.gz | blastall -p blastn -a ${NUMPROC} -b 1000000 -d $ROOT_PATH/BLAST/Databases/${SAMPLEID}.ReadsDB -i /dev/stdin -m 8 | gzip - > $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.gz";
 
 	SuccessLog "${SAMPLEID}" "${0##*/}" "Filtering BLAST Results with max mm = ${BLAST_MM} bp, and minimal match length of ${BLAST_ML} bp.";
-	singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.gz | awk -v ml=${BLAST_ML} -v mm=${BLAST_MM} '{if(($4>=ml)&&($5<=mm)&&($6==0)&&($9==1)) {print $1;}}' | sort | uniq -c | awk '{print $2 "\t" $1;}' | sort -k2nr | gzip - > $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.filtered.gz";
+	singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.gz | awk -v ml=${BLAST_ML} -v mm=${BLAST_MM} '{if(($4>=ml)&&($5<=mm)&&($6==0)&&($9==1)) {print $1;}}' | sort | uniq -c | awk '{print $2 "\t" $1;}' | sort -k2nr | gzip - > $ROOT_PATH/BLAST/Runs/${SAMPLEID}.blast.filtered.gz";
 
 	# Creating hits per fragment file
 	echo -e "FragmentID\tReadHits" > $ROOT_PATH/BLAST/${SAMPLEID}.blast.hits.txt;

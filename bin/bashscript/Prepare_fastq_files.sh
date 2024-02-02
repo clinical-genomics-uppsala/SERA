@@ -20,10 +20,10 @@ fi
 if [[ ${#fastq_files_r1[@]} > 1 ]];
 then
     pre_filename=$(basename ${fastq_files_r1[0]} | sed -e 's/_L[0-9]\+_R1_001\.fastq\.gz//')
-    echo "singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY zcat $RAWDATA_PE1 | pigz -p 4 > "$ROOT_PATH/seqdata/${pre_filename}_L000_R1_001.fastq.gz";"
-    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $RAWDATA_PE1 | pigz -p 4 > $ROOT_PATH/seqdata/${pre_filename}_L000_R1_001.fastq.gz";
-    echo "singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $ROOT_PATH_ANNOVAR -B $SERA_PATH $SERA_SINGULARITY zcat $RAWDATA_PE2 | pigz -p 4 > "$ROOT_PATH/seqdata/${pre_filename}_L000_R2_001.fastq.gz";"
-    singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $RAWDATA_PE2 | pigz -p 4 > $ROOT_PATH/seqdata/${pre_filename}_L000_R2_001.fastq.gz";
+    echo "singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY zcat $RAWDATA_PE1 | pigz -p 4 > "$ROOT_PATH/seqdata/${pre_filename}_L000_R1_001.fastq.gz";"
+    singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $RAWDATA_PE1 | pigz -p 4 > $ROOT_PATH/seqdata/${pre_filename}_L000_R1_001.fastq.gz";
+    echo "singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $ROOT_PATH_ANNOVAR -B $SERA_PATH $SERA_SINGULARITY zcat $RAWDATA_PE2 | pigz -p 4 > "$ROOT_PATH/seqdata/${pre_filename}_L000_R2_001.fastq.gz";"
+    singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "zcat $RAWDATA_PE2 | pigz -p 4 > $ROOT_PATH/seqdata/${pre_filename}_L000_R2_001.fastq.gz";
 else
     echo " $RAWDATA_PE1 $ROOT_PATH/seqdata/";
     cp $RAWDATA_PE1 "$ROOT_PATH/seqdata/";
