@@ -24,14 +24,14 @@ if [[ $PLATFORM = "Illumina" ]]; then
         if [[ ${METHOD} == "swift" && ( ${CUTADAPT_PREFIX} == "cp288_masterfile_191114" || ${CUTADAPT_PREFIX} == "Accel-Amplicon-Plus_Lung_Cancer_masterfile" || ${CUTADAPT_PREFIX} == "18-2132_EGFR_MID_Masterfile_mod20191002" ) ]]; then
 
            #CUTADAPT_PREFIX should point to the masterfile
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -s "primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -s "primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam";
            SuccessLog "${SAMPLEID}" "/projects/wp4/nobackup/workspace/jonas_test/primerclip/primerclip ${ROOT_PATH}/refFiles/${CUTADAPT_PREFIX}.txt $ROOT_PATH/Bwa/${SAMPLEID}.untrimmed.qsorted.sam $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam;"
 
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -f $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam";
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam";
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "java -jar ${SERA_PATH}/bin/java/biostar84452.jar $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam --samoutputformat BAM > $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
-           singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -f $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "java -jar ${SERA_PATH}/bin/java/biostar84452.jar $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam --samoutputformat BAM > $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam";
+           singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY sh -c "samtools flagstat $ROOT_PATH/Bwa/${SAMPLEID}.sorted.bam > $ROOT_PATH/Bwa/${SAMPLEID}.alignmentStats.txt";
            SuccessLog "${SAMPLEID}" "samtools view -bS $ROOT_PATH/Bwa/${SAMPLEID}.pclip.sam | samtools sort -@ 3 /dev/stdin -o $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;"
            SuccessLog "${SAMPLEID}" "samtools index $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;"
            SuccessLog "${SAMPLEID}" "java -jar ${SERA_PATH}/bin/java/biostar84452.jar $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam --samoutputformat BAM > $ROOT_PATH/Bwa/${SAMPLEID}.sorted.sc.bam;"

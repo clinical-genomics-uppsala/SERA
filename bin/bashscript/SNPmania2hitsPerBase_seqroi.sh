@@ -27,9 +27,9 @@ if [[ ${READS} == "true" ]]; then
 		if [[ ! -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map || ! -z $FORCE ]]; then
 			if [[ -e $ROOT_PATH/refFiles/${REFSEQ}.seqroi ]]; then
 				if [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.variations ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -i $ROOT_PATH/SNPmania/${SAMPLEID}.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map;
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -i $ROOT_PATH/SNPmania/${SAMPLEID}.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map;
 				elif [[ -e $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations ]]; then
-					singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map;
+					singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/SNPmania2hitsPerBase.pl -r $ROOT_PATH/refFiles/${REFSEQ}.seqroi -i $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations  -o $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map;
 				else
 					ErrorLog "${SAMPLEID}" "None of the possible input files existed ($ROOT_PATH/SNPmania/${SAMPLEID}.variations or $ROOT_PATH/SNPmania/${SAMPLEID}.ampliconmapped.variations)!";
 				fi

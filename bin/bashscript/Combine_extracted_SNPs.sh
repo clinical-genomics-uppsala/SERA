@@ -31,7 +31,7 @@ if [[ ${READS} == "true" ]]; then
 		# If there still exist input files - create combined file
 		ls -1 $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > /dev/null 2>&1
 		if [[  "$?" = "0" ]]; then
-			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.ampliconmapped.txt;
+			singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.ampliconmapped.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.ampliconmapped.txt;
 
 		else
 			WarningLog "$SAMPLEID" "No files with ending *_SNPs.ampliconmapped.txt were found!";
@@ -45,7 +45,7 @@ if [[ ${READS} == "true" ]]; then
 		# If there still exist input files - create combined file
 		ls -1 $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > /dev/null 2>&1
 		if [[  "$?" = "0" ]]; then
-			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.txt;
+			singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY awk 'BEGIN{print "#Run\tSample\tTumour\tVaf\tRef_RD\tVar_RD\tTot_RD\t#Ref_amp\t#Var_amp\tChr\tPos\tRef\tVar\tId\tRef_amp\tVar_amp"} {if($1!~/#Run/){print $0}}' $ROOT_PATH/Extracted_sampleInfo/*_SNPs.txt > $ROOT_PATH/Extracted_SNPs/SNPs.allSamples.txt;
 
 		else
 			WarningLog "$SAMPLEID" "No files with ending *_SNPs.txt were found!";

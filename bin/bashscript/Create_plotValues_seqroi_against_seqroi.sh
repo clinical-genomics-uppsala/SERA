@@ -23,7 +23,7 @@ if [[ ${READS} == "true" ]]; then
 	if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
 		if [[ ! -e $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.nusbaum || ! -e $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.stenberg || ! -z $FORCE ]]; then
 			if [[ -e $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map ]]; then
-				singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/hitsPerBase2ampregionNormalizedValue.pl -a $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map -i $ROOT_PATH/refFiles/${REFSEQ}.seqroi -c $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.stenberg -n $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.nusbaum;
+				singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/hitsPerBase2ampregionNormalizedValue.pl -a $ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map -i $ROOT_PATH/refFiles/${REFSEQ}.seqroi -c $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.stenberg -n $ROOT_PATH/plotValues/${SAMPLEID}.seqroi_seqroi.uniq.nusbaum;
 			else
 				ErrorLog "${SAMPLEID}" "$ROOT_PATH/hitsPerBaseFiles/${SAMPLEID}.seqroi.uniq.map does NOT exist!";
 			fi
