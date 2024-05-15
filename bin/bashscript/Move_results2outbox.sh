@@ -163,7 +163,7 @@ fi
 cp -p ${ROOT_PATH}/inputFile* ${OUTBOX_PATH};
 cp -p ${ROOT_PATH}/PipelineLog* ${OUTBOX_PATH};
 
-echo "DONE" > "${OUTBOX_PATH}/Done.txt";
+echo "DONE" > "${OUTBOX_PATH}/.done.txt";
 
 if [[ "$?" != "0" ]]; then
     ErrorLog "$SAMPLEID" "Failed in copying results to outbox";

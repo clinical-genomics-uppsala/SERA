@@ -29,7 +29,7 @@ fi
 if [[ -d $ROOT_PATH/plotPdfs || ! -z $FORCE ]]; then
 	if [[ ${READS} == "true" ]]; then
 		if [[ ${CALL_TYPE} == "h.sapiens" ]]; then
-			singularity exec -B /data -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/makeGnuplotFile_old.pl -i $ROOT_PATH/plotPdfs/plotFile.txt -o $ROOT_PATH/plotPdfs;
+			singularity exec -B /data -B /scratch -B /opt -B /beegfs-storage -B /projects -B $SERA_PATH $SERA_SINGULARITY perl $SERA_PATH/bin/perlscript/makeGnuplotFile_old.pl -i $ROOT_PATH/plotPdfs/plotFile.txt -o $ROOT_PATH/plotPdfs;
 		fi
 	fi
 	# Run Gnuplot on all scripts
