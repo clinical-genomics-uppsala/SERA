@@ -353,9 +353,9 @@ for sample in infoSort:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
 
-rawPath = "/projects/inbox/wp1_sera/" + args.analysis + "/fastq/"
-filePath = "/scratch/analysis/wp1_sera/" + args.analysis
-outboxPath = "/scratch/analysis/wp1_sera/" + args.analysis + "/OUTBOX/"
+rawPath = "/projects/inbox/wp1_haloplex-idt/" + args.analysis + "/fastq/"
+filePath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis
+outboxPath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis + "/OUTBOX/"
 
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
