@@ -447,7 +447,7 @@ with (open(output, mode = 'w'))as outfile:
         if len(read1) != len(read2):
             raise Exception("Different number of reads found: " + ",".join(read1) + " " + ",".join(read2))
         if len(read1) == 0:
-            raise Exception("No fastq files found!!!")
+            raise Exception("No fastq files found for sample {sample}!!!")
         outfile.write ("RAWDATA_PE1_ARR_[${COUNT}]=\"" + " ".join(read1) + "\";\n")
         outfile.write ("RAWDATA_PE2_ARR_[${COUNT}]=\"" + " ".join(read2) + "\";\n")
         outfile.write ("RAWDATA_INDEX_ARR_[${COUNT}]=\"false\";\n")
