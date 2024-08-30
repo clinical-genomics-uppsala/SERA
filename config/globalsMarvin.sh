@@ -14,8 +14,8 @@ export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta_moriarty.pl";
 export ROOT_PATH_ANNOVAR="/annovar/2015Mar22/bin";
 export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
 
-export SERA_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularies/gmsuppsala_sera_1.0.0.simg"
-export AMPLICONMAPPING_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularies/gmsuppsala_ampliconmapping_0.0.1.simg"
+export SERA_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_sera_1.0.0.simg"
+export AMPLICONMAPPING_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_ampliconmapping_0.0.1.simg"
 # java flags, use quick accessible temp dir for increased performance
 export PATH_JSNPMANIA="/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4"
 export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"
