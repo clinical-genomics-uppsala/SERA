@@ -1,10 +1,10 @@
 TYPE=colon
-HOTSPOT=Mutations_Colon_20171219.csv
+HOTSPOT=Mutations_Colon_20250220.csv
 AMPLIFICATION=Amplification_Colon_20160226.txt
 BACKGROUND=Background_Colon_20160226.txt
 
 TYPE=lung
-HOTSPOT=Mutations_Lung_20190211.csv
+HOTSPOT=Mutations_Lung_20250220.csv
 AMPLIFICATION=Amplification_Lung_20160226.txt
 BACKGROUND=Background_Lung_20160226.txt
 
@@ -14,7 +14,7 @@ AMPLIFICATION=false
 BACKGROUND=false
 
 TYPE=melanom
-HOTSPOT=Mutations_Melanom_20230123.csv
+HOTSPOT=Mutations_Melanom_20250220.csv
 AMPLIFICATION=false
 BACKGROUND=false
 
