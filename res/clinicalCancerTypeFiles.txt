@@ -9,7 +9,7 @@ AMPLIFICATION=Amplification_Lung_20160226.txt
 BACKGROUND=Background_Lung_20160226.txt
 
 TYPE=gist
-HOTSPOT=Mutations_Gist_20190211.csv
+HOTSPOT=Mutations_Gist_20250220.csv
 AMPLIFICATION=false
 BACKGROUND=false
 
@@ -29,7 +29,7 @@ AMPLIFICATION=false
 BACKGROUND=false
 
 TYPE=mtc
-HOTSPOT=Mutations_MTC_220221.csv
+HOTSPOT=Mutations_MTC_250220.csv
 AMPLIFICATION=false
 BACKGROUND=false
 
