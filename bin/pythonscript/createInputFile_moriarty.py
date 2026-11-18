@@ -353,9 +353,14 @@ for sample in infoSort:
         expFolder += "-" + sample
 year = info[sample]['exp'][:4]
 
-rawPath = "/projects/inbox/wp1_haloplex-idt/" + args.analysis + "/fastq/"
-filePath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis
-outboxPath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis + "/OUTBOX/"
+#rawPath = "/projects/inbox/wp1_haloplex-idt/" + args.analysis + "/fastq/"
+#filePath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis
+#outboxPath = "/scratch/analysis/wp1_haloplex-idt/" + args.analysis + "/OUTBOX/"
+rawPath = "/proj/ngi2024001/nobackup/inbox/wp1_haloplex-idt/" + args.analysis + "/fastq/"
+filePath = "/proj/ngi2024001/nobackup/analysis/wp1_haloplex-idt/" + args.analysis
+outboxPath = "/proj/ngi2024001/nobackup/analysis/wp1_haloplex-idt/" + args.analysis + "/OUTBOX/"
+
+
 
 # rawPath = "/proj/" + args.project + "/private/" + info[sample]['exp'] + "_rawdata"
 # filePath = "/proj/" + args.project + "/nobackup/private/" + info[sample]['exp']
@@ -399,7 +404,7 @@ output = filePath + "/inputFile"
 with (open(output, mode = 'w'))as outfile:
     outfile.write('################################\n### SEQUENCING-SPECIFIC SETTINGS\n################################\n\n# These settings are shared for all samples included in this analysis\n\n')
     outfile.write("SOFTWARE=\"" + args.software + "\";\n")
-    outfile.write("UPPNEX_PROJECT_ID=\"" + args.project + "\";\n")
+    outfile.write("UPPNEX_PROJECT_ID=\"ngi2024001\";\n")
     outfile.write("RAW_PATH=\"" + rawPath + "\";\n")
     outfile.write("FILE_PATH=\"" + filePath + "\";\n\n")
     outfile.write("export GLOBALS=\"" + args.globals + "\";\n")
