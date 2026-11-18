@@ -6,16 +6,20 @@
 # please make sure that all softwares paths (Mosaik, samtools etc) are available from bash without specifying path
 
 # load script modules if necessary
-. $SERA_PATH/config/modules_marvin.sh
+#. $SERA_PATH/config/modules_marvin.sh
 
 # paths to softwares
-export ROOT_PATH_JSNPMANIA="/projects/wp1/software/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
+#export ROOT_PATH_JSNPMANIA="/projects/wp1/software/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
+export ROOT_PATH_JSNPMANIA="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/design_and_ref_files/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4";
 export DOWNLOAD2FASTA="$SERA_PATH/bin/perlscript/download2fasta_moriarty.pl";
 export ROOT_PATH_ANNOVAR="/annovar/2015Mar22/bin";
-export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
+#export ANNOVAR_MODULES="/data/ref_data/hg19/annovar/2015Mar22_20160706";
+export ANNOVAR_MODULES="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/design_and_ref_files/annovar/2015Mar22_20160706";
 
-export SERA_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_sera_1.0.0.simg"
-export AMPLICONMAPPING_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_ampliconmapping_0.0.1.simg"
+#export SERA_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_sera_1.0.0.simg"
+export SERA_SINGULARITY="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/apptainer_cache/gmsuppsala_sera_1.0.0.simg"
+#export AMPLICONMAPPING_SINGULARITY="/projects/bin/wp1_haloplex-idt/singularity/gmsuppsala_ampliconmapping_0.0.1.simg"
+export AMPLICONMAPPING_SINGULARITY="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/apptainer_cache/gmsuppsala_ampliconmapping_0.0.1.simg"
 # java flags, use quick accessible temp dir for increased performance
 export PATH_JSNPMANIA="/jSNPmania-0.0.7-SNAPSHOT-amplicons_v4"
 export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"
@@ -25,7 +29,8 @@ export JAVA_FLAGS="-Djava.io.tmpdir=$TMPDIR -Xmx16384m"
 export MOSAIK_TMP=$TMPDIR;  # set to empty if not desirable
 
 # Include SLURM submit information
-SLURM_MISC_SETTINGS="-A $UPPNEX_PROJECT_ID";    #--qos=short";
+#SLURM_MISC_SETTINGS="-A $UPPNEX_PROJECT_ID";    #--qos=short";
+SLURM_MISC_SETTINGS="-A ngi2024001";
 
 
 ###########################
@@ -52,13 +57,16 @@ export LOG_FILE="$ROOT_PATH/seralog.xml";
 export GENOME_BUILD="hg19";
 
 # Aligner reference genome files
-export GENOME_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta";
+#export GENOME_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta";
+export GENOME_REF="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/design_and_ref_files/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta";
 
 # Reference genome sequence (fasta)
-export GENOME_FASTA_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"; # Aligner reference genome files
+#export GENOME_FASTA_REF="/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"; # Aligner reference genome files
+export GENOME_FASTA_REF="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/design_and_ref_files/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta";
 
 # Blast DB
-export BLAST_DB="/data/ref_genomes/hg19/blastdb/human_genomic";  # local hg 19
+#export BLAST_DB="/data/ref_genomes/hg19/blastdb/human_genomic";  # local hg 19
+export BLAST_DB="/proj/ngi2024001/nobackup/bin/wp1_haloplex-idt/design_and_ref_files/blastdb/human_genomic";
 
 #NC to chr conversion
 export NC2chr="$SERA_PATH/config/reference.hg19.Info";
